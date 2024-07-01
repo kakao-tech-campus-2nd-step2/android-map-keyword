@@ -36,6 +36,22 @@ class SQLiteDb(context: Context) {
         cursor.close()
         return exists
     }
+    fun getAllData(): Cursor {
+        return database.query(SQLiteHelper.TABLE_NAME, null, null, null, null, null, null)
+    }
+
+    fun logAllData() {
+        val cursor = getAllData()
+        if (cursor.moveToFirst()) {
+            do {
+                val name = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.COL_NAME))
+                val address = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.COL_ADDRESS))
+                val category = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.COL_CATEGORY))
+                Log.d("DatabaseHelper", "Name: $name, Address: $address, Category : $category")
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+    }
 
 
 
