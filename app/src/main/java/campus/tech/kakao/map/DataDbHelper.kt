@@ -10,7 +10,7 @@ class DataDbHelper(context: Context) : SQLiteOpenHelper(context, "data.db", null
                 "name String," +
                 "location String," +
                 "category String);"
-        db.execSQL(sql)
+        db?.execSQL(sql)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
