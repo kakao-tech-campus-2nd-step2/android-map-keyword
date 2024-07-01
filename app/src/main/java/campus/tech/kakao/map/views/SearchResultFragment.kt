@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.Views
+package campus.tech.kakao.map.views
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
