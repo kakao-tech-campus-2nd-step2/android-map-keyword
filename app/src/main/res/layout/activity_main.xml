@@ -25,12 +25,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         app:layout_constraintEnd_toEndOf="@id/inputText"
         app:layout_constraintBottom_toBottomOf="@id/inputText"
-        android:background="@drawable/outline_cancel_24"
+        android:background="@drawable/baseline_close_24"
         android:layout_marginBottom="5dp"
+        android:backgroundTint="@color/black"
         />
 
     <TextView
