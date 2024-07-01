@@ -1,4 +1,4 @@
 package campus.tech.kakao.map
 
-class SQLiteOpenHelper {
+class SQLiteDb {
 }
