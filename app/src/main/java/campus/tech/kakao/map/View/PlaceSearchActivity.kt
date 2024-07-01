@@ -8,8 +8,10 @@ import campus.tech.kakao.map.R
 import campus.tech.kakao.map.ViewModel.SearchViewModel
 
 class PlaceSearchActivity : AppCompatActivity() {
+    private lateinit var viewModel : ViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[SearchViewModel::class.java]
         setContentView(R.layout.activity_place_search)
     }
 }
