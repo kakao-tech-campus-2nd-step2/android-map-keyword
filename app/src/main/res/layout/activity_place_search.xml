@@ -7,6 +7,18 @@
     android:layout_height="match_parent"
     tools:context=".View.PlaceSearchActivity">
 
+    <EditText
+        android:id="@+id/etSearchPlace"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/normal_100"
+        android:layout_marginTop="@dimen/normal_100"
+        android:hint="@string/et_search_hint"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:drawableEnd="@drawable/delete_btn_bg"
+        />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
