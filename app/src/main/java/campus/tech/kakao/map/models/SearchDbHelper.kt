@@ -18,10 +18,26 @@ class SearchDbHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(SearchResultContract.CREATE_QUERY)
+
+        if(db != null){
+            insertInitialData(db)
+        }
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
 
+    }
+
+    private fun insertInitialData(db: SQLiteDatabase) {
+        val datas = InitialDataset.initialData
+        for (data in datas) {
+            val contentValues = ContentValues().apply {
+                put(SearchResultContract.COLUMN_NAME, data.name)
+                put(SearchResultContract.COLUMN_ADDRESS, data.address)
+                put(SearchResultContract.COLUMN_TYPE, data.type)
+            }
+            db.insert(TABLE_NAME, null, contentValues)
+        }
     }
 
     fun insertData(name: String, address: String, type: String) {
