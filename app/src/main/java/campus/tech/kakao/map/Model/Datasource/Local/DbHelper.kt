@@ -5,7 +5,6 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 import campus.tech.kakao.map.Model.Place
 import campus.tech.kakao.map.Util.PlaceCategory
 import campus.tech.kakao.map.Util.PlaceContract
@@ -40,7 +39,7 @@ class DbHelper(context: Context?, name: String?, factory: SQLiteDatabase.CursorF
         db.insert(PlaceContract.PlaceEntry.TABLE_NAME,null,values)
     }
 
-    fun read() : Cursor{
+    fun getAllPlace() : Cursor{
         val db = readableDatabase
         return db.rawQuery("SELECT * FROM ${PlaceContract.PlaceEntry.TABLE_NAME}",null)
     }
@@ -48,5 +47,21 @@ class DbHelper(context: Context?, name: String?, factory: SQLiteDatabase.CursorF
     fun delete(name : String){
         val db = writableDatabase
         db.delete(PlaceContract.PlaceEntry.TABLE_NAME,"${PlaceContract.PlaceEntry.COLUMN_NAME}=?",arrayOf(name))
+    }
+
+    fun getSimilarCursorByName(name: String) : Cursor{
+        val db = readableDatabase
+        val selection = "${PlaceContract.PlaceEntry.COLUMN_NAME} LIKE ?"
+        val selectionArgs = arrayOf("%$name%")
+
+        return db.query(
+            PlaceContract.PlaceEntry.TABLE_NAME,
+            null,
+            selection,
+            selectionArgs,
+            null,
+            null,
+            null
+        )
     }
 }

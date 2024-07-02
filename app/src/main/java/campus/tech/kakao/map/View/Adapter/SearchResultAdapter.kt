@@ -1,7 +1,5 @@
-package campus.tech.kakao.map.View
+package campus.tech.kakao.map.View.Adapter
 
-import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,10 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.Model.Place
 import campus.tech.kakao.map.R
-import campus.tech.kakao.map.Util.PlaceCategory
 
 class SearchResultAdapter(
-    private val places: List<Place>,
+    var places: List<Place>,
     private val inflater : LayoutInflater
 ): RecyclerView.Adapter<SearchResultAdapter.ViewHolder>(){
 
@@ -43,5 +40,10 @@ class SearchResultAdapter(
 
     override fun getItemCount(): Int {
         return places.size
+    }
+
+    fun updateData(placeList : List<Place>){
+        places = placeList
+        notifyDataSetChanged()
     }
 }
