@@ -4,18 +4,30 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class DataDbHelper(context: Context) : SQLiteOpenHelper(context, "data.db", null, 1) {
+class DataDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+
+    companion object {
+        private const val DATABASE_NAME = "data.db"
+        private const val DATABASE_VERSION = 1
+        private const val TABLE_NAME = "LOCATION"
+    }
+
     override fun onCreate(db: SQLiteDatabase?) {
-        val sql: String = "CREATE TABLE if not exists locations(" +
-                "name String," +
-                "location String," +
-                "category String);"
+        val sql = """
+            CREATE TABLE IF NOT EXISTS $TABLE_NAME (
+                name TEXT,
+                location TEXT,
+                category TEXT
+            );
+        """.trimIndent()
         db?.execSQL(sql)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        val sql: String = "DROP TABLE if exists locations"
-        db?.execSQL(sql)
+        db?.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
         onCreate(db)
+    }
+    fun openDatabases() {
+        writableDatabase
     }
 }
