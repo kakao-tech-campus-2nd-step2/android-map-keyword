@@ -3,16 +3,23 @@ package campus.tech.kakao.map
 import android.content.ContentValues
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var db: DataDbHelper
+    private lateinit var recyclerView: RecyclerView
+    private var locationList = ArrayList<LocationData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
- 
+
         createQuery()
+        initialize()
+        setRecyclerView()
     }
 
     private fun createQuery() {
@@ -68,6 +75,15 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Log.e("MainActivity", "Database error: ${e.message}", e)
         }
+    }
+
+    private fun initialize() {
+
+    }
+
+    private fun setRecyclerView() {
+        recyclerView.adapter = LocationAdapter(locationList, LayoutInflater.from(this))
+        recyclerView.layoutManager = LinearLayoutManager(this)
     }
 
     override fun onDestroy() {
