@@ -23,7 +23,7 @@
         app:layout_constraintBottom_toTopOf="@id/address"
         android:text="카페1"
         android:textSize="30sp" />
-    
+
     <TextView
         android:id="@+id/address"
         android:layout_width="wrap_content"
