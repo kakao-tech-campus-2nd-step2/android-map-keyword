@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         val mapList = findViewById<RecyclerView>(R.id.mapList)
         val mapItemList = mutableListOf<MapItem>()
         for (i in 0..20) {
-            mapItemList.add(MapItem("카페" + i, "복현동" + i, "카페"))
+            mapItemList.add(MapItem("카페" + i, "서울 성동구 성수동" + i, "카페"))
         }
 
         val selectList = findViewById<RecyclerView>(R.id.selectList)
