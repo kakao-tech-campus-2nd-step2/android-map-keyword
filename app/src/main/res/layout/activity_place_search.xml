@@ -33,7 +33,6 @@
         android:text="@string/search_result_empty"
         android:textSize="@dimen/normal_100"
         android:textColor="@color/grey"
-        android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
