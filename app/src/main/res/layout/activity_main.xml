@@ -25,6 +25,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+        android:id="@+id/cancelBtn"
         android:layout_width="30dp"
         android:layout_height="30dp"
         app:layout_constraintEnd_toEndOf="@id/inputText"
@@ -35,6 +36,7 @@
         />
 
     <TextView
+        android:id="@+id/resultView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="검색 결과가 없습니다."

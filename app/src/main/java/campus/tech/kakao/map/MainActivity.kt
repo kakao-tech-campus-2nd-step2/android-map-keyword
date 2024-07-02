@@ -4,6 +4,9 @@ import android.content.ContentValues
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -11,6 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 class MainActivity : AppCompatActivity() {
     private lateinit var db: DataDbHelper
     private lateinit var recyclerView: RecyclerView
+    private lateinit var inputText: EditText
+    private lateinit var cancelBtn: Button
+    private lateinit var resultView: TextView
     private var locationList = ArrayList<LocationData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,12 +84,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initialize() {
-
+        recyclerView = findViewById(R.id.recyclerView)
+        inputText = findViewById(R.id.inputText)
+        cancelBtn = findViewById(R.id.cancelBtn)
+        resultView = findViewById(R.id.resultView)
     }
 
     private fun setRecyclerView() {
         recyclerView.adapter = LocationAdapter(locationList, LayoutInflater.from(this))
         recyclerView.layoutManager = LinearLayoutManager(this)
+        Log.d("recyclerView", "recyclerView Adapter")
     }
 
     override fun onDestroy() {
