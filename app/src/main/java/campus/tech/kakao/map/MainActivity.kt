@@ -26,22 +26,23 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+    fun insertData(dbHelper: SQLiteDb){
+        for (i in 1..10) {
+            val name = "카페 $i"
+            val address = "서울 성동구 성수동 $i"
+            val category = "카페"
+
+            dbHelper.insertData(name, address, category)
+
+
+        }
+        for (i in 1..10) {
+            val name = "약국 $i"
+            val address = "서울 강남구 대치동 $i"
+            val category = "약국"
+
+            dbHelper.insertData(name, address, category)
+        }
     }
-fun insertData(dbHelper: SQLiteDb){
-    for (i in 1..10) {
-        val name = "카페 $i"
-        val address = "서울 성동구 성수동 $i"
-        val category = "카페"
-
-        dbHelper.insertData(name, address, category)
-
-
     }
-    for (i in 1..10) {
-        val name = "약국 $i"
-        val address = "서울 강남구 대치동 $i"
-        val category = "약국"
 
-        dbHelper.insertData(name, address, category)
-    }
-}
