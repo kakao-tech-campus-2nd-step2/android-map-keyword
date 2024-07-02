@@ -9,21 +9,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SearchResultRepository(context: Context) {
-    private val searchResult: MutableLiveData<List<SearchResult>> = MutableLiveData(listOf())
+    val searchResult: MutableLiveData<List<SearchResult>> = MutableLiveData(listOf())
     private lateinit var searchDb: SearchDbHelper
 
     init {
         searchDb = SearchDbHelper(context)
     }
 
-    fun observe(owner: LifecycleOwner, observer: Observer<List<SearchResult>>) {
-        searchResult.observe(owner, observer)
-    }
-
     fun search(text: String) {
         CoroutineScope(Dispatchers.IO).launch {
             val result = searchDb.queryName(text)
-            searchResult.value = result
+            searchResult.postValue(result)
         }
     }
 
@@ -31,10 +27,10 @@ class SearchResultRepository(context: Context) {
         private var instance: SearchResultRepository? = null
 
         fun getInstance(context: Context): SearchResultRepository {
-            if (SearchResultRepository.instance == null) {
-                SearchResultRepository.instance = SearchResultRepository(context)
+            if (instance == null) {
+                instance = SearchResultRepository(context)
             }
-            return SearchResultRepository.instance!!
+            return instance!!
         }
     }
 }
