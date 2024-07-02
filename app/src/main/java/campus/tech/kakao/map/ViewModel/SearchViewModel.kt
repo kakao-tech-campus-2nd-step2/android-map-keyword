@@ -6,8 +6,8 @@ import campus.tech.kakao.map.Model.Place
 import campus.tech.kakao.map.Repository.PlaceRepository
 
 class SearchViewModel(private val repository: PlaceRepository) : ViewModel() {
-    fun getAllPlace() {
-        val places = repository.getAllPlace()
+    fun getAllPlace() : List<Place>{
+        return repository.getAllPlace()
     }
 
     fun deletePlace(name : String){
