@@ -11,15 +11,23 @@
         android:id="@+id/etSearchPlace"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/normal_100"
+        android:layout_marginStart="@dimen/normal_100"
+        android:layout_marginEnd="32dp"
         android:layout_marginTop="@dimen/normal_100"
         android:hint="@string/et_search_hint"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:drawableEnd="@drawable/delete_btn_bg"
         />
 
+    <ImageView
+        android:id="@+id/deleteSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/delete_btn_bg"
+        app:layout_constraintLeft_toRightOf="@id/etSearchPlace"
+        app:layout_constraintBottom_toBottomOf="@+id/etSearchPlace"
+        app:layout_constraintTop_toTopOf="@id/etSearchPlace"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchResult"
         android:layout_width="match_parent"

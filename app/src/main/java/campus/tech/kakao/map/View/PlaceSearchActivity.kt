@@ -3,6 +3,7 @@ package campus.tech.kakao.map.View
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout.VERTICAL
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +27,7 @@ class PlaceSearchActivity : AppCompatActivity() {
     private lateinit var searchResult: RecyclerView
     private lateinit var noItem : TextView
     private lateinit var etSearchPlace : EditText
+    private lateinit var deleteSearch : ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,9 +42,17 @@ class PlaceSearchActivity : AppCompatActivity() {
         searchResult = findViewById<RecyclerView>(R.id.searchResult)
         etSearchPlace = findViewById<EditText>(R.id.etSearchPlace)
         noItem = findViewById<TextView>(R.id.noItem)
+        deleteSearch = findViewById<ImageView>(R.id.deleteSearch)
 
         settingRecyclerView()
+        setDeleteSearchListener()
         setEditTextListener()
+    }
+
+    private fun setDeleteSearchListener(){
+        deleteSearch.setOnClickListener {
+            etSearchPlace.setText("")
+        }
     }
 
     private fun setEditTextListener(){
