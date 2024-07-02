@@ -11,7 +11,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+ 
+        createQuery()
+    }
 
+    private fun createQuery() {
         db = DataDbHelper(context = this)
 
         try {
@@ -64,7 +68,6 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Log.e("MainActivity", "Database error: ${e.message}", e)
         }
-        // 데이터베이스를 열어둔 상태로 유지
     }
 
     override fun onDestroy() {
