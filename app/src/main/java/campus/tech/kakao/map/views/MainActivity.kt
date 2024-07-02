@@ -44,17 +44,4 @@ class MainActivity : AppCompatActivity() {
             searchViewModel.search(it.toString())
         }
     }
-
-    private fun getDataFromDb() {
-        val data = SearchDbHelper.getInstance(applicationContext).queryAll()
-        printDebugLog(data)
-    }
-
-    private fun printDebugLog(searchResults: List<SearchResult>) {
-        val stringBuilder: StringBuilder = StringBuilder()
-        for ((i, data) in searchResults.withIndex()) {
-            stringBuilder.appendLine("[$i] name: ${data.name}, address: ${data.address}, type: ${data.type}")
-        }
-        Log.d("KSC", stringBuilder.toString())
-    }
 }
