@@ -18,6 +18,8 @@ class MainActivity : AppCompatActivity() {
             Log.d("MainActivity", "Opening database")
             val writeDB = db.writableDatabase
 
+            writeDB.execSQL("DELETE FROM LOCATION") //시작하기 전 이 쿼리문을 추가한다.
+
             Log.d("MainActivity", "Inserting data")
             for (i in 1..10) {
                 val values = ContentValues().apply {
@@ -27,6 +29,15 @@ class MainActivity : AppCompatActivity() {
                 }
                 writeDB.insert("LOCATION", null, values)
             }
+            for (i in 1..10) {
+                val values = ContentValues().apply {
+                    put("name", "약국$i")
+                    put("location", "전주 완산구 효자동$i")
+                    put("category", "약국")
+                }
+                writeDB.insert("LOCATION", null, values)
+            }
+
 
             Log.d("MainActivity", "Reading data")
             val readDB = db.readableDatabase
