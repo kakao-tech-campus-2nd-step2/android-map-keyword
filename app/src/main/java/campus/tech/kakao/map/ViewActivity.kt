@@ -19,16 +19,7 @@ class ViewActivity : AppCompatActivity() {
         })
 
         test2()
-
-
-
-        /*val dummy: List<Location> = listOf(
-            Location("카페 a", "부산시 해운대구", "카페"),
-            Location("카페 b", "부산시 해운대구", "카페" ),
-            Location("카페 c", "부산시 해운대구", "카페" )
-        )
-        val listView = findViewById<ListView>(R.id.listLocation)
-        listView.adapter = LocationListviewAdapter(dummy)*/
+        
     }
 
     private fun test1(){
