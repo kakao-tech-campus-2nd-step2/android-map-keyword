@@ -2,7 +2,6 @@ package campus.tech.kakao.map.models
 
 class InitialDataset {
     companion object{
-
         val initialData:List<SearchResult> = listOf(
             SearchResult("카페1", "대구 달서구 복현동 1", "카페"),
             SearchResult("카페2", "대구 달서구 복현동 2", "카페"),
