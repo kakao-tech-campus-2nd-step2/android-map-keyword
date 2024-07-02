@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -26,6 +27,14 @@ class MainActivity : AppCompatActivity() {
         createQuery()
         initialize()
         setRecyclerView()
+
+        for (i in 1..10) {
+            locationList.add(LocationData("카페$i", "전주$i", "커피"))
+        }
+
+        recyclerView.adapter = LocationAdapter(locationList, LayoutInflater.from(this))
+        isShowText()
+
     }
 
     private fun createQuery() {
@@ -94,6 +103,15 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = LocationAdapter(locationList, LayoutInflater.from(this))
         recyclerView.layoutManager = LinearLayoutManager(this)
         Log.d("recyclerView", "recyclerView Adapter")
+    }
+
+    private fun isShowText() {
+        if (locationList.isEmpty()) {
+            resultView.visibility = View.VISIBLE
+        }
+        else {
+            resultView.visibility = View.GONE
+        }
     }
 
     override fun onDestroy() {
