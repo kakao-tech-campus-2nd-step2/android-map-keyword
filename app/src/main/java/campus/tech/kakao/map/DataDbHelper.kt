@@ -15,7 +15,7 @@ class DataDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
     override fun onCreate(db: SQLiteDatabase?) {
         val sql = """
             CREATE TABLE IF NOT EXISTS $TABLE_NAME (
-                name TEXT,
+                name TEXT PRIMARY KEY,
                 location TEXT,
                 category TEXT
             );
@@ -26,8 +26,5 @@ class DataDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
         onCreate(db)
-    }
-    fun openDatabases() {
-        writableDatabase
     }
 }
