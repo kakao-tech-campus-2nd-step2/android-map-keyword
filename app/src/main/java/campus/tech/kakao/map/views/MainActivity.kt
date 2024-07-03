@@ -16,18 +16,22 @@ import campus.tech.kakao.map.models.SearchResultRepository
 import campus.tech.kakao.map.view_models.SearchActivityViewModel
 
 class MainActivity : AppCompatActivity() {
-    lateinit var searchResultFragmentContainer: FragmentContainerView
-    lateinit var searchInput: EditText
-    lateinit var savedWordBar: View
-    val searchViewModel: SearchActivityViewModel by viewModels()
+    private lateinit var searchResultFragmentContainer: FragmentContainerView
+    private lateinit var searchInput: EditText
+    private lateinit var savedWordBar: View
+    private val searchViewModel: SearchActivityViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initiateViews()
-        searchViewModel.searchResult.observe(this) { Log.d("KSC", it.toString()) }
+        initiateLiveDataObservation()
         initiateSearchView()
+    }
+
+    private fun initiateLiveDataObservation(){
+        searchViewModel.keywords.observe(this) {Log.d("KSC", it.toString())}
     }
 
     private fun initiateViews() {
