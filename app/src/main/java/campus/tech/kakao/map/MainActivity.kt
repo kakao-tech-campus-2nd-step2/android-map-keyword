@@ -2,6 +2,8 @@ package campus.tech.kakao.map
 
 import android.content.ContentValues
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -27,14 +30,7 @@ class MainActivity : AppCompatActivity() {
         createQuery()
         initialize()
         setRecyclerView()
-
-        for (i in 1..10) {
-            locationList.add(LocationData("카페$i", "전주$i", "커피"))
-        }
-
-        recyclerView.adapter = LocationAdapter(locationList, LayoutInflater.from(this))
-        isShowText()
-
+        setSearchListener()
     }
 
     private fun createQuery() {
@@ -49,15 +45,15 @@ class MainActivity : AppCompatActivity() {
             Log.d("MainActivity", "Inserting data")
             for (i in 1..10) {
                 val values = ContentValues().apply {
-                    put("name", "카페$i")
+                    put("name", "cafe$i")
                     put("location", "광주 북구 용봉동$i")
-                    put("category", "카페")
+                    put("category", "coffee")
                 }
                 writeDB.insert("LOCATION", null, values)
             }
             for (i in 1..10) {
                 val values = ContentValues().apply {
-                    put("name", "약국$i")
+                    put("name", "pharmacy$i")
                     put("location", "전주 완산구 효자동$i")
                     put("category", "약국")
                 }
@@ -104,6 +100,50 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         Log.d("recyclerView", "recyclerView Adapter")
     }
+
+    private fun setSearchListener() {
+        inputText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                searchLocations(s.toString())
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+
+            override fun afterTextChanged(s: Editable?) { }
+        })
+    }
+
+    private fun searchLocations(key: String) {
+        val readDB = db.readableDatabase
+        locationList.clear()
+
+        val cursor = readDB.query(
+            "LOCATION",
+            null,
+            "name LIKE ? OR location LIKE ? OR category LIKE ?",
+            arrayOf("%$key%", "%$key%", "%$key%"),
+            null,
+            null,
+            null
+        )
+
+        cursor.use { cur ->
+            while (cur.moveToNext()) {
+                val name = cur.getString(cur.getColumnIndexOrThrow("name"))
+                val location = cur.getString(cur.getColumnIndexOrThrow("location"))
+                val category = cur.getString(cur.getColumnIndexOrThrow("category"))
+                locationList.add(LocationData(name, location, category))
+            }
+        }
+
+        updateRecyclerView()
+        isShowText()
+    }
+
+    private fun updateRecyclerView() {
+        (recyclerView.adapter as LocationAdapter).notifyDataSetChanged()
+    }
+
 
     private fun isShowText() {
         if (locationList.isEmpty()) {
