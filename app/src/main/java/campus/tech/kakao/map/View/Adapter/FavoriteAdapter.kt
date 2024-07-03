@@ -27,16 +27,17 @@ class FavoriteAdapter(
         init {
             placeName = itemView.findViewById<TextView>(R.id.favoriteName)
             deleteFavorite = itemView.findViewById<ImageView>(R.id.deleteFavorite)
+
+            deleteFavorite.setOnClickListener {
+                onClickDelete.invoke(placeName?.text.toString())
+                notifyDataSetChanged()
+            }
         }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val favorite = favorites[position]
         holder.placeName.text = favorite.name
-        holder.deleteFavorite.setOnClickListener {
-            onClickDelete.invoke(holder.placeName?.text.toString())
-            notifyDataSetChanged()
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
