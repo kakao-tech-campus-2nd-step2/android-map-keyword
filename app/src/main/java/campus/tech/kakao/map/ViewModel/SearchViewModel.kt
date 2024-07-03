@@ -7,19 +7,20 @@ import campus.tech.kakao.map.Model.Place
 import campus.tech.kakao.map.Repository.PlaceRepository
 
 class SearchViewModel(private val repository: PlaceRepository) : ViewModel() {
-    val currentResult : MutableLiveData<List<Place>> = MutableLiveData()
-    val favoritePlace : MutableLiveData<MutableList<Place>> = MutableLiveData()
+    val currentResult: MutableLiveData<List<Place>> = MutableLiveData()
+    val favoritePlace: MutableLiveData<MutableList<Place>> = MutableLiveData()
 
-    init{
+    init {
         favoritePlace.value = repository.getCurrentFavorite()
+        currentResult.value = listOf<Place>()
     }
 
-    fun searchPlace(string : String) {
-        currentResult.value = if(string.isEmpty()) listOf<Place>()
-            else repository.getSimilarPlacesByName(string)
+    fun searchPlace(string: String) {
+        currentResult.value = if (string.isEmpty()) listOf<Place>()
+        else repository.getSimilarPlacesByName(string)
     }
 
-    fun addFavorite(name : String) {
+    fun addFavorite(name: String) {
         val place = repository.addFavorite(name)
         if (favoritePlace.value == null) {
             favoritePlace.value = mutableListOf<Place>(place)
@@ -32,7 +33,7 @@ class SearchViewModel(private val repository: PlaceRepository) : ViewModel() {
         }
     }
 
-    fun deleteFromFavorite(name: String){
+    fun deleteFromFavorite(name: String) {
         val place = favoritePlace.value?.find { it.name == name }
         favoritePlace.value?.remove(place)
         repository.deleteFavorite(name)
@@ -42,7 +43,7 @@ class SearchViewModel(private val repository: PlaceRepository) : ViewModel() {
         return repository.getCurrentFavorite()
     }
 
-    private fun isPlaceInFavorite(name: String) : Boolean {
+    private fun isPlaceInFavorite(name: String): Boolean {
         return (favoritePlace.value?.find { it.name == name }) != null
     }
 
