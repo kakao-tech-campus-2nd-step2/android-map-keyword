@@ -9,15 +9,18 @@ import campus.tech.kakao.map.R
 
 class SearchKeywordAdapter(
     private val inflater: LayoutInflater,
-    val onItemClicked: ((item: String) -> Unit)
+    val onItemClicked: ((item: String) -> Unit),
+    val onItemDeleteButtonClicked: ((item: String) -> Unit)
 ) : RecyclerView.Adapter<SearchKeywordAdapter.SearchKeywordViewHolder>() {
     private var items: List<String> = listOf()
 
     class SearchKeywordViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var nameText: TextView
+        val deleteText: View
 
         init {
             nameText = itemView.findViewById(R.id.text_search_keyword)
+            deleteText = itemView.findViewById(R.id.view_delete_keyword)
         }
     }
 
@@ -26,6 +29,9 @@ class SearchKeywordAdapter(
         val holder = SearchKeywordViewHolder(view)
         view.setOnClickListener {
             onItemClicked(holder.nameText.text.toString())
+        }
+        holder.deleteText.setOnClickListener {
+            onItemDeleteButtonClicked(holder.nameText.text.toString())
         }
         return holder
     }

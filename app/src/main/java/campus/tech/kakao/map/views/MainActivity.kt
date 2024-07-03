@@ -43,9 +43,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initiateSaveKeywordRecyclerView() {
-        val adapter = SearchKeywordAdapter(LayoutInflater.from(this)) {
-            searchInput.setText(it)
-        }
+        val adapter = SearchKeywordAdapter(LayoutInflater.from(this), {
+            searchInput.setText(
+                it
+            )
+        }, {
+            searchViewModel.deleteKeyword(it)
+        })
         savedKeywordListView = findViewById(R.id.saved_search_bar)
         savedKeywordListView.adapter = adapter
         savedKeywordListView.layoutManager =
