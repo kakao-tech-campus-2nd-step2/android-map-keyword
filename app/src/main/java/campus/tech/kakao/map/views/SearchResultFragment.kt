@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.R
@@ -34,19 +36,29 @@ class SearchResultFragment : Fragment() {
 
     private fun initiateRecyclerView(view: View) {
         searchResultRecyclerView = view.findViewById(R.id.list_search_result)
-
         searchResultRecyclerView.adapter =
             SearchResultAdapter(LayoutInflater.from(activity)) { item: SearchResult, _: Int ->
                 viewModel.clickSearchResultItem(item)
             }
         searchResultRecyclerView.layoutManager =
             LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        searchResultRecyclerView.addItemDecoration(
+            DividerItemDecoration(
+                activity,
+                DividerItemDecoration.VERTICAL
+            )
+        )
     }
 
     private fun initiateSearchResultLiveDataObservation() {
         viewModel.searchResult.observe(viewLifecycleOwner) {
             (searchResultRecyclerView.adapter as? SearchResultAdapter)?.updateResult(it)
+            setNoResultHelpTextActive(it.isEmpty())
         }
+    }
+
+    private fun setNoResultHelpTextActive(active: Boolean){
+        noResultHelpText.isVisible = active
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
