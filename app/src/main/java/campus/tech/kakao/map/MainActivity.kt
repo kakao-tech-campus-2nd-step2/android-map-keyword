@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -18,36 +19,19 @@ class MainActivity : AppCompatActivity() {
 
         searchEditText = findViewById(R.id.edit_search)
         recyclerView = findViewById(R.id.recyclerView)
-
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        val dbHelper = DatabaseHelper.getInstance(this)
-        val db = dbHelper.writableDatabase
+        initializeDatabase()
+    }
 
-        db.execSQL("CREATE TABLE IF NOT EXISTS ${DatabaseHelper.TABLE_NAME} (" +
-                "${DatabaseHelper.COLUMN_ID} INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "${DatabaseHelper.COLUMN_NAME} TEXT, " +
-                "${DatabaseHelper.COLUMN_ADDRESS} TEXT)")
-
-        for (i in 1..10) {
-            val insertData =
-                "INSERT INTO ${DatabaseHelper.TABLE_NAME} (${DatabaseHelper.COLUMN_NAME}, ${DatabaseHelper.COLUMN_ADDRESS}) VALUES ('cafe$i', '대전 유성구 봉명동 $i')"
-            Log.d("database", "찍힘1")
-            db.execSQL(insertData)
+    private fun initializeDatabase() {
+        val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val isFirstRun = prefs.getBoolean("isFirstRun", true)
+        if (isFirstRun) {
+            val repository = Repository(this)
+            repository.populateInitialData()
+            prefs.edit().putBoolean("isFirstRun", false).apply()
         }
-
-        for (i in 1..10) {
-            val insertData =
-                "INSERT INTO ${DatabaseHelper.TABLE_NAME} (${DatabaseHelper.COLUMN_NAME}, ${DatabaseHelper.COLUMN_ADDRESS}) VALUES ('cinema$i', '대전 유성구 봉명동 $i')"
-            Log.d("database", "찍힘2")
-            db.execSQL(insertData)
-        }
-
-        for (i in 1..10) {
-            val insertData =
-                "INSERT INTO ${DatabaseHelper.TABLE_NAME} (${DatabaseHelper.COLUMN_NAME}, ${DatabaseHelper.COLUMN_ADDRESS}) VALUES ('pharmacy$i', '대전 유성구 봉명동 $i')"
-            Log.d("database", "찍힘2")
-            db.execSQL(insertData)
-        }
+        Repository(this).printAllData()
     }
 }
