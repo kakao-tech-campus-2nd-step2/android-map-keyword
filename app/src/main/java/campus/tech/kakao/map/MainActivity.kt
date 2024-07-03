@@ -15,6 +15,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var noResultTextView: TextView
     private lateinit var adapter: PlacesAdapter
     private lateinit var databaseHelper: SQLiteDb
+    private lateinit var historyRecyclerView: RecyclerView
+    private lateinit var historyAdapter: HistoryAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,16 +25,30 @@ class MainActivity : AppCompatActivity() {
         searchView = findViewById(R.id.searchView)
         recyclerView = findViewById(R.id.recyclerView)
         noResultTextView = findViewById(R.id.noResultTextView)
+        historyRecyclerView = findViewById(R.id.historyRecyclerView)
 
         databaseHelper = SQLiteDb(this)
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = PlacesAdapter(listOf()) { name ->
             databaseHelper.insertIntoSelectedData(name)
+            updateHistory()
         }
         recyclerView.adapter = adapter
+        historyRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        historyAdapter = HistoryAdapter(databaseHelper.getAllSelectedData()) { name ->
+            val deletedRows = databaseHelper.deleteFromSelectedData(name)
+            if (deletedRows > 0) {
+                updateHistory()
+            } else {
+            }
+        }
+        historyRecyclerView.adapter = historyAdapter
 
-        showNoResultMessage()
+        setupSearchView()
+        checkRun()
+    }
 
+    private fun setupSearchView() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
@@ -47,11 +63,9 @@ class MainActivity : AppCompatActivity() {
                         searchPlaces(it)
                     }
                 }
-                return false
+                return true
             }
         })
-
-        checkRun()
     }
 
     private fun checkRun() {
@@ -100,5 +114,10 @@ class MainActivity : AppCompatActivity() {
     private fun hideNoResultMessage() {
         noResultTextView.visibility = View.GONE
         recyclerView.visibility = View.VISIBLE
+    }
+
+    private fun updateHistory() {
+        val history = databaseHelper.getAllSelectedData()
+        historyAdapter.updateData(history)
     }
 }

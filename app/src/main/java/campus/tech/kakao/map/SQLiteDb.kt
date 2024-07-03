@@ -3,6 +3,7 @@ package campus.tech.kakao.map
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import campus.tech.kakao.map.SQLiteHelper.Companion.COL_ID_2
 
 class SQLiteDb(context: Context) {
     private val dbHelper: SQLiteHelper = SQLiteHelper.getInstance(context)
@@ -73,5 +74,36 @@ class SQLiteDb(context: Context) {
             put(SQLiteHelper.COL_NAME_2, name)
         }
         return database.insert(SQLiteHelper.TABLE_NAME_2, null, values)
+    }
+
+    fun getAllSelectedData(): List<String> {
+        val selectedData = mutableListOf<String>()
+        val cursor = database.query(
+            SQLiteHelper.TABLE_NAME_2,
+            arrayOf(SQLiteHelper.COL_NAME_2),
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+
+        if (cursor.moveToFirst()) {
+            do {
+                val name = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.COL_NAME_2))
+                selectedData.add(name)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+
+        return selectedData.reversed()
+    }
+
+    fun deleteFromSelectedData(id: String): Int {
+        return database.delete(
+            SQLiteHelper.TABLE_NAME_2,
+            "$COL_ID_2 = ?",
+            arrayOf(id.toString())
+        )
     }
 }
