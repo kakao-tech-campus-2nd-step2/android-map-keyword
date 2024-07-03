@@ -85,6 +85,11 @@ class SearchDbHelper(context: Context) :
         db.delete(SearchResultContract.TABLE_NAME, "${BaseColumns._ID} = ?", arrayOf(id))
     }
 
+    fun deleteKeyword(keyword: String){
+        val db = writableDatabase
+        db.delete(SearchKeywordContract.TABLE_NAME, "${SearchKeywordContract.COLUMN_KEYWORD} = ?", arrayOf(keyword))
+    }
+
     private fun getAllSearchResultFromCursor(cursor: Cursor?): List<SearchResult> {
         val result = mutableListOf<SearchResult>()
 
