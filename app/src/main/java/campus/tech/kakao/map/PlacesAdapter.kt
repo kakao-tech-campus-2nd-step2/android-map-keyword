@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class PlacesAdapter(private var places: List<Place>) : RecyclerView.Adapter<PlacesAdapter.PlaceViewHolder>() {
+class PlacesAdapter(private var places: List<Place>, private val onItemClick: (String) -> Unit) : RecyclerView.Adapter<PlacesAdapter.PlaceViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_place, parent, false)
@@ -18,6 +18,8 @@ class PlacesAdapter(private var places: List<Place>) : RecyclerView.Adapter<Plac
         holder.nameTextView.text = place.name
         holder.addressTextView.text = place.address
         holder.categoryTextView.text = place.category
+
+        holder.itemView.setOnClickListener {onItemClick(place.name)}
     }
 
     override fun getItemCount(): Int {

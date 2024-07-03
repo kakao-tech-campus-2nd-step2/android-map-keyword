@@ -9,11 +9,16 @@ class SQLiteHelper private constructor(context: Context) : SQLiteOpenHelper(cont
     companion object {
         const val DATABASE_NAME = "SearchData.db"
         const val DATABASE_VERSION = 1
+
         const val TABLE_NAME = "Data"
         const val COL_ID = "id"
         const val COL_NAME = "name"
         const val COL_ADDRESS = "address"
         const val COL_CATEGORY = "category"
+
+        const val TABLE_NAME_2 = "SelectedData"
+        const val COL_ID_2 = "id"
+        const val COL_NAME_2 = "name"
 
         private var instance: SQLiteHelper? = null
 
@@ -27,16 +32,26 @@ class SQLiteHelper private constructor(context: Context) : SQLiteOpenHelper(cont
     }
 
     override fun onCreate(db: SQLiteDatabase) {
+        createTables(db)
+    }
+
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME_2")
+        createTables(db)
+    }
+
+    private fun createTables(db: SQLiteDatabase) {
         val createTable = "CREATE TABLE $TABLE_NAME (" +
                 "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "$COL_NAME TEXT, " +
                 "$COL_ADDRESS TEXT, " +
                 "$COL_CATEGORY TEXT)"
         db.execSQL(createTable)
-    }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
-        onCreate(db)
+        val createTable2 = "CREATE TABLE $TABLE_NAME_2 (" +
+                "$COL_ID_2 INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "$COL_NAME_2 TEXT)"
+        db.execSQL(createTable2)
     }
 }

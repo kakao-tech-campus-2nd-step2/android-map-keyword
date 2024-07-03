@@ -26,7 +26,9 @@ class MainActivity : AppCompatActivity() {
 
         databaseHelper = SQLiteDb(this)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = PlacesAdapter(listOf())
+        adapter = PlacesAdapter(listOf()) { name ->
+            databaseHelper.insertIntoSelectedData(name)
+        }
         recyclerView.adapter = adapter
 
         showNoResultMessage()

@@ -2,7 +2,6 @@ package campus.tech.kakao.map
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 
 class SQLiteDb(context: Context) {
@@ -63,10 +62,16 @@ class SQLiteDb(context: Context) {
     }
 
     fun logAllData() {
-        val places = getAllData()
-        for (place in places) {
+        val cursor = getAllData()
+        for (place in cursor) {
             println("ID: ${place.id}, Name: ${place.name}, Address: ${place.address}, Category: ${place.category}")
         }
     }
-}
 
+    fun insertIntoSelectedData(name: String): Long {
+        val values = ContentValues().apply {
+            put(SQLiteHelper.COL_NAME_2, name)
+        }
+        return database.insert(SQLiteHelper.TABLE_NAME_2, null, values)
+    }
+}
