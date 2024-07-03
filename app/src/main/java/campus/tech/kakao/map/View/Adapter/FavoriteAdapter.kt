@@ -14,7 +14,7 @@ import campus.tech.kakao.map.R
 import campus.tech.kakao.map.ViewModel.SearchViewModel
 
 class FavoriteAdapter(
-    var favorites: MutableList<Place>,
+    private var favorites: List<Place>,
     private val inflater: LayoutInflater,
     val onClickDelete: (name: String) -> Unit
 ) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {

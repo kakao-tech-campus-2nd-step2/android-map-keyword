@@ -68,7 +68,7 @@ class PlaceSearchActivity : AppCompatActivity() {
 
     private fun setFavoriteAdapter() {
         val adapter = FavoriteAdapter(
-            viewModel.getCurrentFavorite(),
+            viewModel.favoritePlace.value?: listOf<Place>(),
             LayoutInflater.from(this),
             onClickDelete = {
                 viewModel.deleteFromFavorite(it)
