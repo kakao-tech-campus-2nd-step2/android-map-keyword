@@ -18,10 +18,6 @@ class SearchResultFragment : Fragment() {
     lateinit var noResultHelpText: View
     private val viewModel by activityViewModels<SearchActivityViewModel>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,17 +26,25 @@ class SearchResultFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_search_result, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun initiateRecyclerView(view: View){
         searchResultRecyclerView = view.findViewById(R.id.list_search_result)
-        noResultHelpText = view.findViewById(R.id.text_no_result)
 
         searchResultRecyclerView.adapter =
             SearchResultAdapter(LayoutInflater.from(activity))
         searchResultRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+    }
 
+    private fun initiateSearchResultLiveDataObservation(){
         viewModel.searchResult.observe(viewLifecycleOwner){
             (searchResultRecyclerView.adapter as? SearchResultAdapter)?.updateResult(it)
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        noResultHelpText = view.findViewById(R.id.text_no_result)
+
+        initiateRecyclerView(view)
+        initiateSearchResultLiveDataObservation()
     }
 }
