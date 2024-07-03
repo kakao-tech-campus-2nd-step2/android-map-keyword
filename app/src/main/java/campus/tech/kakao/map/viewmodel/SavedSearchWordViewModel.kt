@@ -20,10 +20,8 @@ class SavedSearchWordViewModel(application: Application) : AndroidViewModel(appl
     fun insertSearchWord(searchWord: SavedSearchWord) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                repository.insertSearchWord(searchWord)
-                val currentList = _savedSearchWords.value ?: emptyList()
-                val updatedList = currentList + searchWord
-                _savedSearchWords.postValue(updatedList)
+                repository.deleteAndInsertSearchWord(searchWord)
+                getAllSearchWords()
             }
         }
     }

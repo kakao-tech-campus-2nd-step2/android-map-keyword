@@ -34,8 +34,8 @@ class MainActivity : AppCompatActivity() {
 
         setRecyclerViews()
         setSearchResultRecyclerView()
-//        placeViewModel.clearAllPlaces()
-//        testDataInsert()
+        placeViewModel.clearAllPlaces()
+        testDataInsert()
 
         setClearImageViewClickListener()
         setSearchEditText()
@@ -145,6 +145,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    interface OnPlaceItemClickListener {
+        fun onPlaceItemClicked(place: Place)
+    }
+
     /**
      * 검색 결과를 표시하는 RecyclerView를 설정하는 함수.
      *
@@ -159,10 +163,6 @@ class MainActivity : AppCompatActivity() {
             }
         binding.searchResultRecyclerView.adapter = ResultRecyclerViewAdapter(placeItemClickListener)
         binding.searchResultRecyclerView.layoutManager = LinearLayoutManager(this)
-    }
-
-    interface OnPlaceItemClickListener {
-        fun onPlaceItemClicked(place: Place)
     }
 
     class ResultRecyclerViewAdapter(private val clickListener: OnPlaceItemClickListener) :

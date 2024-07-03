@@ -4,9 +4,11 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import campus.tech.kakao.map.model.SavedSearchWord
 
-class SavedSearchWordRepository(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class SavedSearchWordRepository(context: Context) :
+    SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL("CREATE TABLE $TABLE_NAME ($COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_NAME TEXT)")
     }
@@ -20,13 +22,22 @@ class SavedSearchWordRepository(context: Context) : SQLiteOpenHelper(context, DA
         onCreate(db)
     }
 
-    fun insertSearchWord(searchWord: SavedSearchWord) {
+    fun deleteAndInsertSearchWord(searchWord: SavedSearchWord) {
         val db = writableDatabase
-        val contentValues =
-            ContentValues().apply {
-                put(COLUMN_NAME, searchWord.name)
-            }
-        db.insert(TABLE_NAME, null, contentValues)
+        db.beginTransaction()
+        try {
+            db.delete(TABLE_NAME, "$COLUMN_NAME = ?", arrayOf(searchWord.name))
+            val contentValues =
+                ContentValues().apply {
+                    put(COLUMN_NAME, searchWord.name)
+                }
+            db.insert(TABLE_NAME, null, contentValues)
+            db.setTransactionSuccessful()
+        } catch (e: Exception) {
+            Log.e("dbError", "Error while delete and insert: ${e.message}")
+        } finally {
+            db.endTransaction()
+        }
     }
 
     fun getAllSearchWords(): List<SavedSearchWord> {
