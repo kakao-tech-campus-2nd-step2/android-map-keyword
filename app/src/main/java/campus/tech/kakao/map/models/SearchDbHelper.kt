@@ -28,6 +28,10 @@ class SearchDbHelper(context: Context) :
         if (oldVersion <= 1){
             db?.execSQL(SearchKeywordContract.CREATE_QUERY)
         }
+        if(oldVersion in 2..2){
+            db?.execSQL(SearchKeywordContract.DROP_QUERY)
+            db?.execSQL(SearchKeywordContract.CREATE_QUERY)
+        }
     }
 
     private fun insertInitialData(db: SQLiteDatabase) {
@@ -158,7 +162,7 @@ class SearchDbHelper(context: Context) :
 
     companion object {
         private var instance: SearchDbHelper? = null
-        const val DATABASE_VERSION = 2
+        const val DATABASE_VERSION = 3
         const val DATABASE_NAME = "MapSearch"
 
         fun getInstance(context: Context): SearchDbHelper {

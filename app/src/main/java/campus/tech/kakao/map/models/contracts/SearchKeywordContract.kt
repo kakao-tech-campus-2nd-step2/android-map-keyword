@@ -11,7 +11,8 @@ object SearchKeywordContract : BaseColumns {
 
     const val CREATE_QUERY = "CREATE TABLE IF NOT EXISTS $TABLE_NAME (" +
             "${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            "$COLUMN_KEYWORD TEXT)"
+            "$COLUMN_KEYWORD TEXT," +
+            "UNIQUE($COLUMN_KEYWORD))"
 
     const val DROP_QUERY = "DROP TABLE IF EXISTS $TABLE_NAME"
 }
