@@ -28,6 +28,17 @@ class SavedSearchWordViewModel(application: Application) : AndroidViewModel(appl
         }
     }
 
+    fun deleteSearchWord(searchWord: SavedSearchWord) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                repository.deleteSearchWord(searchWord)
+                val currentList = _savedSearchWords.value ?: emptyList()
+                val updatedList = currentList.filter { it != searchWord }
+                _savedSearchWords.postValue(updatedList)
+            }
+        }
+    }
+
     private fun getAllSearchWords() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {

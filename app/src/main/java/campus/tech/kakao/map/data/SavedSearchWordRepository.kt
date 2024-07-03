@@ -41,6 +41,11 @@ class SavedSearchWordRepository(context: Context) : SQLiteOpenHelper(context, DA
         return searchWords
     }
 
+    fun deleteSearchWord(searchWord: SavedSearchWord) {
+        val db = writableDatabase
+        db.delete(TABLE_NAME, "$COLUMN_NAME = ?", arrayOf(searchWord.name))
+    }
+
     companion object {
         const val DATABASE_NAME = "search_words.db"
         const val DATABASE_VERSION = 1

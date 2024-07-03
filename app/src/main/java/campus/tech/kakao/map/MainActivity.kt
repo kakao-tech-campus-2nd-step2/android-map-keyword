@@ -115,7 +115,6 @@ class MainActivity : AppCompatActivity() {
         observeSavedSearchWords()
     }
 
-
     /**
      * 검색 결과를 관찰하고, RecyclerView에 결과를 반영하는 함수.
      */
@@ -213,16 +212,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    interface OnSavedSearchWordClearImageViewClickListener {
+        fun onSavedSearchWordClearImageViewClicked(savedSearchWord: SavedSearchWord)
+    }
+
     /**
      * SavedSearchWordRecyclerView를 설정하는 함수.
+     *
+     * - `savedSearchWordClearImageViewClickListener` : clear 버튼을 누르면 해당 저장된 검색어가 사라지도록 하는 클릭리스너 interface 구현 객체
      */
     private fun setSavedSearchWordRecyclerView() {
-        binding.savedSearchWordRecyclerView.adapter = SavedSearchWordRecyclerViewAdapter()
+        val savedSearchWordClearImageViewClickListener =
+            object : OnSavedSearchWordClearImageViewClickListener {
+                override fun onSavedSearchWordClearImageViewClicked(savedSearchWord: SavedSearchWord) {
+                    savedSearchWordViewModel.deleteSearchWord(savedSearchWord)
+                }
+            }
+        binding.savedSearchWordRecyclerView.adapter =
+            SavedSearchWordRecyclerViewAdapter(savedSearchWordClearImageViewClickListener)
         binding.savedSearchWordRecyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
     }
 
-    class SavedSearchWordRecyclerViewAdapter :
+    class SavedSearchWordRecyclerViewAdapter(private val clickListener: OnSavedSearchWordClearImageViewClickListener) :
         RecyclerView.Adapter<SavedSearchWordRecyclerViewAdapter.SavedSearchWordViewHolder>() {
         private var savedSearchWordList: List<SavedSearchWord> = emptyList()
 
@@ -247,7 +259,7 @@ class MainActivity : AppCompatActivity() {
                     parent,
                     false,
                 )
-            return SavedSearchWordViewHolder(binding)
+            return SavedSearchWordViewHolder(binding, clickListener)
         }
 
         override fun getItemCount(): Int {
@@ -262,12 +274,18 @@ class MainActivity : AppCompatActivity() {
             holder.bind(savedSearchWord)
         }
 
-        class SavedSearchWordViewHolder(private val binding: ItemSavedSearchWordBinding) :
+        class SavedSearchWordViewHolder(
+            private val binding: ItemSavedSearchWordBinding,
+            private val clickListener: OnSavedSearchWordClearImageViewClickListener,
+        ) :
             RecyclerView.ViewHolder(binding.root) {
             fun bind(savedSearchWord: SavedSearchWord) {
                 binding.savedSearchWord = savedSearchWord
+
+                binding.savedSearchWordClearImageView.setOnClickListener {
+                    clickListener.onSavedSearchWordClearImageViewClicked(savedSearchWord)
+                }
             }
         }
     }
-
 }
