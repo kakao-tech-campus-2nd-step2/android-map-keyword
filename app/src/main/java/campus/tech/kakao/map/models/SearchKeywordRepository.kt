@@ -1,15 +1,18 @@
 package campus.tech.kakao.map.models
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SearchKeywordRepository(context: Context) {
-    val keywords: MutableLiveData<List<String>> = MutableLiveData(listOf())
-    private lateinit var searchDb: SearchDbHelper
+    private val _keywords: MutableLiveData<List<String>> = MutableLiveData(listOf())
+    val keywords: LiveData<List<String>>
+        get() = _keywords
 
+    private lateinit var searchDb: SearchDbHelper
     init {
         searchDb = SearchDbHelper(context)
     }
@@ -18,7 +21,7 @@ class SearchKeywordRepository(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             searchDb.insertOrReplaceKeyword(keyword)
             val newData = searchDb.queryAllSearchKeywords()
-            keywords.postValue(newData)
+            _keywords.postValue(newData)
         }
     }
 
@@ -26,14 +29,14 @@ class SearchKeywordRepository(context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             searchDb.deleteKeyword(keyword)
             val newData = searchDb.queryAllSearchKeywords()
-            keywords.postValue(newData)
+            _keywords.postValue(newData)
         }
     }
 
     fun getKeywords() {
         CoroutineScope(Dispatchers.IO).launch {
             val newData = searchDb.queryAllSearchKeywords()
-            keywords.postValue(newData)
+            _keywords.postValue(newData)
         }
     }
 

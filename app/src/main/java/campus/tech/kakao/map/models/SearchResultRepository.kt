@@ -1,13 +1,17 @@
 package campus.tech.kakao.map.models
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SearchResultRepository(context: Context) {
-    val searchResult: MutableLiveData<List<SearchResult>> = MutableLiveData(listOf())
+    private val _searchResult: MutableLiveData<List<SearchResult>> = MutableLiveData(listOf())
+    val searchResult: LiveData<List<SearchResult>>
+        get() = _searchResult
+
     private lateinit var searchDb: SearchDbHelper
 
     init {
@@ -17,7 +21,7 @@ class SearchResultRepository(context: Context) {
     fun search(text: String) {
         CoroutineScope(Dispatchers.IO).launch {
             val result = searchDb.querySearchResultsByName(text)
-            searchResult.postValue(result)
+            _searchResult.postValue(result)
         }
     }
 

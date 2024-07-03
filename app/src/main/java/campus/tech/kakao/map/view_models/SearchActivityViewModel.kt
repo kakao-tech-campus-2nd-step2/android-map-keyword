@@ -1,7 +1,6 @@
 package campus.tech.kakao.map.view_models
 
 import android.app.Application
-import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,12 +13,16 @@ class SearchActivityViewModel (application: Application): AndroidViewModel(appli
     private val searchResultRepository: SearchResultRepository = SearchResultRepository.getInstance(application)
     private val keywordRepository: SearchKeywordRepository = SearchKeywordRepository.getInstance(application)
 
-    val searchResult: MutableLiveData<List<SearchResult>> = searchResultRepository.searchResult
-    val keywords: MutableLiveData<List<String>> = keywordRepository.keywords
-    val searchText: MutableLiveData<String> = MutableLiveData("")
+    private val _searchText: MutableLiveData<String> = MutableLiveData("")
+
+    val searchResult: LiveData<List<SearchResult>>
+        get() = searchResultRepository.searchResult
+    val keywords: LiveData<List<String>>
+        get() = keywordRepository.keywords
+    val searchText: LiveData<String>
+        get() = _searchText
 
     init{
-        searchResultRepository.search("")
         keywordRepository.getKeywords()
     }
 
@@ -39,8 +42,7 @@ class SearchActivityViewModel (application: Application): AndroidViewModel(appli
         addKeyword(selectedItem.name)
     }
 
-    fun changeSearchInputValue(value: String){
-        searchText.value = value
+    fun submitQuery(value: String){
         search(value)
     }
 
@@ -49,7 +51,7 @@ class SearchActivityViewModel (application: Application): AndroidViewModel(appli
     }
 
     fun clickKeyword(keyword: String){
-        searchText.postValue(keyword)
+        _searchText.postValue(keyword)
         search(keyword)
     }
 }
