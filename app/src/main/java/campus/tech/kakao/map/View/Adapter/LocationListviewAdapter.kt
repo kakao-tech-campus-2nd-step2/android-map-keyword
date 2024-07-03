@@ -1,10 +1,12 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.View.Adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import campus.tech.kakao.map.Model.Location
+import campus.tech.kakao.map.R
 
 class LocationListviewAdapter(
     private val items: List<Location>

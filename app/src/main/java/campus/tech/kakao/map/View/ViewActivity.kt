@@ -1,10 +1,13 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.View
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import campus.tech.kakao.map.Model.Location
+import campus.tech.kakao.map.Model.Repository
+import campus.tech.kakao.map.R
+import campus.tech.kakao.map.ViewModel.LocationViewModel
 
 class ViewActivity : AppCompatActivity() {
     private lateinit var viewModel: LocationViewModel

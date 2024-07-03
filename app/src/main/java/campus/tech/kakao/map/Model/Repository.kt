@@ -1,9 +1,10 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.Model
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import campus.tech.kakao.map.LocationContract
 
 class Repository(context: Context):
     SQLiteOpenHelper(context, LocationContract.DATABASE_NAME, null, 1) {
@@ -31,13 +32,15 @@ class Repository(context: Context):
             put(LocationContract.COLUMN_LOCATION, location.location)
             put(LocationContract.COLUMN_TYPE, location.type)
         }
-        writableDatabase.update(LocationContract.TABLE_NAME, values,
+        writableDatabase.update(
+            LocationContract.TABLE_NAME, values,
             "${LocationContract.COLUMN_NAME} = ?", arrayOf(location.name)
         )
     }
 
     fun deleteData(name: String){
-        writableDatabase.delete(LocationContract.TABLE_NAME,
+        writableDatabase.delete(
+            LocationContract.TABLE_NAME,
             "${LocationContract.COLUMN_NAME} = ?", arrayOf(name) )
     }
 
