@@ -1,7 +1,6 @@
 package campus.tech.kakao.map.Repository
 
 import android.database.Cursor
-import android.util.Log
 import campus.tech.kakao.map.Model.Datasource.Local.SqliteDB
 import campus.tech.kakao.map.Model.Place
 import campus.tech.kakao.map.Util.CategoryUtil
@@ -33,7 +32,6 @@ class PlaceRepository(private val database: SqliteDB) {
     }
 
     fun addFavorite(name: String): Place {
-        Log.d("repo", "a")
         database.insertFavorite(name)
         return getPlaceByName(name)
     }
