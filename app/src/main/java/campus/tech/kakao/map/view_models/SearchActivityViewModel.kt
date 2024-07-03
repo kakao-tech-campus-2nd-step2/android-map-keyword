@@ -18,7 +18,6 @@ class SearchActivityViewModel (application: Application): AndroidViewModel(appli
 
     fun search(query: String){
         searchResultRepository.search(query)
-        addKeyword(query)
     }
 
     private fun addKeyword(keyword: String){
