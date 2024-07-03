@@ -1,11 +1,14 @@
 package campus.tech.kakao.map
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import campus.tech.kakao.map.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -46,6 +49,9 @@ class MainActivity : AppCompatActivity() {
         binding.buttonX.setOnClickListener {
             binding.inputSearch.text.clear()
         }
+
+        //RecyclerView 설정
+        binding.searchRecyclerView.layoutManager = LinearLayoutManager(this)
     }
 
     private fun insertInitialData(dbHelper: DbHelper) {
@@ -82,5 +88,9 @@ class MainActivity : AppCompatActivity() {
             results.add("Name: $name, Address: $address, Category: $category")
         }
         cursor.close()
+
+        //RecyclerView 어댑터 설정
+        binding.searchRecyclerView.adapter = SearchAdapter(results)
+        binding.searchRecyclerView.visibility = if (results.isEmpty()) View.GONE else View.VISIBLE
     }
 }
