@@ -12,6 +12,9 @@ class MapViewModel(mContext: Context) : ViewModel() {
         model.insertLocation(location)
     }
 
+    fun searchLocation(locName: String, isExactMatch: Boolean): List<Location> {
+        return model.searchLocation(locName, isExactMatch)
+    }
     fun getAllLocation(): List<Location> {
         return model.getAllLocation()
     }
