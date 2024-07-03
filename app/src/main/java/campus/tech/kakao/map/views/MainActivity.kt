@@ -14,15 +14,12 @@ import campus.tech.kakao.map.models.SearchDbHelper
 import campus.tech.kakao.map.models.SearchResult
 import campus.tech.kakao.map.models.SearchResultRepository
 import campus.tech.kakao.map.view_models.SearchActivityViewModel
-import campus.tech.kakao.map.view_models.SearchActivityViewModelFactory
 
 class MainActivity : AppCompatActivity() {
     lateinit var searchResultFragmentContainer: FragmentContainerView
     lateinit var searchInput: EditText
     lateinit var savedWordBar: View
-    val searchViewModel: SearchActivityViewModel by viewModels {
-        SearchActivityViewModelFactory((SearchResultRepository.getInstance(applicationContext)))
-    }
+    val searchViewModel: SearchActivityViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

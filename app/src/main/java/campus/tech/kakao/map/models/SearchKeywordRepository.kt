@@ -29,4 +29,14 @@ class SearchKeywordRepository (context: Context){
             keywords.postValue(newData)
         }
     }
+    companion object {
+        private var instance: SearchKeywordRepository? = null
+
+        fun getInstance(context: Context): SearchKeywordRepository {
+            if (instance == null) {
+                instance = SearchKeywordRepository(context)
+            }
+            return instance!!
+        }
+    }
 }
