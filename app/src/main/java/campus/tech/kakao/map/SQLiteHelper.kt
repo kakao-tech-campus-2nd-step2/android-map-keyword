@@ -15,7 +15,6 @@ class SQLiteHelper private constructor(context: Context) : SQLiteOpenHelper(cont
         const val COL_NAME = "name"
         const val COL_ADDRESS = "address"
         const val COL_CATEGORY = "category"
-
         const val TABLE_NAME_2 = "SelectedData"
         const val COL_ID_2 = "id"
         const val COL_NAME_2 = "name"
@@ -32,16 +31,6 @@ class SQLiteHelper private constructor(context: Context) : SQLiteOpenHelper(cont
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        createTables(db)
-    }
-
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME_2")
-        createTables(db)
-    }
-
-    private fun createTables(db: SQLiteDatabase) {
         val createTable = "CREATE TABLE $TABLE_NAME (" +
                 "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "$COL_NAME TEXT, " +
@@ -54,4 +43,12 @@ class SQLiteHelper private constructor(context: Context) : SQLiteOpenHelper(cont
                 "$COL_NAME_2 TEXT)"
         db.execSQL(createTable2)
     }
+
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME_2")
+        onCreate(db)
+    }
+
+
 }

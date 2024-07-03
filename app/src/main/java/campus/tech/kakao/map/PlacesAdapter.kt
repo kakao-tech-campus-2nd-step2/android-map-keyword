@@ -18,7 +18,6 @@ class PlacesAdapter(private var places: List<Place>, private val onItemClick: (S
         holder.nameTextView.text = place.name
         holder.addressTextView.text = place.address
         holder.categoryTextView.text = place.category
-
         holder.itemView.setOnClickListener {onItemClick(place.name)}
     }
 
