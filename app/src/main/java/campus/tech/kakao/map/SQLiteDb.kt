@@ -9,7 +9,7 @@ class SQLiteDb(context: Context) {
     private val dbHelper: SQLiteHelper = SQLiteHelper.getInstance(context)
     private val database: SQLiteDatabase = dbHelper.writableDatabase
 
-    fun insertData(name: String, address: String, category: String): Any {
+    fun insertData(name: String, address: String, category: String): Long {
         if (!isDataExists(name)) {
             val values = ContentValues().apply {
                 put(SQLiteHelper.COL_NAME, name)
@@ -18,7 +18,7 @@ class SQLiteDb(context: Context) {
             }
             return database.insert(SQLiteHelper.TABLE_NAME, null, values)
         }
-        return false
+        return -1
     }
 
     fun isDataExists(name: String): Boolean {
@@ -40,7 +40,7 @@ class SQLiteDb(context: Context) {
         val places = mutableListOf<Place>()
         val cursor = database.query(
             SQLiteHelper.TABLE_NAME,
-            arrayOf(SQLiteHelper.COL_NAME, SQLiteHelper.COL_ADDRESS, SQLiteHelper.COL_CATEGORY),
+            arrayOf(SQLiteHelper.COL_ID, SQLiteHelper.COL_NAME, SQLiteHelper.COL_ADDRESS, SQLiteHelper.COL_CATEGORY),
             null,
             null,
             null,
@@ -50,10 +50,11 @@ class SQLiteDb(context: Context) {
 
         if (cursor.moveToFirst()) {
             do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(SQLiteHelper.COL_ID))
                 val name = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.COL_NAME))
                 val address = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.COL_ADDRESS))
                 val category = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.COL_CATEGORY))
-                places.add(Place(name, address, category))
+                places.add(Place(id, name, address, category))
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -62,9 +63,10 @@ class SQLiteDb(context: Context) {
     }
 
     fun logAllData() {
-        val cursor = getAllData()
-        for (place in cursor) {
-            println("Name: ${place.name}, Address: ${place.address}, Category: ${place.category}")
+        val places = getAllData()
+        for (place in places) {
+            println("ID: ${place.id}, Name: ${place.name}, Address: ${place.address}, Category: ${place.category}")
         }
     }
 }
+

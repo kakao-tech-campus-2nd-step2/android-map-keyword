@@ -10,6 +10,7 @@ class SQLiteHelper private constructor(context: Context) : SQLiteOpenHelper(cont
         const val DATABASE_NAME = "SearchData.db"
         const val DATABASE_VERSION = 1
         const val TABLE_NAME = "Data"
+        const val COL_ID = "id"
         const val COL_NAME = "name"
         const val COL_ADDRESS = "address"
         const val COL_CATEGORY = "category"
@@ -27,7 +28,8 @@ class SQLiteHelper private constructor(context: Context) : SQLiteOpenHelper(cont
 
     override fun onCreate(db: SQLiteDatabase) {
         val createTable = "CREATE TABLE $TABLE_NAME (" +
-                "$COL_NAME TEXT PRIMARY KEY, " +
+                "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "$COL_NAME TEXT, " +
                 "$COL_ADDRESS TEXT, " +
                 "$COL_CATEGORY TEXT)"
         db.execSQL(createTable)
