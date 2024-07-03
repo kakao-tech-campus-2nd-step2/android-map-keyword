@@ -22,11 +22,12 @@
             android:padding="10dp" />
 
         <ImageView
+            android:id="@+id/cancelBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/searchText"
             android:layout_centerVertical="true"
-            android:contentDescription="@string/cancelbtn"
+            android:contentDescription="@string/cancelBtn"
             android:src="@drawable/cancel_btn" />
 
     </RelativeLayout>
