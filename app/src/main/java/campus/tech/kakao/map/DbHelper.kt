@@ -13,6 +13,15 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
+        createTable(db)
+    }
+
+    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
+        db?.execSQL("DROP TABLE IF EXISTS ${PlaceContract.TABLE_NAME}")
+        createTable(db)
+    }
+
+    private fun createTable(db: SQLiteDatabase?) {
         db?.execSQL(
             "CREATE TABLE ${PlaceContract.TABLE_NAME} (" +
                     "${PlaceContract.COLUMN_NAME} VARCHAR(30) NOT NULL," +
@@ -20,11 +29,6 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
                     "${PlaceContract.COLUMN_CATEGORY} VARCHAR(30) NOT NULL" +
                     ");"
         )
-    }
-
-    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.execSQL("DROP TABLE IF EXISTS ${PlaceContract.TABLE_NAME}")
-        onCreate(db)
     }
 
     fun insertData(name: String, address: String, category: String) {
@@ -53,7 +57,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     //데이터 추가 시 중복 방지
-    fun isDataExists(name: String, address: String, category: String): Boolean {
+    private fun isDataExists(name: String, address: String, category: String): Boolean {
         val db = readableDatabase
         val cursor = db.rawQuery(
             "SELECT 1 FROM ${PlaceContract.TABLE_NAME} WHERE ${PlaceContract.COLUMN_NAME} = ? AND ${PlaceContract.COLUMN_ADDRESS} = ? AND ${PlaceContract.COLUMN_CATEGORY} = ?",
