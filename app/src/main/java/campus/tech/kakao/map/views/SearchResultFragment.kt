@@ -26,6 +26,12 @@ class SearchResultFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_search_result, container, false)
     }
 
+    private fun setInitialValueToAdapter(){
+        viewModel.searchResult.value?.let{
+            (searchResultRecyclerView.adapter as? SearchResultAdapter)?.updateResult(it)
+        }
+    }
+
     private fun initiateRecyclerView(view: View) {
         searchResultRecyclerView = view.findViewById(R.id.list_search_result)
 
@@ -49,5 +55,6 @@ class SearchResultFragment : Fragment() {
 
         initiateRecyclerView(view)
         initiateSearchResultLiveDataObservation()
+        setInitialValueToAdapter()
     }
 }

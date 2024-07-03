@@ -29,6 +29,14 @@ class SearchKeywordRepository (context: Context){
             keywords.postValue(newData)
         }
     }
+
+    fun getKeywords(){
+        CoroutineScope(Dispatchers.IO).launch {
+            val newData = searchDb.queryAllSearchKeywords()
+            keywords.postValue(newData)
+        }
+    }
+
     companion object {
         private var instance: SearchKeywordRepository? = null
 

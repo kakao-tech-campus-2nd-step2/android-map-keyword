@@ -17,6 +17,11 @@ class SearchActivityViewModel (application: Application): AndroidViewModel(appli
     val searchResult: MutableLiveData<List<SearchResult>> = searchResultRepository.searchResult
     val keywords: MutableLiveData<List<String>> = keywordRepository.keywords
 
+    init{
+        searchResultRepository.search("")
+        keywordRepository.getKeywords()
+    }
+
     fun search(query: String){
         searchResultRepository.search(query)
     }
