@@ -1,35 +1,39 @@
 package campus.tech.kakao.map.ViewModel
 
-import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import campus.tech.kakao.map.Model.Place
 import campus.tech.kakao.map.Repository.PlaceRepository
 
 class SearchViewModel(private val repository: PlaceRepository) : ViewModel() {
-    val currentResult: MutableLiveData<List<Place>> = MutableLiveData()
-    val favoritePlace: MutableLiveData<MutableList<Place>> = MutableLiveData()
+
+    private val _currentResult: MutableLiveData<List<Place>> = MutableLiveData()
+    val currentResult : LiveData<List<Place>> = _currentResult
+    private val _favoritePlace: MutableLiveData<MutableList<Place>> = MutableLiveData()
+    val favoritePlace : LiveData<MutableList<Place>> = _favoritePlace
+
 
     init {
-        favoritePlace.value = repository.getCurrentFavorite()
-        currentResult.value = listOf<Place>()
+        _favoritePlace.value = repository.getCurrentFavorite()
+        _currentResult.value = listOf<Place>()
     }
 
     fun searchPlace(string: String) {
-        currentResult.value = if (string.isEmpty()) listOf<Place>()
+        _currentResult.value = if (string.isEmpty()) listOf<Place>()
         else repository.getSimilarPlacesByName(string)
     }
 
     fun addFavorite(name: String) {
         val place = repository.addFavorite(name)
         if (favoritePlace.value == null) {
-            favoritePlace.value = mutableListOf<Place>(place)
+            _favoritePlace.value = mutableListOf<Place>(place)
         } else {
             if (isPlaceInFavorite(name)) return
             // favoritePlace.value에 바로 add할 시 Adapter에서 변화를 감지 못함
             val favorites = favoritePlace.value!!
             favorites.add(place)
-            favoritePlace.value = favorites
+            _favoritePlace.value = favorites
         }
     }
 
@@ -39,7 +43,7 @@ class SearchViewModel(private val repository: PlaceRepository) : ViewModel() {
         repository.deleteFavorite(name)
     }
 
-    fun getCurrentFavorite(): MutableList<Place> {
+    private fun getCurrentFavorite(): MutableList<Place> {
         return repository.getCurrentFavorite()
     }
 
