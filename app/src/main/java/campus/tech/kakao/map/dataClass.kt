@@ -5,3 +5,6 @@ data class Place(
     val address: String,
     val category: String
 )
+data class Item(
+    val id: Long, val searchingName: String
+)
