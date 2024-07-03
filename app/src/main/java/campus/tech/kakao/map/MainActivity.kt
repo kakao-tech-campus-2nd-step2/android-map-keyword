@@ -75,23 +75,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun searchDatabase(query: String) {
-        val db = dbHelper.readableDatabase
-        val cursor = db.rawQuery(
-            "SELECT * FROM ${PlaceContract.TABLE_NAME} WHERE " +
-                    "${PlaceContract.COLUMN_NAME} LIKE ? OR " +
-                    "${PlaceContract.COLUMN_ADDRESS} LIKE ? OR " +
-                    "${PlaceContract.COLUMN_CATEGORY} LIKE ?",
-            arrayOf("%$query%", "%$query%", "%$query%")
-        )
-
         val results = mutableListOf<String>()
-        while (cursor.moveToNext()) {
-            val name = cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_NAME))
-            val address = cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_ADDRESS))
-            val category = cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_CATEGORY))
-            results.add("Name: $name, Address: $address, Category: $category")
+
+        dbHelper.readableDatabase.use { db ->
+            db.rawQuery(
+                "SELECT * FROM ${PlaceContract.TABLE_NAME} WHERE " +
+                        "${PlaceContract.COLUMN_NAME} LIKE ? OR " +
+                        "${PlaceContract.COLUMN_ADDRESS} LIKE ? OR " +
+                        "${PlaceContract.COLUMN_CATEGORY} LIKE ?",
+                arrayOf("%$query%", "%$query%", "%$query%")
+            ).use { cursor ->
+                while (cursor.moveToNext()) {
+                    val name = cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_NAME))
+                    val address = cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_ADDRESS))
+                    val category = cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_CATEGORY))
+                    results.add("Name: $name, Address: $address, Category: $category")
+                }
+            }
         }
-        cursor.close()
 
         //RecyclerView 어댑터 설정
         binding.searchRecyclerView.adapter = SearchAdapter(results)
