@@ -6,7 +6,6 @@ import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.FragmentContainerView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +16,7 @@ import campus.tech.kakao.map.views.adapters.SearchKeywordAdapter
 class MainActivity : AppCompatActivity() {
     private lateinit var searchResultFragmentContainer: FragmentContainerView
     private lateinit var searchInput: EditText
-    private lateinit var savedKeywordListView: RecyclerView
+    private lateinit var keywordRecyclerView: RecyclerView
     private val searchViewModel: SearchActivityViewModel by viewModels()
 
 
@@ -36,13 +35,13 @@ class MainActivity : AppCompatActivity() {
                 searchInput.setText(it)
         }
         searchViewModel.keywords.observe(this) {
-            (savedKeywordListView.adapter as? SearchKeywordAdapter)?.updateKeywords(it)
+            (keywordRecyclerView.adapter as? SearchKeywordAdapter)?.updateKeywords(it)
         }
     }
 
     private fun setInitialValueToAdapter() {
         searchViewModel.keywords.value?.let {
-            (savedKeywordListView.adapter as? SearchKeywordAdapter)?.updateKeywords(it)
+            (keywordRecyclerView.adapter as? SearchKeywordAdapter)?.updateKeywords(it)
         }
     }
 
@@ -52,9 +51,9 @@ class MainActivity : AppCompatActivity() {
         }, {
             searchViewModel.clickKeywordDeleteButton(it)
         })
-        savedKeywordListView = findViewById(R.id.saved_search_bar)
-        savedKeywordListView.adapter = adapter
-        savedKeywordListView.layoutManager =
+        keywordRecyclerView = findViewById(R.id.saved_search_bar)
+        keywordRecyclerView.adapter = adapter
+        keywordRecyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
     }
@@ -62,7 +61,7 @@ class MainActivity : AppCompatActivity() {
     private fun initiateViews() {
         searchResultFragmentContainer = findViewById(R.id.fragment_container_search_result)
         searchInput = findViewById(R.id.input_search)
-        savedKeywordListView = findViewById(R.id.saved_search_bar)
+        keywordRecyclerView = findViewById(R.id.saved_search_bar)
 
         searchInput.doAfterTextChanged {
             searchViewModel.changeSearchInputValue(it.toString())
