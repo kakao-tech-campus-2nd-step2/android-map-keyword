@@ -99,11 +99,6 @@ class SQLiteDb(context: Context) {
         return selectedData.reversed()
     }
 
-    fun deleteFromSelectedData(id: String): Int {
-        return database.delete(
-            SQLiteHelper.TABLE_NAME_2,
-            "$COL_ID_2 = ?",
-            arrayOf(id.toString())
-        )
-    }
+
+
 }

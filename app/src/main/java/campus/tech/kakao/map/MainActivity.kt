@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
         noResultTextView = findViewById(R.id.noResultTextView)
         historyRecyclerView = findViewById(R.id.historyRecyclerView)
-
         databaseHelper = SQLiteDb(this)
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = PlacesAdapter(listOf()) { name ->
@@ -34,17 +33,18 @@ class MainActivity : AppCompatActivity() {
             updateHistory()
         }
         recyclerView.adapter = adapter
+
         historyRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        historyAdapter = HistoryAdapter(databaseHelper.getAllSelectedData()) { name ->
+        val historyList = databaseHelper.getAllSelectedData()
+        historyAdapter = HistoryAdapter(historyList.toMutableList()) { name ->
             val deletedRows = databaseHelper.deleteFromSelectedData(name)
             if (deletedRows > 0) {
-                updateHistory()
-            } else {
-            }
+                updateHistory() } else { }
         }
         historyRecyclerView.adapter = historyAdapter
 
         setupSearchView()
+
         checkRun()
     }
 

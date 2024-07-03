@@ -3,10 +3,11 @@ package campus.tech.kakao.map
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class HistoryAdapter(private var historyList: List<String>, private val itemClickListener: (String) -> Unit) :
+class HistoryAdapter(private var historyList: MutableList<String>, private val itemClickListener: (String) -> Unit) :
     RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
@@ -15,8 +16,14 @@ class HistoryAdapter(private var historyList: List<String>, private val itemClic
     }
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-        val item = historyList[position]
-        holder.bind(item)
+        val historyItem = historyList[position]
+        holder.bind(historyItem)
+
+        holder.delButton.setOnClickListener {
+            itemClickListener(historyItem)
+            historyList.remove(historyItem)
+            notifyDataSetChanged()
+        }
     }
 
     override fun getItemCount(): Int {
@@ -24,22 +31,14 @@ class HistoryAdapter(private var historyList: List<String>, private val itemClic
     }
 
     fun updateData(newHistoryList: List<String>) {
-        historyList = newHistoryList
+        historyList.clear()
+        historyList.addAll(newHistoryList)
         notifyDataSetChanged()
     }
 
     inner class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val historyTextView: TextView = itemView.findViewById(R.id.historyTextView)
-
-        init {
-            itemView.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    val item = historyList[position]
-                    itemClickListener(item)
-                }
-            }
-        }
+        internal val delButton: ImageButton = itemView.findViewById(R.id.delButton)
 
         fun bind(item: String) {
             historyTextView.text = item
