@@ -38,7 +38,6 @@ class MainActivity : AppCompatActivity() {
         setSearchView()
         setSearchListener()
     }
-
     private fun createQuery() {
         db = DataDbHelper(context = this)
 
@@ -109,9 +108,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setSearchView() {
-        searchAdapter = LocationAdapter(searchList, LayoutInflater.from(this), this)
+        searchAdapter = LocationAdapter(searchList, LayoutInflater.from(this))
         searchView.adapter = searchAdapter
-        searchView.layoutManager = LinearLayoutManager(this)
+        searchView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        searchView.visibility = View.GONE
 
     }
 
@@ -125,6 +125,22 @@ class MainActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) { }
         })
+    }
+
+    fun onItemClick(locationData: LocationData) {
+        if (searchList.contains(locationData)) {
+            val index = searchList.indexOf(locationData)
+            if (index > 0) {
+                searchList.removeAt(index)
+                searchList.add(0, locationData)
+                searchAdapter.notifyItemMoved(index, 0)
+                searchView.scrollToPosition(0)
+            }
+        } else {
+            searchList.add(0, locationData)
+            searchAdapter.notifyItemInserted(0)
+            searchView.scrollToPosition(0)
+        }
     }
 
     private fun searchLocations(key: String) {

@@ -37,5 +37,9 @@ class LocationAdapter(
         holder.location_text_view.text = locations.location
         holder.category_text_view.text = locations.category
 
+        holder.itemView.setOnClickListener {
+
+        }
+
     }
 }
