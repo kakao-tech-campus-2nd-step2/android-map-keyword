@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -16,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var searchBox: EditText
     private lateinit var searchResultView: RecyclerView
     private lateinit var message: TextView
+    private lateinit var clear: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,11 +27,16 @@ class MainActivity : AppCompatActivity() {
         searchBox = findViewById(R.id.search_box)
         searchResultView = findViewById(R.id.search_result)
         message = findViewById(R.id.message)
+        clear = findViewById(R.id.clear)
 
         searchBox.doAfterTextChanged {
             it?.let {
                 search(it.toString(), false)
             }
+        }
+
+        clear.setOnClickListener {
+            searchBox.text.clear()
         }
     }
 
