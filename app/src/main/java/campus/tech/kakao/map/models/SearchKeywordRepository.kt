@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SearchKeywordRepository (context: Context){
+class SearchKeywordRepository(context: Context) {
     val keywords: MutableLiveData<List<String>> = MutableLiveData(listOf())
     private lateinit var searchDb: SearchDbHelper
 
@@ -22,7 +22,7 @@ class SearchKeywordRepository (context: Context){
         }
     }
 
-    fun deleteKeyword(keyword: String){
+    fun deleteKeyword(keyword: String) {
         CoroutineScope(Dispatchers.IO).launch {
             searchDb.deleteKeyword(keyword)
             val newData = searchDb.queryAllSearchKeywords()
@@ -30,7 +30,7 @@ class SearchKeywordRepository (context: Context){
         }
     }
 
-    fun getKeywords(){
+    fun getKeywords() {
         CoroutineScope(Dispatchers.IO).launch {
             val newData = searchDb.queryAllSearchKeywords()
             keywords.postValue(newData)

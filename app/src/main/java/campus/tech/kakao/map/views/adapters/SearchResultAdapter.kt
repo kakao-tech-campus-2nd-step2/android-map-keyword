@@ -8,7 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.models.SearchResult
 
-class SearchResultAdapter(private val inflater: LayoutInflater, val onItemClicked: ((item:SearchResult, index:Int)->Unit)) :
+class SearchResultAdapter(
+    private val inflater: LayoutInflater,
+    val onItemClicked: ((item: SearchResult, index: Int) -> Unit)
+) :
     RecyclerView.Adapter<SearchResultAdapter.SearchResultViewHolder>() {
     class SearchResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val resultName: TextView
@@ -21,9 +24,10 @@ class SearchResultAdapter(private val inflater: LayoutInflater, val onItemClicke
             resultType = itemView.findViewById(R.id.text_result_type)
         }
     }
+
     var results: List<SearchResult> = listOf()
 
-    fun updateResult(results: List<SearchResult>){
+    fun updateResult(results: List<SearchResult>) {
         this.results = results
         notifyDataSetChanged()
     }

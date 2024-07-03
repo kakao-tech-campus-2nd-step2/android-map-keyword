@@ -19,16 +19,16 @@ class SearchDbHelper(context: Context) :
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(SearchResultContract.CREATE_QUERY)
 
-        if(db != null){
+        if (db != null) {
             insertInitialData(db)
         }
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        if (oldVersion <= 1){
+        if (oldVersion <= 1) {
             db?.execSQL(SearchKeywordContract.CREATE_QUERY)
         }
-        if(oldVersion in 2..2){
+        if (oldVersion in 2..2) {
             db?.execSQL(SearchKeywordContract.DROP_QUERY)
             db?.execSQL(SearchKeywordContract.CREATE_QUERY)
         }
@@ -60,7 +60,7 @@ class SearchDbHelper(context: Context) :
         insertSearchResult(searchResult.name, searchResult.address, searchResult.type)
     }
 
-    fun insertOrReplaceKeyword(keyword: String){
+    fun insertOrReplaceKeyword(keyword: String) {
         val db = writableDatabase
         val contentValues = ContentValues().apply {
             put(SearchKeywordContract.COLUMN_KEYWORD, keyword)
@@ -77,7 +77,12 @@ class SearchDbHelper(context: Context) :
             put(SearchResultContract.COLUMN_ADDRESS, address)
             put(SearchResultContract.COLUMN_TYPE, type)
         }
-        db.update(SearchResultContract.TABLE_NAME, contentValues, "${BaseColumns._ID} = ?", arrayOf(id))
+        db.update(
+            SearchResultContract.TABLE_NAME,
+            contentValues,
+            "${BaseColumns._ID} = ?",
+            arrayOf(id)
+        )
     }
 
     fun updateSearchResult(id: String, searchResult: SearchResult) {
@@ -89,9 +94,13 @@ class SearchDbHelper(context: Context) :
         db.delete(SearchResultContract.TABLE_NAME, "${BaseColumns._ID} = ?", arrayOf(id))
     }
 
-    fun deleteKeyword(keyword: String){
+    fun deleteKeyword(keyword: String) {
         val db = writableDatabase
-        db.delete(SearchKeywordContract.TABLE_NAME, "${SearchKeywordContract.COLUMN_KEYWORD} = ?", arrayOf(keyword))
+        db.delete(
+            SearchKeywordContract.TABLE_NAME,
+            "${SearchKeywordContract.COLUMN_KEYWORD} = ?",
+            arrayOf(keyword)
+        )
     }
 
     private fun getAllSearchResultFromCursor(cursor: Cursor?): List<SearchResult> {
@@ -121,14 +130,14 @@ class SearchDbHelper(context: Context) :
     private fun getAllSearchKeywordFromCursor(cursor: Cursor?): List<String> {
         val result = mutableListOf<String>()
 
-        try{
-            while (cursor?.moveToNext() == true){
+        try {
+            while (cursor?.moveToNext() == true) {
                 result.add(cursor.getString(SearchKeywordContract.COLUMN_KEYWORD_INDEX))
             }
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
-            if (cursor != null && !cursor.isClosed){
+            if (cursor != null && !cursor.isClosed) {
                 cursor.close()
             }
         }
