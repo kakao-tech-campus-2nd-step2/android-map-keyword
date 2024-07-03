@@ -1,6 +1,7 @@
 package campus.tech.kakao.map.view_models
 
 import android.app.Application
+import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import campus.tech.kakao.map.models.SearchKeywordRepository
@@ -26,5 +27,9 @@ class SearchActivityViewModel (application: Application): AndroidViewModel(appli
 
     fun deleteKeyword(keyword: String){
         keywordRepository.deleteKeyword(keyword)
+    }
+
+    fun clickSearchResultItem(selectedItem: SearchResult){
+        addKeyword(selectedItem.name)
     }
 }

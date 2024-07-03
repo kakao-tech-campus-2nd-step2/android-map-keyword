@@ -2,13 +2,14 @@ package campus.tech.kakao.map.views
 
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.models.SearchResult
 
-class SearchResultAdapter(private val inflater: LayoutInflater) :
+class SearchResultAdapter(private val inflater: LayoutInflater, val onItemClicked: ((item:SearchResult, index:Int)->Unit)) :
     RecyclerView.Adapter<SearchResultAdapter.SearchResultViewHolder>() {
     class SearchResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val resultName: TextView
@@ -30,7 +31,18 @@ class SearchResultAdapter(private val inflater: LayoutInflater) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
         val view = inflater.inflate(R.layout.item_search_result, parent, false)
-        return SearchResultViewHolder(view)
+        val holder = SearchResultViewHolder(view)
+        view.setOnClickListener {
+            onItemClicked(
+                SearchResult(
+                    holder.resultName.text.toString(),
+                    holder.resultAddress.text.toString(),
+                    holder.resultType.text.toString()
+                ),
+                holder.bindingAdapterPosition
+            )
+        }
+        return holder
     }
 
     override fun getItemCount(): Int {

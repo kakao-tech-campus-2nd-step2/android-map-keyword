@@ -26,16 +26,19 @@ class SearchResultFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_search_result, container, false)
     }
 
-    private fun initiateRecyclerView(view: View){
+    private fun initiateRecyclerView(view: View) {
         searchResultRecyclerView = view.findViewById(R.id.list_search_result)
 
         searchResultRecyclerView.adapter =
-            SearchResultAdapter(LayoutInflater.from(activity))
-        searchResultRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            SearchResultAdapter(LayoutInflater.from(activity)) { item: SearchResult, _: Int ->
+                viewModel.clickSearchResultItem(item)
+            }
+        searchResultRecyclerView.layoutManager =
+            LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
     }
 
-    private fun initiateSearchResultLiveDataObservation(){
-        viewModel.searchResult.observe(viewLifecycleOwner){
+    private fun initiateSearchResultLiveDataObservation() {
+        viewModel.searchResult.observe(viewLifecycleOwner) {
             (searchResultRecyclerView.adapter as? SearchResultAdapter)?.updateResult(it)
         }
     }
