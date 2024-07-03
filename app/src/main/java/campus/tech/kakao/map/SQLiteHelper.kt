@@ -37,5 +37,4 @@ class SQLiteHelper private constructor(context: Context) : SQLiteOpenHelper(cont
         db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
         onCreate(db)
     }
-
 }

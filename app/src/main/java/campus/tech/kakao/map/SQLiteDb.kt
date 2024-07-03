@@ -4,7 +4,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
 
 class SQLiteDb(context: Context) {
     private val dbHelper: SQLiteHelper = SQLiteHelper.getInstance(context)
@@ -36,23 +35,36 @@ class SQLiteDb(context: Context) {
         cursor.close()
         return exists
     }
-    fun getAllData(): Cursor {
-        return database.query(SQLiteHelper.TABLE_NAME, null, null, null, null, null, null)
-    }
 
-    fun logAllData() {
-        val cursor = getAllData()
+    fun getAllData(): List<Place> {
+        val places = mutableListOf<Place>()
+        val cursor = database.query(
+            SQLiteHelper.TABLE_NAME,
+            arrayOf(SQLiteHelper.COL_NAME, SQLiteHelper.COL_ADDRESS, SQLiteHelper.COL_CATEGORY),
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+
         if (cursor.moveToFirst()) {
             do {
                 val name = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.COL_NAME))
                 val address = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.COL_ADDRESS))
                 val category = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.COL_CATEGORY))
-                Log.d("DatabaseHelper", "Name: $name, Address: $address, Category : $category")
+                places.add(Place(name, address, category))
             } while (cursor.moveToNext())
         }
         cursor.close()
+
+        return places
     }
 
-
-
+    fun logAllData() {
+        val cursor = getAllData()
+        for (place in cursor) {
+            println("Name: ${place.name}, Address: ${place.address}, Category: ${place.category}")
+        }
+    }
 }
