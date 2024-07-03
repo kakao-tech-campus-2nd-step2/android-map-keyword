@@ -15,14 +15,16 @@ import campus.tech.kakao.map.ViewModel.SearchViewModel
 
 class FavoriteAdapter(
     var favorites: MutableList<Place>,
-    private val inflater : LayoutInflater,
-    val onClickDelete : (name : String) -> Unit
-) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>(){
+    private val inflater: LayoutInflater,
+    val onClickDelete: (name: String) -> Unit
+) : RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
 
-    inner class ViewHolder(itemView: View,onClickDelete : (name : String) -> Unit) : RecyclerView.ViewHolder(itemView){
-        var placeName : TextView
-        var deleteFavorite : ImageView
-        init{
+    inner class ViewHolder(itemView: View, onClickDelete: (name: String) -> Unit) :
+        RecyclerView.ViewHolder(itemView) {
+        var placeName: TextView
+        var deleteFavorite: ImageView
+
+        init {
             placeName = itemView.findViewById<TextView>(R.id.favoriteName)
             deleteFavorite = itemView.findViewById<ImageView>(R.id.deleteFavorite)
         }
@@ -38,16 +40,16 @@ class FavoriteAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = inflater.inflate(R.layout.favorite_element,parent,false)
+        val view = inflater.inflate(R.layout.favorite_element, parent, false)
 
-        return ViewHolder(view,onClickDelete)
+        return ViewHolder(view, onClickDelete)
     }
 
     override fun getItemCount(): Int {
         return favorites.size
     }
 
-    fun updateData(favoriteList : MutableList<Place>){
+    fun updateData(favoriteList: MutableList<Place>) {
         this.favorites = favoriteList
         notifyDataSetChanged()
     }
