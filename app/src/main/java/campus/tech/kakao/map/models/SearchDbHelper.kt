@@ -6,11 +6,11 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
+import campus.tech.kakao.map.models.contracts.SearchKeywordContract
 import campus.tech.kakao.map.models.contracts.SearchResultContract
 import campus.tech.kakao.map.models.contracts.SearchResultContract.COLUMN_ADDRESS_INDEX
 import campus.tech.kakao.map.models.contracts.SearchResultContract.COLUMN_NAME_INDEX
 import campus.tech.kakao.map.models.contracts.SearchResultContract.COLUMN_TYPE_INDEX
-import campus.tech.kakao.map.models.contracts.SearchResultContract.TABLE_NAME
 
 data class SearchResult(val name: String, val address: String, val type: String)
 
@@ -25,7 +25,9 @@ class SearchDbHelper(context: Context) :
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-
+        if (oldVersion <= 1){
+            db?.execSQL(SearchKeywordContract.CREATE_QUERY)
+        }
     }
 
     private fun insertInitialData(db: SQLiteDatabase) {
@@ -36,25 +38,34 @@ class SearchDbHelper(context: Context) :
                 put(SearchResultContract.COLUMN_ADDRESS, data.address)
                 put(SearchResultContract.COLUMN_TYPE, data.type)
             }
-            db.insert(TABLE_NAME, null, contentValues)
+            db.insert(SearchResultContract.TABLE_NAME, null, contentValues)
         }
     }
 
-    fun insertData(name: String, address: String, type: String) {
+    fun insertSearchResult(name: String, address: String, type: String) {
         val db = writableDatabase
         val contentValues = ContentValues().apply {
             put(SearchResultContract.COLUMN_NAME, name)
             put(SearchResultContract.COLUMN_ADDRESS, address)
             put(SearchResultContract.COLUMN_TYPE, type)
         }
-        db.insert(TABLE_NAME, null, contentValues)
+        db.insert(SearchResultContract.TABLE_NAME, null, contentValues)
     }
 
-    fun insertData(searchResult: SearchResult) {
-        insertData(searchResult.name, searchResult.address, searchResult.type)
+    fun insertSearchResult(searchResult: SearchResult) {
+        insertSearchResult(searchResult.name, searchResult.address, searchResult.type)
     }
 
-    fun updateData(id: String, name: String, address: String, type: String) {
+    fun insertOrReplaceKeyword(keyword: String){
+        val db = writableDatabase
+        val contentValues = ContentValues().apply {
+            put(SearchKeywordContract.COLUMN_KEYWORD, keyword)
+        }
+
+        db.replace(SearchKeywordContract.TABLE_NAME, null, contentValues)
+    }
+
+    fun updateSearchResult(id: String, name: String, address: String, type: String) {
         val db = writableDatabase
         val contentValues = ContentValues().apply {
             put(BaseColumns._ID, id)
@@ -62,19 +73,19 @@ class SearchDbHelper(context: Context) :
             put(SearchResultContract.COLUMN_ADDRESS, address)
             put(SearchResultContract.COLUMN_TYPE, type)
         }
-        db.update(TABLE_NAME, contentValues, "${BaseColumns._ID} = ?", arrayOf(id))
+        db.update(SearchResultContract.TABLE_NAME, contentValues, "${BaseColumns._ID} = ?", arrayOf(id))
     }
 
-    fun updateData(id: String, searchResult: SearchResult) {
-        updateData(id, searchResult.name, searchResult.address, searchResult.type)
+    fun updateSearchResult(id: String, searchResult: SearchResult) {
+        updateSearchResult(id, searchResult.name, searchResult.address, searchResult.type)
     }
 
-    fun deleteData(id: String) {
+    fun deleteSearchResult(id: String) {
         val db = writableDatabase
-        db.delete(TABLE_NAME, "${BaseColumns._ID} = ?", arrayOf(id))
+        db.delete(SearchResultContract.TABLE_NAME, "${BaseColumns._ID} = ?", arrayOf(id))
     }
 
-    private fun getAllResultFromCursor(cursor: Cursor?): List<SearchResult> {
+    private fun getAllSearchResultFromCursor(cursor: Cursor?): List<SearchResult> {
         val result = mutableListOf<SearchResult>()
 
         try {
@@ -98,26 +109,51 @@ class SearchDbHelper(context: Context) :
         return result
     }
 
-    fun queryAll(): List<SearchResult> {
-        val db = readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME", null)
+    private fun getAllSearchKeywordFromCursor(cursor: Cursor?): List<String> {
+        val result = mutableListOf<String>()
 
-        return getAllResultFromCursor(cursor)
+        try{
+            while (cursor?.moveToNext() == true){
+                result.add(cursor.getString(SearchKeywordContract.COLUMN_KEYWORD_INDEX))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            if (cursor != null && !cursor.isClosed){
+                cursor.close()
+            }
+        }
+
+        return result
     }
 
-    fun queryName(name: String): List<SearchResult> {
+    fun queryAllSearchResults(): List<SearchResult> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM ${SearchResultContract.TABLE_NAME}", null)
+
+        return getAllSearchResultFromCursor(cursor)
+    }
+
+    fun querySearchResultsByName(name: String): List<SearchResult> {
         val db = readableDatabase
         val cursor = db.rawQuery(
-            "SELECT * FROM $TABLE_NAME WHERE ${SearchResultContract.COLUMN_NAME} LIKE \"%$name%\"",
+            "SELECT * FROM ${SearchResultContract.TABLE_NAME} WHERE ${SearchResultContract.COLUMN_NAME} LIKE \"%$name%\"",
             null
         )
 
-        return getAllResultFromCursor(cursor)
+        return getAllSearchResultFromCursor(cursor)
+    }
+
+    fun queryAllSearchKeywords(): List<String> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM ${SearchKeywordContract.TABLE_NAME}", null)
+
+        return getAllSearchKeywordFromCursor(cursor)
     }
 
     companion object {
         private var instance: SearchDbHelper? = null
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 2
         const val DATABASE_NAME = "MapSearch"
 
         fun getInstance(context: Context): SearchDbHelper {
