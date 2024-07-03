@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout.VERTICAL
+import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
@@ -18,6 +19,7 @@ import campus.tech.kakao.map.R
 import campus.tech.kakao.map.Repository.PlaceRepository
 import campus.tech.kakao.map.Util.PlaceContract
 import campus.tech.kakao.map.Util.ViewModelFactory
+import campus.tech.kakao.map.View.Adapter.FavoriteAdapter
 import campus.tech.kakao.map.View.Adapter.SearchResultAdapter
 import campus.tech.kakao.map.View.Observer.EmptyPlaceObserver
 import campus.tech.kakao.map.ViewModel.SearchViewModel
@@ -28,6 +30,7 @@ class PlaceSearchActivity : AppCompatActivity() {
     private lateinit var noItem : TextView
     private lateinit var etSearchPlace : EditText
     private lateinit var deleteSearch : ImageView
+    private lateinit var favorite : RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,11 +46,30 @@ class PlaceSearchActivity : AppCompatActivity() {
         etSearchPlace = findViewById<EditText>(R.id.etSearchPlace)
         noItem = findViewById<TextView>(R.id.noItem)
         deleteSearch = findViewById<ImageView>(R.id.deleteSearch)
+        favorite = findViewById<RecyclerView>(R.id.favorite)
 
         settingRecyclerView()
+        settingListView()
         setDeleteSearchListener()
         setEditTextListener()
     }
+
+    private fun settingListView() {
+        val adapter = FavoriteAdapter(
+            viewModel.getCurrentFavorite(),
+            LayoutInflater.from(this),
+            onClickDelete = {
+                viewModel.deleteFromFavorite(it)
+            }
+        )
+
+        favorite.adapter = adapter
+        viewModel.favoritePlace.observe(this){
+            adapter.updateData(it)
+        }
+        favorite.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,true)
+    }
+
 
     private fun setDeleteSearchListener(){
         deleteSearch.setOnClickListener {
@@ -64,7 +86,10 @@ class PlaceSearchActivity : AppCompatActivity() {
     private fun setAdapter(){
         val adapter = SearchResultAdapter(
             viewModel.currentResult.value ?: listOf<Place>(),
-            LayoutInflater.from(this)
+            LayoutInflater.from(this),
+            onClickAdd = {
+                viewModel.addFavorite(it)
+            }
         )
         viewModel.currentResult.observe(this){
             adapter.updateData(it)

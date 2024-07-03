@@ -7,13 +7,15 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.Model.Place
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.ViewModel.SearchViewModel
 
 class SearchResultAdapter(
     var places: List<Place>,
-    private val inflater : LayoutInflater
+    private val inflater : LayoutInflater,
+    val onClickAdd : (name : String) -> Unit
 ): RecyclerView.Adapter<SearchResultAdapter.ViewHolder>(){
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    class ViewHolder(itemView: View,onClickAdd : (name : String) -> Unit) : RecyclerView.ViewHolder(itemView){
         var placeName : TextView
         var placeAddress : TextView
         var placeCategory : TextView
@@ -22,13 +24,16 @@ class SearchResultAdapter(
             placeAddress = itemView.findViewById<TextView>(R.id.placeAddress)
             placeCategory = itemView.findViewById<TextView>(R.id.placeCategory)
 
+            itemView.setOnClickListener {
+                onClickAdd.invoke(placeName.text.toString())
+            }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = inflater.inflate(R.layout.place_element,parent,false)
 
-        return ViewHolder(view)
+        return ViewHolder(view,onClickAdd)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
