@@ -7,11 +7,11 @@
     android:layout_height="match_parent"
     tools:context=".views.MainActivity">
 
-    <EditText
+    <androidx.appcompat.widget.SearchView
+        app:iconifiedByDefault="false"
         android:id="@+id/input_search"
         android:layout_width="0dp"
         android:layout_height="45dp"
-        android:layout_marginHorizontal="10dp"
         android:layout_marginTop="10dp"
         android:hint="@string/hint_input_search"
         android:inputType="text"

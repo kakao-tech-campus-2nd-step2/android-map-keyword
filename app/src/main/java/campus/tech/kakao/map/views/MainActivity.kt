@@ -2,11 +2,10 @@ package campus.tech.kakao.map.views
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.FragmentContainerView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +15,7 @@ import campus.tech.kakao.map.views.adapters.SearchKeywordAdapter
 
 class MainActivity : AppCompatActivity() {
     private lateinit var searchResultFragmentContainer: FragmentContainerView
-    private lateinit var searchInput: EditText
+    private lateinit var searchInput: SearchView
     private lateinit var keywordRecyclerView: RecyclerView
     private val searchViewModel: SearchActivityViewModel by viewModels()
 
@@ -32,11 +31,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun initiateLiveDataObservation() {
         searchViewModel.searchText.observe(this) {
-            if (it != searchInput.text.toString())
-                searchInput.setText(it)
+            searchInput.setQuery(it, false)
         }
         searchViewModel.keywords.observe(this) {
-            (keywordRecyclerView.adapter as? SearchKeywordAdapter)?.updateKeywords(it)
+            (keywordRecyclerView.adapter as? SearchKeywordAdapter)?.updateKeywords(it.asReversed())
             setKeywordRecyclerViewActive(it.isNotEmpty())
         }
     }
@@ -64,13 +62,24 @@ class MainActivity : AppCompatActivity() {
         keywordRecyclerView.isVisible = active
     }
 
+    private fun initiateSearchView(){
+        searchInput = findViewById(R.id.input_search)
+
+        searchInput.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                searchViewModel.submitQuery(query?:"")
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
+    }
+
     private fun initiateViews() {
         searchResultFragmentContainer = findViewById(R.id.fragment_container_search_result)
-        searchInput = findViewById(R.id.input_search)
         keywordRecyclerView = findViewById(R.id.saved_search_bar)
-
-        searchInput.doAfterTextChanged {
-            searchViewModel.changeSearchInputValue(it.toString())
-        }
+        initiateSearchView()
     }
 }
