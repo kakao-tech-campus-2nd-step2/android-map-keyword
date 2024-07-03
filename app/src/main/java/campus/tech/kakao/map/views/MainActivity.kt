@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.FragmentContainerView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         }
         searchViewModel.keywords.observe(this) {
             (keywordRecyclerView.adapter as? SearchKeywordAdapter)?.updateKeywords(it)
+            setKeywordRecyclerViewActive(it.isNotEmpty())
         }
     }
 
@@ -56,6 +58,10 @@ class MainActivity : AppCompatActivity() {
         keywordRecyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
+    }
+
+    private fun setKeywordRecyclerViewActive(active: Boolean) {
+        keywordRecyclerView.isVisible = active
     }
 
     private fun initiateViews() {
