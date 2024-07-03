@@ -28,12 +28,39 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     fun insertData(name: String, address: String, category: String) {
-        val db = writableDatabase
-        val values = ContentValues().apply {
-            put(PlaceContract.COLUMN_NAME, name)
-            put(PlaceContract.COLUMN_ADDRESS, address)
-            put(PlaceContract.COLUMN_CATEGORY, category)
+        if(!isDataExists(name, address, category)) {
+            val db = writableDatabase
+            val values = ContentValues().apply {
+                put(PlaceContract.COLUMN_NAME, name)
+                put(PlaceContract.COLUMN_ADDRESS, address)
+                put(PlaceContract.COLUMN_CATEGORY, category)
+            }
+            db.insert(PlaceContract.TABLE_NAME, null, values)
         }
-        db.insert(PlaceContract.TABLE_NAME, null, values)
+    }
+
+    //DB가 비어있는지 확인
+    fun isDBEmpty(dbHelper: DbHelper): Boolean {
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery("SELECT COUNT(*) FROM ${PlaceContract.TABLE_NAME}", null)
+        var count = 0
+
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0)
+        }
+        cursor.close()
+        return  count == 0
+    }
+
+    //데이터 추가 시 중복 방지
+    fun isDataExists(name: String, address: String, category: String): Boolean {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT 1 FROM ${PlaceContract.TABLE_NAME} WHERE ${PlaceContract.COLUMN_NAME} = ? AND ${PlaceContract.COLUMN_ADDRESS} = ? AND ${PlaceContract.COLUMN_CATEGORY} = ?",
+            arrayOf(name, address, category)
+        )
+        val exists = cursor.moveToFirst()
+        cursor.close()
+        return exists
     }
 }

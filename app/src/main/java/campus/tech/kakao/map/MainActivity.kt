@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         dbHelper = DbHelper(this)
 
         //DB가 비어있을 때만 기본 데이터 추가
-        if (isDBEmpty(dbHelper)) {
+        if (dbHelper.isDBEmpty(dbHelper)) {
             insertInitialData(dbHelper)
         }
 
@@ -55,19 +56,6 @@ class MainActivity : AppCompatActivity() {
 
         //RecyclerView 설정
         binding.searchRecyclerView.layoutManager = LinearLayoutManager(this)
-    }
-
-    //DB가 비어있는지 확인
-    private fun isDBEmpty(dbHelper: DbHelper): Boolean {
-        val db = dbHelper.readableDatabase
-        val cursor = db.rawQuery("SELECT COUNT(*) FROM ${PlaceContract.TABLE_NAME}", null)
-        var count = 0
-
-        if (cursor.moveToFirst()) {
-            count = cursor.getInt(0)
-        }
-        cursor.close()
-        return  count == 0
     }
 
     private fun insertInitialData(dbHelper: DbHelper) {
