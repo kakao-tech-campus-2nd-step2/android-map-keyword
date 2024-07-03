@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var inputText: EditText
     private lateinit var cancelBtn: Button
     private lateinit var resultView: TextView
+    private lateinit var searchView: RecyclerView
     private var locationList = ArrayList<LocationData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,6 +94,7 @@ class MainActivity : AppCompatActivity() {
         inputText = findViewById(R.id.inputText)
         cancelBtn = findViewById(R.id.cancelBtn)
         resultView = findViewById(R.id.resultView)
+        searchView = findViewById(R.id.searchView)
     }
 
     private fun setRecyclerView() {
