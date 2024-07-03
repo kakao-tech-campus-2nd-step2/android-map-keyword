@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,5 +36,6 @@ class LocationAdapter(
         holder.name_text_view.text = locations.name
         holder.location_text_view.text = locations.location
         holder.category_text_view.text = locations.category
+
     }
 }

@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.AdapterView.OnItemClickListener
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -22,7 +23,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var cancelBtn: Button
     private lateinit var resultView: TextView
     private lateinit var searchView: RecyclerView
+    private lateinit var locationAdapter: LocationAdapter
+    private lateinit var searchAdapter: LocationAdapter
     private var locationList = ArrayList<LocationData>()
+    private var searchList = ArrayList<LocationData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         createQuery()
         initialize()
         setRecyclerView()
+        setSearchView()
         setSearchListener()
     }
 
@@ -101,6 +106,13 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = LocationAdapter(locationList, LayoutInflater.from(this))
         recyclerView.layoutManager = LinearLayoutManager(this)
         Log.d("recyclerView", "recyclerView Adapter")
+    }
+
+    private fun setSearchView() {
+        searchAdapter = LocationAdapter(searchList, LayoutInflater.from(this), this)
+        searchView.adapter = searchAdapter
+        searchView.layoutManager = LinearLayoutManager(this)
+
     }
 
     private fun setSearchListener() {
