@@ -3,6 +3,8 @@ package campus.tech.kakao.map
 import android.content.ContentValues
 import android.os.Bundle
 import android.util.Log
+import android.widget.EditText
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import campus.tech.kakao.map.LocationContract.LocationEntry
 
@@ -12,8 +14,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val dbAccessor = LocationDbAccessor(context=this)
-        addLocationData(dbAccessor)
-        readLocationData(dbAccessor)
+//        addLocationData(dbAccessor)
+//        readLocationData(dbAccessor)
+        val xButton: ImageView = findViewById(R.id.xButton)
+        val searchEditText: EditText = findViewById(R.id.searchEditText)
+        xButton.setOnClickListener{
+            searchEditText.setText("")
+        }
     }
 
     private fun readLocationData(dbAccessor: LocationDbAccessor) {
