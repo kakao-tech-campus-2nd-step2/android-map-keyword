@@ -21,29 +21,33 @@ class MainActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        val dbHelper = DatabaseHelper(this)
+        val dbHelper = DatabaseHelper.getInstance(this)
         val db = dbHelper.writableDatabase
+
+        db.execSQL("CREATE TABLE IF NOT EXISTS ${DatabaseHelper.TABLE_NAME} (" +
+                "${DatabaseHelper.COLUMN_ID} INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "${DatabaseHelper.COLUMN_NAME} TEXT, " +
+                "${DatabaseHelper.COLUMN_ADDRESS} TEXT)")
 
         for (i in 1..10) {
             val insertData =
                 "INSERT INTO ${DatabaseHelper.TABLE_NAME} (${DatabaseHelper.COLUMN_NAME}, ${DatabaseHelper.COLUMN_ADDRESS}) VALUES ('cafe$i', '대전 유성구 봉명동 $i')"
-            Log.d("database", "찍힘")
-            val insertData2 =
-                "INSERT INTO ${DatabaseHelper.TABLE_NAME} (${DatabaseHelper.COLUMN_NAME}, ${DatabaseHelper.COLUMN_ADDRESS}) VALUES ('Pharmacy$i', '대전 유성구 봉명동 $i')"
-            Log.d("database", "찍힘")
-            val insertData3 =
-                "INSERT INTO ${DatabaseHelper.TABLE_NAME} (${DatabaseHelper.COLUMN_NAME}, ${DatabaseHelper.COLUMN_ADDRESS}) VALUES ('Cinema$i', '대전 유성구 봉명동 $i')"
-            Log.d("database", "찍힘")
-
+            Log.d("database", "찍힘1")
             db.execSQL(insertData)
-            db.execSQL(insertData2)
-            db.execSQL(insertData3)
         }
-    }
 
-    override fun onDestroy() {
-        val dbHelper = DatabaseHelper(this)
-        dbHelper.close()
-        super.onDestroy()
+        for (i in 1..10) {
+            val insertData =
+                "INSERT INTO ${DatabaseHelper.TABLE_NAME} (${DatabaseHelper.COLUMN_NAME}, ${DatabaseHelper.COLUMN_ADDRESS}) VALUES ('cinema$i', '대전 유성구 봉명동 $i')"
+            Log.d("database", "찍힘2")
+            db.execSQL(insertData)
+        }
+
+        for (i in 1..10) {
+            val insertData =
+                "INSERT INTO ${DatabaseHelper.TABLE_NAME} (${DatabaseHelper.COLUMN_NAME}, ${DatabaseHelper.COLUMN_ADDRESS}) VALUES ('pharmacy$i', '대전 유성구 봉명동 $i')"
+            Log.d("database", "찍힘2")
+            db.execSQL(insertData)
+        }
     }
 }

@@ -26,6 +26,13 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         const val COLUMN_ID = "id"
         const val COLUMN_NAME = "name"
         const val COLUMN_ADDRESS = "address"
-        
+
+
+        @Volatile private var instance: DatabaseHelper? = null
+
+        fun getInstance(context: Context): DatabaseHelper =
+            instance ?: synchronized(this) {
+                instance ?: DatabaseHelper(context.applicationContext).also { instance = it }
+            }
     }
 }
