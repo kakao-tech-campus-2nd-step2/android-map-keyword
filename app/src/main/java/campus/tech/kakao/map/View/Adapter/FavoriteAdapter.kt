@@ -41,7 +41,6 @@ class FavoriteAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = inflater.inflate(R.layout.favorite_element, parent, false)
-
         return ViewHolder(view, onClickDelete)
     }
 
@@ -49,7 +48,7 @@ class FavoriteAdapter(
         return favorites.size
     }
 
-    fun updateData(favoriteList: MutableList<Place>) {
+    fun updateData(favoriteList: List<Place>) {
         this.favorites = favoriteList
         notifyDataSetChanged()
     }
