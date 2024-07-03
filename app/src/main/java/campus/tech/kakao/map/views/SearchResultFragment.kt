@@ -1,7 +1,6 @@
 package campus.tech.kakao.map.views
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.models.SearchResult
 import campus.tech.kakao.map.view_models.SearchActivityViewModel
+import campus.tech.kakao.map.views.adapters.SearchResultAdapter
 
 class SearchResultFragment : Fragment() {
     lateinit var searchResultRecyclerView: RecyclerView

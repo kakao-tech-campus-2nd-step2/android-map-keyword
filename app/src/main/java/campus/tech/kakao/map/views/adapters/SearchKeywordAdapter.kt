@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.views
+package campus.tech.kakao.map.views.adapters
 
 import android.view.LayoutInflater
 import android.view.View

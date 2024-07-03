@@ -1,11 +1,8 @@
 package campus.tech.kakao.map.views
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.EditText
-import android.widget.ListView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
@@ -14,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.view_models.SearchActivityViewModel
+import campus.tech.kakao.map.views.adapters.SearchKeywordAdapter
 
 class MainActivity : AppCompatActivity() {
     private lateinit var searchResultFragmentContainer: FragmentContainerView
