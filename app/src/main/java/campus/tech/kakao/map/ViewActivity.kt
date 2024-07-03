@@ -15,7 +15,7 @@ class ViewActivity : AppCompatActivity() {
         viewModel = LocationViewModel.getInstance(Repository(this))
 
         viewModel.locations.observe(this, Observer { locations ->
-            Log.d("sqlite22","$locations")
+            Log.d("sqlite33","$locations")
         })
 
         test2()
@@ -54,6 +54,11 @@ class ViewActivity : AppCompatActivity() {
             viewModel.insert(Location("컴포즈"+i,"부산시 금정구"+i, "카페"))
         }
 
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        test1()
     }
 
 }

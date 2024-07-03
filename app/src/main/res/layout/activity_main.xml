@@ -35,10 +35,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edtSearch" />
 
-    <ListView
-        android:id="@+id/listLocation"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerLog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/edtSearch"/>
+        app:layout_constraintTop_toBottomOf="@id/edtSearch">
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/recyclerLog"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
