@@ -16,5 +16,8 @@ class SearchLocationActivity : AppCompatActivity() {
 		binding = ActivitySearchLocationBinding.inflate(layoutInflater)
 		setContentView(binding.root)
 
+		binding.removeSearchInputButton.setOnClickListener {
+			binding.searchInputEditText.text.clear()
+		}
 	}
 }
