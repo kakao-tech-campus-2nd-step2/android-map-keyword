@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         val selectList = findViewById<RecyclerView>(R.id.selectList)
         val inputSpace = findViewById<EditText>(R.id.inputSpace)
         val mainText = findViewById<TextView>(R.id.main_text)
+        val cancelBtn = findViewById<ImageView>(R.id.cancelBtn)
 
         //mapItemViewModel.updateMapItemList()
         //selectItemViewModel.updateSelectItemList()
@@ -53,6 +55,10 @@ class MainActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {}
         })
+
+        cancelBtn.setOnClickListener {
+            inputSpace.setText("")
+        }
     }
 }
 
