@@ -6,7 +6,7 @@ class PlaceRepository(private val dbHelper: DBHelper) {
         dbHelper.insert(db,place)
     }
 
-    fun getPlace(): Place?{
+    fun getPlace(): List<Place>?{
         return null
     }
 

@@ -7,7 +7,7 @@ class MainViewModel(private val placeRepository: PlaceRepository): ViewModel() {
         placeRepository.insertPlace(place)
     }
 
-    fun getPlace(): Place? {
+    fun getPlace(): List<Place>? {
         return placeRepository.getPlace()
     }
 
