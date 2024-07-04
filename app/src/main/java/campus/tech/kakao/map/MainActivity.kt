@@ -2,6 +2,8 @@ package campus.tech.kakao.map
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -55,15 +57,19 @@ class MainActivity : AppCompatActivity() {
             binding.inputSearch.text.clear()
         }
 
-        binding.inputSearch.addTextChangedListener {
-            val query = it.toString()
-            if(query.isNotEmpty()) {
-                viewModel.searchDatabase(query)
-            } else {
-                binding.searchRecyclerView.visibility = View.GONE
-                binding.noResult.visibility = View.VISIBLE
+        binding.inputSearch.addTextChangedListener ( object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val query = s.toString()
+                if(query.isNotEmpty()) {
+                    viewModel.searchDatabase(query)
+                } else {
+                    binding.searchRecyclerView.visibility = View.GONE
+                    binding.noResult.visibility = View.VISIBLE
+                }
             }
-        }
+            override fun afterTextChanged(s: Editable?) {}
+            })
 
         //RecyclerView 설정
         //binding.searchRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -75,7 +81,7 @@ class MainActivity : AppCompatActivity() {
             viewModel.addSearch(place)
         }
 
-        savedSearchAdapter = SavedSearchAdpater { place ->
+        savedSearchAdapter = SavedSearchAdapter { place ->
             viewModel.removeSearch(place)
         }
 

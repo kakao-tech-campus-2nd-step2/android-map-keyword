@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.databinding.ItemSavedSearchBinding
 
-class SavedSearchAdpater(private val onDeleteClicked: (String) -> Unit) : RecyclerView.Adapter<SavedSearchAdpater.ViewHolder>() {
+class SavedSearchAdapter(private val onDeleteClicked: (String) -> Unit) : RecyclerView.Adapter<SavedSearchAdapter.ViewHolder>() {
     private val searches = mutableListOf<String>()
 
     class ViewHolder(val binding: ItemSavedSearchBinding) : RecyclerView.ViewHolder(binding.root)
