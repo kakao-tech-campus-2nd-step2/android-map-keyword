@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import campus.tech.kakao.map.databinding.ActivitySearchLocationBinding
 import campus.tech.kakao.map.model.SearchLocationRepository
 import campus.tech.kakao.map.viewmodel.SearchLocationViewModel
@@ -31,5 +33,13 @@ class SearchLocationActivity : AppCompatActivity() {
 				viewModel.searchLocation(s.toString())
 			}
 		})
+
+		viewModel.location.observe(this) {
+			it?.let { locationData ->
+				binding.searchResultRecyclerView.adapter = SearchLocationAdapter(locationData, this)
+				binding.searchResultRecyclerView.layoutManager = LinearLayoutManager(this)
+				binding.emptyResultTextView.isVisible = locationData.isEmpty()
+			}
+		}
 	}
 }
