@@ -12,7 +12,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), DatabaseListener {
     private lateinit var viewModel: MapViewModel
     private lateinit var searchBox: EditText
     private lateinit var searchHistoryView: RecyclerView
@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             searchBox.text.clear()
         }
         val history = viewModel.getAllHistory()
-        searchHistoryView.adapter = HistoryRecyclerAdapter(history, layoutInflater)
+        searchHistoryView.adapter = HistoryRecyclerAdapter(history, layoutInflater, this)
         searchHistoryView.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
         searchHistoryView.isVisible = true
 
@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
 
     fun search(locName: String, isExactMatch: Boolean) {
         val searchResult = viewModel.searchLocation(locName, isExactMatch)
-        searchResultView.adapter = MapRecyclerAdapter(searchResult, layoutInflater, this@MainActivity, ::writeHistory)
+        searchResultView.adapter = MapRecyclerAdapter(searchResult, layoutInflater, this)
         if (searchResult.isNotEmpty() && locName.isNotEmpty()) {
             searchResultView.isVisible = true
             message.isVisible = false
@@ -60,10 +60,16 @@ class MainActivity : AppCompatActivity() {
         searchResultView.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
     }
 
-    fun writeHistory(name: String): Unit {
-        viewModel.writeHistory(name)
+    override fun deleteHistory(historyName: String) {
+        viewModel.deleteHistory(historyName)
         val history = viewModel.getAllHistory()
-        searchHistoryView.adapter = HistoryRecyclerAdapter(history, layoutInflater)
+        searchHistoryView.adapter = HistoryRecyclerAdapter(history, layoutInflater, this)
+    }
+
+    override fun writeHistory(historyName: String): Unit {
+        viewModel.writeHistory(historyName)
+        val history = viewModel.getAllHistory()
+        searchHistoryView.adapter = HistoryRecyclerAdapter(history, layoutInflater, this)
     }
 
 }

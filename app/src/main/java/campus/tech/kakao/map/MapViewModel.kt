@@ -20,11 +20,15 @@ class MapViewModel(mContext: Context) : ViewModel() {
         return model.getAllLocation()
     }
 
-    fun writeHistory(name: String) {
-        model.writeHistory(name)
-    }
-
     fun getAllHistory(): List<String> {
         return model.getAllHistory()
+    }
+
+    fun deleteHistory(historyName: String) {
+        model.deleteHistory(historyName)
+    }
+
+    fun writeHistory(historyName: String) {
+        model.writeHistory(historyName)
     }
 }

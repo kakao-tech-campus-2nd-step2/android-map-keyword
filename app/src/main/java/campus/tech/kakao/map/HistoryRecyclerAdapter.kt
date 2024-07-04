@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 
 class HistoryRecyclerAdapter(
     val history: List<String>,
-    val layoutInflater: LayoutInflater
+    val layoutInflater: LayoutInflater,
+    val databaseListener: DatabaseListener
 ) : RecyclerView.Adapter<HistoryRecyclerAdapter.HistoryViewHolder>() {
     inner class HistoryViewHolder(itemView: View) : ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.history_name)
@@ -18,7 +19,11 @@ class HistoryRecyclerAdapter(
 
         init {
             clear.setOnClickListener {
-                notifyItemRemoved(bindingAdapterPosition)
+                if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                    databaseListener.deleteHistory(name.text.toString())
+                    notifyItemRemoved(bindingAdapterPosition)
+                }
+//                notifyDataSetChanged()
             }
         }
     }

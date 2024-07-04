@@ -13,8 +13,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 class MapRecyclerAdapter(
     val locationList: List<Location>,
     val layoutInflater: LayoutInflater,
-    val mContext: Context,
-    val writeHistory: (String) -> Unit
+    val databaseListener: DatabaseListener
 ) : RecyclerView.Adapter<MapRecyclerAdapter.MapViewHolder>() {
     inner class MapViewHolder(itemView: View) : ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.location_name)
@@ -24,7 +23,7 @@ class MapRecyclerAdapter(
         init {
             itemView.setOnClickListener {
                 if (bindingAdapterPosition != RecyclerView.NO_POSITION)
-                    writeHistory(name.text.toString())
+                    databaseListener.writeHistory(name.text.toString())
             }
         }
     }
