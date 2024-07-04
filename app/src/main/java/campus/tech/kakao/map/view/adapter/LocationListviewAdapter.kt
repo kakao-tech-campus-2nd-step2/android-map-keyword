@@ -1,11 +1,11 @@
-package campus.tech.kakao.map.View.Adapter
+package campus.tech.kakao.map.view.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
-import campus.tech.kakao.map.Model.Location
+import campus.tech.kakao.map.model.Location
 import campus.tech.kakao.map.R
 
 class LocationListviewAdapter(
@@ -31,7 +31,7 @@ class LocationListviewAdapter(
 
         tvName.text = item.name
         tvLocation.text = item.location
-        tvType.text = item.type.toString()
+        tvType.text = item.type
 
         return view
     }

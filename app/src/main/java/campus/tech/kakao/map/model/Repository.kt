@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.Model
+package campus.tech.kakao.map.model
 
 import android.content.ContentValues
 import android.content.Context
@@ -36,6 +36,23 @@ class Repository(context: Context):
             LocationContract.TABLE_NAME, values,
             "${LocationContract.COLUMN_NAME} = ?", arrayOf(location.name)
         )
+    }
+
+    fun selectData(newText: String): List<Location>{
+        val locations = mutableListOf<Location>()
+        val cursor = readableDatabase.query(
+            LocationContract.TABLE_NAME,
+            null, "${LocationContract.COLUMN_NAME} LIKE ?", arrayOf("${newText}%"), null, null, null
+        )
+        cursor?.use {
+            while (it.moveToNext()) {
+                val name = it.getString(it.getColumnIndexOrThrow(LocationContract.COLUMN_NAME))
+                val location = it.getString(it.getColumnIndexOrThrow(LocationContract.COLUMN_LOCATION))
+                val type = it.getString(it.getColumnIndexOrThrow(LocationContract.COLUMN_TYPE))
+                locations.add(Location(name, location, type))
+            }
+        }
+        return locations
     }
 
     fun deleteData(name: String){

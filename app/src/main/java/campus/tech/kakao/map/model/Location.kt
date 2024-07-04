@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.Model
+package campus.tech.kakao.map.model
 
 data class Location (
     val name: String,

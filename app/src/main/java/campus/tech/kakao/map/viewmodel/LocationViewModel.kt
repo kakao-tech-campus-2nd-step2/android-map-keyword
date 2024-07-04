@@ -1,15 +1,22 @@
-package campus.tech.kakao.map.ViewModel
+package campus.tech.kakao.map.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import campus.tech.kakao.map.Model.Location
-import campus.tech.kakao.map.Model.Repository
+import campus.tech.kakao.map.model.Location
+import campus.tech.kakao.map.model.Repository
 
 class LocationViewModel(private val repository: Repository): ViewModel(){
     private val _locations = MutableLiveData<List<Location>>()
     val locations: LiveData<List<Location>>
         get() = _locations
+
+    val searchText = MutableLiveData<String>()
+
+    fun select(){
+        Log.d("07/04d", repository.selectData(searchText.value.toString()).toString())
+    }
 
     fun insert(location: Location){
         repository.insertData(location)
