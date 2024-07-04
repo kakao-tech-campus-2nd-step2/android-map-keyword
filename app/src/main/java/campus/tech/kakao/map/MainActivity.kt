@@ -16,27 +16,12 @@ import campus.tech.kakao.map.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    /* ViewBinding을 사용하기 때문에 주석 처리
-    private lateinit var inputSearch: EditText
-    private lateinit var buttonX: Button
-    private lateinit var noResult: TextView
-    private lateinit var searchListView: ListView
-    */
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
     //private lateinit var dbHelper: DbHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        /* ViewBinding을 사용하기 때문에 주석 처리
-        setContentView(R.layout.activity_main)
-
-        inputSearch = findViewById(R.id.inputSearch)
-        buttonX = findViewById(R.id.buttonX)
-        noResult = findViewById(R.id.noResult)
-        searchListView = findViewById(R.id.searchListView)
-        */
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -55,11 +40,6 @@ class MainActivity : AppCompatActivity() {
             binding.searchRecyclerView.visibility = if (results.isEmpty()) View.GONE else View.VISIBLE
         })
 
-
-        /* ViewBinding을 사용하기 때문에 주석 처리
-        buttonX.setOnClickListener {
-            inputSearch.text.clear()
-        }*/
 
         binding.buttonX.setOnClickListener {
             binding.inputSearch.text.clear()
