@@ -10,6 +10,7 @@ class DataDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         private const val DATABASE_NAME = "data.db"
         private const val DATABASE_VERSION = 1
         private const val TABLE_NAME = "LOCATION"
+        private const val SEARCH_HISTORY = "SEARCH_HISTORY"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -21,6 +22,15 @@ class DataDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
             );
         """.trimIndent()
         db?.execSQL(sql)
+
+        val sql2 = """
+            CREATE TABLE $SEARCH_HISTORY (
+                name TEXT PRIMARY KEY,
+                location TEXT,
+                category TEXT
+            );
+        """.trimIndent()
+        db?.execSQL(sql2)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {

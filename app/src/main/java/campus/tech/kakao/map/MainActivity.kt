@@ -1,6 +1,7 @@
 package campus.tech.kakao.map
 
 import android.content.ContentValues
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -63,7 +64,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 writeDB.insert("LOCATION", null, values)
             }
-            
+
             Log.d("MainActivity", "Reading data")
             val readDB = db.readableDatabase
 
@@ -183,7 +184,6 @@ class MainActivity : AppCompatActivity() {
     private fun updateRecyclerView() {
         locationAdapter.notifyDataSetChanged()
     }
-
 
     private fun isShowText() {
         if (locationList.isEmpty()) {
