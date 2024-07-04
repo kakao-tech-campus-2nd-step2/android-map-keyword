@@ -42,9 +42,10 @@ class PlaceRepository(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
         val cursor = db.query(TABLE_NAME, null, "category=?", arrayOf(category), null, null, null)
         val places = mutableListOf<Place>()
         while (cursor.moveToNext()) {
-            val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
-            val address = cursor.getString(cursor.getColumnIndexOrThrow("address"))
-            places.add(Place(name, address, category))
+            val id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID))
+            val name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME))
+            val address = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ADDRESS))
+            places.add(Place(id, name, address, category))
         }
         cursor.close()
         return places

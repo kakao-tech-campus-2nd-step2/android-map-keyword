@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
     private fun testDataInsert() {
         insertPlaces("서울 성동구 성수동", "카페")
         insertPlaces("서울 강남구 대치동", "약국")
+        insertPlaces("서울 강남구 수서동", "약국")
     }
 
     /**
@@ -66,9 +67,9 @@ class MainActivity : AppCompatActivity() {
         repeat(20) { idx ->
             placeViewModel.insertPlace(
                 Place(
-                    category + (idx + 1),
-                    "$address ${idx + 1}",
-                    category,
+                    name = category + (idx + 1),
+                    address = "$address ${idx + 1}",
+                    category = category,
                 ),
             )
         }
@@ -158,7 +159,12 @@ class MainActivity : AppCompatActivity() {
         val placeItemClickListener =
             object : OnPlaceItemClickListener {
                 override fun onPlaceItemClicked(place: Place) {
-                    savedSearchWordViewModel.insertSearchWord(SavedSearchWord(place.name))
+                    savedSearchWordViewModel.insertSearchWord(
+                        SavedSearchWord(
+                            name = place.name,
+                            placeId = place.id,
+                        ),
+                    )
                 }
             }
         binding.searchResultRecyclerView.adapter = ResultRecyclerViewAdapter(placeItemClickListener)

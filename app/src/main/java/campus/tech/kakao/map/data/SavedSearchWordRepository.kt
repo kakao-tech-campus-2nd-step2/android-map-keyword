@@ -10,7 +10,14 @@ import campus.tech.kakao.map.model.SavedSearchWord
 class SavedSearchWordRepository(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL("CREATE TABLE $TABLE_NAME ($COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_NAME TEXT)")
+        db.execSQL(
+            "CREATE TABLE $TABLE_NAME (" +
+                "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "$COLUMN_NAME TEXT, " +
+                "$COLUMN_PLACE_ID INTEGER, " +
+                "FOREIGN KEY($COLUMN_PLACE_ID) REFERENCES ${PlaceRepository.TABLE_NAME}(${PlaceRepository.COLUMN_ID}) ON DELETE CASCADE" +
+                ")",
+        )
     }
 
     override fun onUpgrade(
@@ -26,10 +33,14 @@ class SavedSearchWordRepository(context: Context) :
         val db = writableDatabase
         db.beginTransaction()
         try {
-            db.delete(TABLE_NAME, "$COLUMN_NAME = ?", arrayOf(searchWord.name))
+            db.delete(TABLE_NAME, "$COLUMN_PLACE_ID = ?", arrayOf(searchWord.placeId.toString()))
             val contentValues =
                 ContentValues().apply {
                     put(COLUMN_NAME, searchWord.name)
+                    put(
+                        COLUMN_PLACE_ID,
+                        searchWord.placeId,
+                    )
                 }
             db.insert(TABLE_NAME, null, contentValues)
             db.setTransactionSuccessful()
@@ -45,8 +56,10 @@ class SavedSearchWordRepository(context: Context) :
         val cursor = db.query(TABLE_NAME, null, null, null, null, null, null)
         val searchWords = mutableListOf<SavedSearchWord>()
         while (cursor.moveToNext()) {
+            val id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID))
             val name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME))
-            searchWords.add(SavedSearchWord(name))
+            val placeId = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_PLACE_ID))
+            searchWords.add(SavedSearchWord(id, name, placeId))
         }
         cursor.close()
         return searchWords
@@ -54,7 +67,13 @@ class SavedSearchWordRepository(context: Context) :
 
     fun deleteSearchWord(searchWord: SavedSearchWord) {
         val db = writableDatabase
-        db.delete(TABLE_NAME, "$COLUMN_NAME = ?", arrayOf(searchWord.name))
+        db.delete(TABLE_NAME, "$COLUMN_ID = ?", arrayOf(searchWord.id.toString()))
+    }
+
+    fun clearAll() {
+        val db = writableDatabase
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
+        onCreate(db)
     }
 
     companion object {
@@ -64,5 +83,6 @@ class SavedSearchWordRepository(context: Context) :
 
         const val COLUMN_ID = "id"
         const val COLUMN_NAME = "name"
+        const val COLUMN_PLACE_ID = "place_id"
     }
 }
