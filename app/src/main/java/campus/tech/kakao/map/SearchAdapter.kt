@@ -6,7 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import campus.tech.kakao.map.databinding.ItemResultBinding
 
-class SearchAdapter(private val results: List<String>) : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
+class SearchAdapter(private val onItemClicked: (String) -> Unit) : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
+
+    private val results = mutableListOf<String>()
+
     class ViewHolder(val binding: ItemResultBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -16,7 +19,16 @@ class SearchAdapter(private val results: List<String>) : RecyclerView.Adapter<Se
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.resutTextView.text = results[position]
+        holder.binding.root.setOnClickListener {
+            onItemClicked(results[position])
+        }
     }
 
     override fun getItemCount() = results.size
+
+    fun updateResults(newResults: List<String>) {
+        results.clear()
+        results.addAll(newResults)
+        notifyDataSetChanged()
+    }
 }
