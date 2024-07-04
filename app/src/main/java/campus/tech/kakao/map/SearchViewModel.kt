@@ -19,4 +19,8 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
             _searchDataList.value = repository.getSearchDataList()
         }
     }
+
+    fun loadSearchData(data: String): List<SearchData> {
+        return repository.getResultDataList(data)
+    }
 }

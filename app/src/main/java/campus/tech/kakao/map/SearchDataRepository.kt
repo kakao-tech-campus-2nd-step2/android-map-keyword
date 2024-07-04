@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -31,5 +32,22 @@ class SearchDataRepository(context: Context){
         cursor.close()
 
         return searchDataList
+    }
+
+    @SuppressLint("Recycle")
+    fun getResultDataList(data:String):List<SearchData>{
+        val rDb = db.readableDatabase
+        val resultDataList = mutableListOf<SearchData>()
+        val query = "Select * from ${SearchDataContract.TABLE_NAME} WHERE ${SearchDataContract.TABLE_COLUMN_NAME} Like '%$data%'"
+        val cursor:Cursor = rDb.rawQuery(query,null)
+        while(cursor.moveToNext()){
+            val name = cursor.getString(cursor.getColumnIndexOrThrow(SearchDataContract.TABLE_COLUMN_NAME))
+            val category = cursor.getString(cursor.getColumnIndexOrThrow(SearchDataContract.TABLE_COLUMN_CATEGORY))
+            val address = cursor.getString(cursor.getColumnIndexOrThrow(SearchDataContract.TABLE_COLUMN_ADDRESS))
+            resultDataList.add(SearchData(name, category, address))
+        }
+        cursor.close()
+
+        return resultDataList
     }
 }
