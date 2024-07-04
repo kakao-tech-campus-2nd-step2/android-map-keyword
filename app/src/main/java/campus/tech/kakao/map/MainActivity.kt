@@ -55,8 +55,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        horadapter = HorRecycleAdapter()
-        
+        horadapter = HorRecycleAdapter(){ name ->
+            DeleteItem(name)
+        }
         RecyclerView.adapter = adapter
         RecyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -151,6 +152,23 @@ class MainActivity : AppCompatActivity() {
         HistoryDB.insert(HistoryEntry.TABLE_NAME,null,values)
     }
 
+    fun DeleteItem(name : String){
+        val selection = "${HistoryEntry.COLUMN_NAME} = ?"
+        val selectionArgs = arrayOf(name)
+
+        HistoryDB = HistoryDBHelper.writableDatabase
+
+        val deleteRows = HistoryDB.delete(
+            HistoryEntry.TABLE_NAME,
+            selection,
+            selectionArgs
+        )
+
+        if (deleteRows > 0){
+            SubAllHistory()
+        }
+
+    }
 
     override fun onDestroy() {
         super.onDestroy()

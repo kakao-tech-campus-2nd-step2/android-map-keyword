@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.databinding.HoritemRecyclerviewBinding
 
 
-class HorRecycleAdapter() : RecyclerView.Adapter<HorRecycleAdapter.Holder>() {
+class HorRecycleAdapter(private val onClick : (String) -> Unit ) : RecyclerView.Adapter<HorRecycleAdapter.Holder>() {
 
     private var cursor:Cursor? = null
 
@@ -18,7 +18,8 @@ class HorRecycleAdapter() : RecyclerView.Adapter<HorRecycleAdapter.Holder>() {
 
         fun bind(name: String) {
             binding.Name.text = name
-            
+            binding.root.setOnClickListener{
+                onClick(name)
             }
         }
 
