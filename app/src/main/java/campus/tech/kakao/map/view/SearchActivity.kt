@@ -22,6 +22,10 @@ class SearchActivity : AppCompatActivity() {
 
         setSearchTextObserver()
         setCancelBtnClickListener()
+
+        viewModel.insertPlaceDummyData(this, "카페", "대전 유성구 궁동", "카페")
+        viewModel.insertPlaceDummyData(this, "약국", "대전 유성구 봉명동", "약국")
+        viewModel.getAllPlaces(this)
     }
 
     private fun setSearchTextObserver() {
