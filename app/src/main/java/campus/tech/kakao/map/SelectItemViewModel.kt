@@ -3,8 +3,8 @@ package campus.tech.kakao.map
 import android.content.Context
 import androidx.lifecycle.ViewModel
 
-class SelectItemViewModel(context: Context) : ViewModel(){
-    private var selectItemList : MutableList<MapItem>
+class SelectItemViewModel(context: Context) : ViewModel() {
+    private var selectItemList: MutableList<MapItem>
     val selectItemDB = SelectItemDBHelper(context)
 
     init {
@@ -16,11 +16,11 @@ class SelectItemViewModel(context: Context) : ViewModel(){
         selectItemList = selectItemDB.makeAllSelectItemList()
     }
 
-    fun getSelectItemList() : MutableList<MapItem>{
+    fun getSelectItemList(): MutableList<MapItem> {
         return selectItemList
     }
 
-    fun insertSelectItem(name: String, address: String, category: String, id : Int) {
+    fun insertSelectItem(name: String, address: String, category: String, id: Int) {
         selectItemDB.insertSelectItem(name, address, category, id)
         selectItemList = selectItemDB.makeAllSelectItemList()
     }

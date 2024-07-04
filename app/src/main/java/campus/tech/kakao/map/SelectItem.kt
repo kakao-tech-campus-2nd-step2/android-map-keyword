@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 
 data class SelectItem(
-    val id : Int,
+    val id: Int,
     val name: String
 )
 
@@ -42,17 +42,17 @@ class SelectItemDBHelper(context: Context) : SQLiteOpenHelper(context, "selectIt
         onCreate(db)
     }
 
-    fun insertSelectItem(name: String, address: String, category: String, id : Int) {
-            val values = ContentValues()
-            values.put(SelectItemDB.TABLE_COLUMN_NAME, name)
-            values.put(SelectItemDB.TABLE_COLUMN_ADDRESS, address)
-            values.put(SelectItemDB.TABLE_COLUMN_CATEGORY, category)
-            values.put(SelectItemDB.TABLE_COLUMN_MAP_ITEM_ID, id)
+    fun insertSelectItem(name: String, address: String, category: String, id: Int) {
+        val values = ContentValues()
+        values.put(SelectItemDB.TABLE_COLUMN_NAME, name)
+        values.put(SelectItemDB.TABLE_COLUMN_ADDRESS, address)
+        values.put(SelectItemDB.TABLE_COLUMN_CATEGORY, category)
+        values.put(SelectItemDB.TABLE_COLUMN_MAP_ITEM_ID, id)
 
-            wDb.insert(SelectItemDB.TABLE_NAME, null, values)
+        wDb.insert(SelectItemDB.TABLE_NAME, null, values)
     }
 
-    fun deleteSelectItem(id : Int) {
+    fun deleteSelectItem(id: Int) {
         wDb.delete(
             SelectItemDB.TABLE_NAME,
             "${SelectItemDB.TABLE_COLUMN_MAP_ITEM_ID}=?",
@@ -61,7 +61,10 @@ class SelectItemDBHelper(context: Context) : SQLiteOpenHelper(context, "selectIt
     }
 
     fun makeAllSelectItemList(): MutableList<MapItem> {
-        val cursor = rDb.rawQuery("Select * from ${SelectItemDB.TABLE_NAME} order by ${SelectItemDB.TABLE_COLUMN_ID} desc", null)
+        val cursor = rDb.rawQuery(
+            "Select * from ${SelectItemDB.TABLE_NAME} order by ${SelectItemDB.TABLE_COLUMN_ID} desc",
+            null
+        )
         val selectItemList = mutableListOf<MapItem>()
         while (cursor.moveToNext()) {
             selectItemList.add(

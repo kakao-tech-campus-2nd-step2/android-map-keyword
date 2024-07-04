@@ -23,6 +23,7 @@ class MapListAdapter(
             }
         }
     }
+
     interface ItemClickListener {
         fun onClick(v: View, position: Int)
     }

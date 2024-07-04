@@ -9,7 +9,7 @@ import android.util.Log
 
 
 data class MapItem(
-    val id : Int,
+    val id: Int,
     val name: String,
     val address: String,
     val category: String
@@ -24,8 +24,8 @@ object MapItemDB : BaseColumns {
 }
 
 class MapItemDbHelper(context: Context) : SQLiteOpenHelper(context, "mapItem.db", null, 1) {
-    //val wDb = writableDatabase
-    //val rDb = readableDatabase
+    val wDb = writableDatabase
+    val rDb = readableDatabase
 
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(
@@ -45,8 +45,13 @@ class MapItemDbHelper(context: Context) : SQLiteOpenHelper(context, "mapItem.db"
         onCreate(db)
     }
 
-    private fun insertMapItem(db: SQLiteDatabase?, name: String, address: String, category: String) {
-        if(db != null) {
+    private fun insertMapItem(
+        db: SQLiteDatabase?,
+        name: String,
+        address: String,
+        category: String
+    ) {
+        if (db != null) {
             for (i in 1..20) {
                 val values = ContentValues()
                 values.put(MapItemDB.TABLE_COLUMN_NAME, name + i)
@@ -58,9 +63,7 @@ class MapItemDbHelper(context: Context) : SQLiteOpenHelper(context, "mapItem.db"
         }
     }
 
-
     fun makeAllMapItemList(): MutableList<MapItem> {
-        val rDb = readableDatabase
         val cursor = rDb.rawQuery("Select * from ${MapItemDB.TABLE_NAME}", null)
         val mapItemList = mutableListOf<MapItem>()
         while (cursor.moveToNext()) {
@@ -79,7 +82,6 @@ class MapItemDbHelper(context: Context) : SQLiteOpenHelper(context, "mapItem.db"
     }
 
     fun printAllMapItemList() {
-        val rDb = readableDatabase
         val cursor = rDb.rawQuery("Select * from ${MapItemDB.TABLE_NAME}", null)
         while (cursor.moveToNext()) {
             Log.d(
@@ -91,9 +93,7 @@ class MapItemDbHelper(context: Context) : SQLiteOpenHelper(context, "mapItem.db"
         cursor.close()
     }
 
-    fun searchMapItem(category : String) : MutableList<MapItem>{
-        val rDb = readableDatabase
-
+    fun searchMapItem(category: String): MutableList<MapItem> {
         val cursor = rDb.query(
             MapItemDB.TABLE_NAME, // 테이블
             null, // 리턴 받고자 하는 컬럼
@@ -105,7 +105,7 @@ class MapItemDbHelper(context: Context) : SQLiteOpenHelper(context, "mapItem.db"
         )
 
         val mapItemList = mutableListOf<MapItem>()
-        if(cursor != null && cursor.getCount() > 0) {
+        if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 mapItemList.add(
                     MapItem(

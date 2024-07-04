@@ -12,7 +12,7 @@ class SelectListAdapter(
 ) : RecyclerView.Adapter<SelectListAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name: TextView
-        val cancelBtn : ImageView
+        val cancelBtn: ImageView
 
         init {
             name = itemView.findViewById<TextView>(R.id.name)

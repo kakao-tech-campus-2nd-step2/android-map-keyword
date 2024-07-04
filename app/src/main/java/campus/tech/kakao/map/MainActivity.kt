@@ -31,8 +31,10 @@ class MainActivity : AppCompatActivity() {
         //mapItemViewModel.updateMapItemList()
         //selectItemViewModel.updateSelectItemList()
 
-        val mapListAdapter = MapListAdapter(mapItemViewModel.getMapItemList(), LayoutInflater.from(this))
-        val selectListAdapter = SelectListAdapter(selectItemViewModel.getSelectItemList(), LayoutInflater.from(this))
+        val mapListAdapter =
+            MapListAdapter(mapItemViewModel.getMapItemList(), LayoutInflater.from(this))
+        val selectListAdapter =
+            SelectListAdapter(selectItemViewModel.getSelectItemList(), LayoutInflater.from(this))
 
         mapList.adapter = mapListAdapter
         mapList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -43,28 +45,32 @@ class MainActivity : AppCompatActivity() {
         mapListAdapter.setItemClickListener(object : MapListAdapter.ItemClickListener {
             override fun onClick(v: View, position: Int) {
                 val mapItem = mapListAdapter.mapItemList.get(position)
-                Log.d("uin", "@"+ mapItem.name + "#"+ mapItem.id)
-                selectItemViewModel.insertSelectItem(mapItem.name, mapItem.address, mapItem.category, mapItem.id)
+                selectItemViewModel.insertSelectItem(
+                    mapItem.name,
+                    mapItem.address,
+                    mapItem.category,
+                    mapItem.id
+                )
                 selectListAdapter.updateMapItemList(selectItemViewModel.getSelectItemList())
             }
         })
 
-        selectListAdapter.setCancelBtnClickListener(object : SelectListAdapter.CancelBtnClickListener{
+        selectListAdapter.setCancelBtnClickListener(object :
+            SelectListAdapter.CancelBtnClickListener {
             override fun onClick(v: View, position: Int) {
                 val selectItem = selectListAdapter.selectItemList.get(position)
-                Log.d("uin", ""+ selectItem.name + "#"+ selectItem.id)
                 selectItemViewModel.deleteSelectItem(selectItem.id)
                 selectListAdapter.updateMapItemList(selectItemViewModel.getSelectItemList())
             }
         })
 
-        inputSpace.addTextChangedListener(object: TextWatcher{
+        inputSpace.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val mapItemList = mapItemViewModel.searchMapItem(s.toString())
                 mapListAdapter.updateMapItemList(mapItemList)
-                if(mapItemList.size == 0) {
+                if (mapItemList.size == 0) {
                     mainText.visibility = View.VISIBLE
                 } else {
                     mainText.visibility = View.INVISIBLE
