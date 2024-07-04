@@ -12,6 +12,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -19,6 +20,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
     //private lateinit var dbHelper: DbHelper
+
+    private lateinit var searchAdapter: SearchAdapter
+    private lateinit var savedSearchAdapter: SavedSearchAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,17 +40,50 @@ class MainActivity : AppCompatActivity() {
         viewModel.insertInitialData()
 
         viewModel.searchResults.observe(this, Observer { results ->
-            binding.searchRecyclerView.adapter = SearchAdapter(results)
+            //binding.searchRecyclerView.adapter = SearchAdapter(results)
+            searchAdapter.updateResults(results)
             binding.searchRecyclerView.visibility = if (results.isEmpty()) View.GONE else View.VISIBLE
+            binding.noResult.visibility = if (results.isEmpty())View.VISIBLE else View.GONE
         })
 
+        viewModel.savedSearches.observe(this, Observer { searches ->
+            savedSearchAdapter.updateSearches(searches)
+        })
 
+        //X 버튼 클릭 시 입력창 초기화
         binding.buttonX.setOnClickListener {
             binding.inputSearch.text.clear()
         }
 
+        binding.inputSearch.addTextChangedListener {
+            val query = it.toString()
+            if(query.isNotEmpty()) {
+                viewModel.searchDatabase(query)
+            } else {
+                binding.searchRecyclerView.visibility = View.GONE
+                binding.noResult.visibility = View.VISIBLE
+            }
+        }
+
         //RecyclerView 설정
-        binding.searchRecyclerView.layoutManager = LinearLayoutManager(this)
+        //binding.searchRecyclerView.layoutManager = LinearLayoutManager(this)
+        setupRecyclerViews()
+    }
+
+    fun setupRecyclerViews() {
+        searchAdapter = SearchAdapter { place ->
+            viewModel.addSearch(place)
+        }
+
+        savedSearchAdapter = SavedSearchAdpater { place ->
+            viewModel.removeSearch(place)
+        }
+
+        binding.savedSearchRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.searchRecyclerView.adapter = searchAdapter
+
+        binding.savedSearchRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        binding.savedSearchRecyclerView.adapter = savedSearchAdapter
     }
 
 }
