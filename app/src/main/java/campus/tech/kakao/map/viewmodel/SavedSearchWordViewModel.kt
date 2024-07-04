@@ -17,22 +17,25 @@ class SavedSearchWordViewModel(application: Application) : AndroidViewModel(appl
 
     val savedSearchWords: LiveData<List<SavedSearchWord>> get() = _savedSearchWords
 
+    init {
+        getAllSearchWords()
+    }
+
     fun insertSearchWord(searchWord: SavedSearchWord) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                repository.deleteAndInsertSearchWord(searchWord)
+                repository.insertOrUpdateSearchWord(searchWord)
                 getAllSearchWords()
             }
         }
     }
 
-    fun deleteSearchWord(searchWord: SavedSearchWord) {
+    fun deleteSearchWordById(searchWord: SavedSearchWord) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                repository.deleteSearchWord(searchWord)
+                repository.deleteSearchWordById(searchWord.id)
                 val currentList = _savedSearchWords.value ?: emptyList()
-                val updatedList = currentList.filter { it != searchWord }
-                _savedSearchWords.postValue(updatedList)
+                _savedSearchWords.postValue(currentList - searchWord)
             }
         }
     }
@@ -44,9 +47,5 @@ class SavedSearchWordViewModel(application: Application) : AndroidViewModel(appl
                 _savedSearchWords.postValue(searchWords)
             }
         }
-    }
-
-    init {
-        getAllSearchWords()
     }
 }

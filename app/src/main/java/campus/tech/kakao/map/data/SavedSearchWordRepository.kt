@@ -10,14 +10,15 @@ import campus.tech.kakao.map.model.SavedSearchWord
 class SavedSearchWordRepository(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(
-            "CREATE TABLE $TABLE_NAME (" +
-                "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "$COLUMN_NAME TEXT, " +
-                "$COLUMN_PLACE_ID INTEGER, " +
-                "FOREIGN KEY($COLUMN_PLACE_ID) REFERENCES ${PlaceRepository.TABLE_NAME}(${PlaceRepository.COLUMN_ID}) ON DELETE CASCADE" +
-                ")",
-        )
+        val createTableQuery = """
+            CREATE TABLE $TABLE_NAME (
+                $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                $COLUMN_NAME TEXT,
+                $COLUMN_PLACE_ID INTEGER,
+                FOREIGN KEY($COLUMN_PLACE_ID) REFERENCES ${PlaceRepository.TABLE_NAME}(${PlaceRepository.COLUMN_ID}) ON DELETE CASCADE
+            )
+        """
+        db.execSQL(createTableQuery)
     }
 
     override fun onUpgrade(
@@ -29,7 +30,7 @@ class SavedSearchWordRepository(context: Context) :
         onCreate(db)
     }
 
-    fun deleteAndInsertSearchWord(searchWord: SavedSearchWord) {
+    fun insertOrUpdateSearchWord(searchWord: SavedSearchWord) {
         val db = writableDatabase
         db.beginTransaction()
         try {
@@ -65,15 +66,10 @@ class SavedSearchWordRepository(context: Context) :
         return searchWords
     }
 
-    fun deleteSearchWord(searchWord: SavedSearchWord) {
-        val db = writableDatabase
-        db.delete(TABLE_NAME, "$COLUMN_ID = ?", arrayOf(searchWord.id.toString()))
-    }
-
-    fun clearAll() {
-        val db = writableDatabase
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
-        onCreate(db)
+    fun deleteSearchWordById(id: Long) {
+        writableDatabase.use { db ->
+            db.delete(TABLE_NAME, "$COLUMN_ID = ?", arrayOf(id.toString()))
+        }
     }
 
     companion object {

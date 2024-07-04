@@ -17,6 +17,10 @@ class PlaceViewModel(application: Application) : AndroidViewModel(application) {
 
     val searchResults: LiveData<List<Place>> get() = _searchResults
 
+    init {
+        clearSearchResults()
+    }
+
     fun insertPlace(place: Place) {
         placeRepository.insertPlace(place)
     }
@@ -29,16 +33,12 @@ class PlaceViewModel(application: Application) : AndroidViewModel(application) {
         _searchResults.value = emptyList()
     }
 
-    fun searchPlaces(category: String) {
+    fun searchPlacesByCategory(category: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val results = placeRepository.getPlacesByCategory(category)
                 _searchResults.postValue(results)
             }
         }
-    }
-
-    init {
-        clearSearchResults()
     }
 }

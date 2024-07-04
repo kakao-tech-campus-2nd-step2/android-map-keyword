@@ -20,29 +20,40 @@ import campus.tech.kakao.map.viewmodel.SavedSearchWordViewModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var placeViewModel: PlaceViewModel
-    private lateinit var savedSearchWordViewModel: SavedSearchWordViewModel
+    private val placeViewModel by lazy { ViewModelProvider(this)[PlaceViewModel::class.java] }
+    private val savedSearchWordViewModel by lazy { ViewModelProvider(this)[SavedSearchWordViewModel::class.java] }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        placeViewModel = ViewModelProvider(this)[PlaceViewModel::class.java]
-        savedSearchWordViewModel = ViewModelProvider(this)[SavedSearchWordViewModel::class.java]
-        binding.placeViewModel = placeViewModel
-        binding.savedSearchWordViewModel = savedSearchWordViewModel
-        binding.lifecycleOwner = this
+        setupBinding()
+        setupDummyData()
+        setupViews()
+        observeViewModels()
+    }
 
-        setRecyclerViews()
+    private fun setupBinding() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.apply {
+            this.placeViewModel = this@MainActivity.placeViewModel
+            this.savedSearchWordViewModel = this@MainActivity.savedSearchWordViewModel
+            this.lifecycleOwner = this@MainActivity
+        }
+    }
+
+    /**
+     * RecyclerView들을 설정하는 함수.
+     */
+    private fun setupRecyclerViews() {
         setSearchResultRecyclerView()
+        setSavedSearchWordRecyclerView()
+    }
+
+    /**
+     * 테스트용 더미 데이터를 place db에 삽입하기 위한 함수.
+     */
+    private fun setupDummyData() {
         placeViewModel.clearAllPlaces()
         testDataInsert()
-
-        setClearImageViewClickListener()
-        setSearchEditText()
-
-        observeViewModels()
-        observeSearchResults()
-        observeSavedSearchWords()
     }
 
     /**
@@ -76,11 +87,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * RecyclerView들을 설정하는 함수.
+     * view들에 필요한 작업을 처리하는 함수.
      */
-    private fun setRecyclerViews() {
-        setSearchResultRecyclerView()
-        setSavedSearchWordRecyclerView()
+    private fun setupViews() {
+        setClearImageViewClickListener()
+        setSearchEditText()
+        setupRecyclerViews()
     }
 
     /**
@@ -90,9 +102,9 @@ class MainActivity : AppCompatActivity() {
         binding.searchEditText.addTextChangedListener { editable ->
             val searchText = editable.toString().trim()
             if (searchText.isNotEmpty()) {
-                placeViewModel.searchPlaces(searchText)
+                placeViewModel.searchPlacesByCategory(searchText)
             } else {
-                placeViewModel.searchPlaces("")
+                placeViewModel.searchPlacesByCategory("")
             }
         }
     }
@@ -105,44 +117,6 @@ class MainActivity : AppCompatActivity() {
     private fun setClearImageViewClickListener() {
         binding.searchClearImageView.setOnClickListener {
             binding.searchEditText.text = null
-        }
-    }
-
-    /**
-     * viewModel을 관찰하도록 하는 함수.
-     */
-    private fun observeViewModels() {
-        observeSearchResults()
-        observeSavedSearchWords()
-    }
-
-    /**
-     * 검색 결과를 관찰하고, RecyclerView에 결과를 반영하는 함수.
-     */
-    private fun observeSearchResults() {
-        placeViewModel.searchResults.observe(
-            this,
-        ) { places ->
-            if (places.isNotEmpty()) {
-                (binding.searchResultRecyclerView.adapter as ResultRecyclerViewAdapter).setPlaces(
-                    places,
-                )
-            }
-        }
-    }
-
-    /**
-     * 저장된 검색어를 관찰하고, RecyclerView에 결과를 반영하는 함수.
-     */
-    private fun observeSavedSearchWords() {
-        savedSearchWordViewModel.savedSearchWords.observe(
-            this,
-        ) { savedSearchWords ->
-            if (savedSearchWords.isNotEmpty()) {
-                (binding.savedSearchWordRecyclerView.adapter as SavedSearchWordRecyclerViewAdapter).setSavedSearchWords(
-                    savedSearchWords,
-                )
-            }
         }
     }
 
@@ -231,7 +205,7 @@ class MainActivity : AppCompatActivity() {
         val savedSearchWordClearImageViewClickListener =
             object : OnSavedSearchWordClearImageViewClickListener {
                 override fun onSavedSearchWordClearImageViewClicked(savedSearchWord: SavedSearchWord) {
-                    savedSearchWordViewModel.deleteSearchWord(savedSearchWord)
+                    savedSearchWordViewModel.deleteSearchWordById(savedSearchWord)
                 }
             }
         binding.savedSearchWordRecyclerView.adapter =
@@ -291,6 +265,44 @@ class MainActivity : AppCompatActivity() {
                 binding.savedSearchWordClearImageView.setOnClickListener {
                     clickListener.onSavedSearchWordClearImageViewClicked(savedSearchWord)
                 }
+            }
+        }
+    }
+
+    /**
+     * viewModel을 관찰하도록 하는 함수.
+     */
+    private fun observeViewModels() {
+        observeSearchResults()
+        observeSavedSearchWords()
+    }
+
+    /**
+     * 검색 결과를 관찰하고, RecyclerView에 결과를 반영하는 함수.
+     */
+    private fun observeSearchResults() {
+        placeViewModel.searchResults.observe(
+            this,
+        ) { places ->
+            if (places.isNotEmpty()) {
+                (binding.searchResultRecyclerView.adapter as ResultRecyclerViewAdapter).setPlaces(
+                    places,
+                )
+            }
+        }
+    }
+
+    /**
+     * 저장된 검색어를 관찰하고, RecyclerView에 결과를 반영하는 함수.
+     */
+    private fun observeSavedSearchWords() {
+        savedSearchWordViewModel.savedSearchWords.observe(
+            this,
+        ) { savedSearchWords ->
+            if (savedSearchWords.isNotEmpty()) {
+                (binding.savedSearchWordRecyclerView.adapter as SavedSearchWordRecyclerViewAdapter).setSavedSearchWords(
+                    savedSearchWords,
+                )
             }
         }
     }
