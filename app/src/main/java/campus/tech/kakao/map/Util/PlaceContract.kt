@@ -11,7 +11,7 @@ object PlaceContract {
         const val COLUMN_ADDRESS = "address"
         const val COLUMN_CATEGORY = "category"
 
-        val SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS $TABLE_NAME (" +
+        const val SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS $TABLE_NAME (" +
                 "$COLUMN_NAME varchar(30) not null," +
                 "$COLUMN_ADDRESS varchar(30)," +
                 "$COLUMN_CATEGORY int);";
@@ -25,7 +25,7 @@ object PlaceContract {
         const val COLUMN_ADDRESS = "address"
         const val COLUMN_CATEGORY = "category"
 
-        val SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS $TABLE_NAME (" +
+        const val SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS $TABLE_NAME (" +
                 "$COLUMN_NAME varchar(30) not null," +
                 "$COLUMN_ADDRESS varchar(30)," +
                 "$COLUMN_CATEGORY int);";
