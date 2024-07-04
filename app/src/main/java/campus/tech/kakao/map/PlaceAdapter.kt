@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 
-class PlaceAdapter(val items: List<Place>, val inflater: LayoutInflater): RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder>() {
+class PlaceAdapter(var items: List<Place>, val inflater: LayoutInflater): RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder>() {
 
     interface OnItemClickListener {
         fun onItemClick(position: Int) {}
@@ -31,7 +31,12 @@ class PlaceAdapter(val items: List<Place>, val inflater: LayoutInflater): Recycl
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return items.size ?: 0
+    }
+
+    fun setData(searchResults: List<Place>) {
+        items = searchResults
+        notifyDataSetChanged()
     }
 
     inner class PlaceViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

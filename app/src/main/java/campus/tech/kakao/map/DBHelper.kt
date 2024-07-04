@@ -30,7 +30,7 @@ class DBHelper (context: Context): SQLiteOpenHelper(context, "place.db", null, 1
         db.execSQL(sql)
     }
 
-    fun select(db: SQLiteDatabase,name:String, address: String, category: String) : String? {
+    fun select(db: SQLiteDatabase, name:String, address: String, category: String) : String? {
         return null
     }
 
