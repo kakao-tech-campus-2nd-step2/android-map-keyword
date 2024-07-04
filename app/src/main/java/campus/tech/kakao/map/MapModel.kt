@@ -73,12 +73,40 @@ class MapModel(mContext: Context) {
         return Location(name, category, address)
     }
 
-    fun writeHistory(name: String) {
+    fun writeHistory(locName: String) {
+
+        if (isHistoryExist(locName))
+            deleteHistory(locName)
         val writeableDb = helper.writableDatabase
         val content = ContentValues()
-        content.put(MapContract.MapEntry.COLUMN_NAME_NAME, name)
-
+        content.put(MapContract.MapEntry.COLUMN_NAME_NAME, locName)
         writeableDb.insert(MapContract.MapEntry.TABLE_NAME_HISTORY, null, content)
+    }
+
+    private fun isHistoryExist(locName: String): Boolean {
+        val readableDb = helper.readableDatabase
+        val selection = "${MapContract.MapEntry.COLUMN_NAME_NAME} = ?"
+        val selectionArgs = arrayOf(locName)
+        val cursor = readableDb.query(
+            MapContract.MapEntry.TABLE_NAME_HISTORY,
+            null,
+            selection,
+            selectionArgs,
+            null,
+            null,
+            null
+        )
+        val isExist: Boolean = cursor.moveToNext()
+        cursor.close()
+        return isExist
+    }
+
+    fun deleteHistory(locName: String) {
+        val writeableDb = helper.writableDatabase
+        val selection = "${MapContract.MapEntry.COLUMN_NAME_NAME} = ?"
+        val selectionArgs = arrayOf(locName)
+
+        writeableDb.delete(MapContract.MapEntry.TABLE_NAME_HISTORY, selection, selectionArgs)
     }
 
     fun getAllHistory(): List<String> {
@@ -98,7 +126,6 @@ class MapModel(mContext: Context) {
             res.add(cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_NAME)))
         }
         cursor.close()
-
         return res
     }
 }
