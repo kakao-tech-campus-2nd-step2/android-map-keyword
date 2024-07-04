@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         createQuery()
         initialize()
+        setCancelBtn()
         setSearchView()
         setRecyclerView()
         setSearchListener()
@@ -99,6 +100,12 @@ class MainActivity : AppCompatActivity() {
         cancelBtn = findViewById(R.id.cancelBtn)
         resultView = findViewById(R.id.resultView)
         searchView = findViewById(R.id.searchView)
+    }
+
+    private fun setCancelBtn() {
+        cancelBtn.setOnClickListener {
+            inputText.text.clear()
+        }
     }
 
     private fun setRecyclerView() {
