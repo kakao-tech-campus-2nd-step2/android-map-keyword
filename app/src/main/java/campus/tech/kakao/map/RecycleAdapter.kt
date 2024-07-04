@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.databinding.ItemRecyclerviewBinding
 
-class RecycleAdapter() : RecyclerView.Adapter<RecycleAdapter.Holder>() {
+class RecycleAdapter( val onClick : (String) -> (Unit)) : RecyclerView.Adapter<RecycleAdapter.Holder>() {
 
     private var cursor: Cursor? = null
 
@@ -17,7 +17,9 @@ class RecycleAdapter() : RecyclerView.Adapter<RecycleAdapter.Holder>() {
             binding.Name.text = name
             binding.Address.text = address
             binding.Category.text = category
-    
+            binding.root.setOnClickListener{
+                onClick(name)
+            }
         }
     }
 

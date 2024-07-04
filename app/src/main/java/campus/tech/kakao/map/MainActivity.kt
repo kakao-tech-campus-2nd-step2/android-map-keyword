@@ -15,9 +15,11 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
     lateinit var DBHelper: DBHelper
+    lateinit var HistoryDBHelper : HistoryDBHelper
     lateinit var DB: SQLiteDatabase
+    lateinit var HistoryDB : SQLiteDatabase
     lateinit var adapter: RecycleAdapter
-
+    lateinit var horadapter : HorRecycleAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +34,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         DBHelper = DBHelper(this, "place.db", null, 2)
-        
+        HistoryDBHelper = HistoryDBHelper(this,"history.db",null,2)
+
         MakeDummyData("카페")
         MakeDummyData("약국")
 
@@ -43,12 +46,24 @@ class MainActivity : AppCompatActivity() {
         val Search = binding.SearchText
         val NoSearchText = binding.NoSearchText
         val RecyclerView = binding.RecyclerView
+        val HolRecyclerView = binding.HorRecyclerView
 
-        adapter = RecycleAdapter()
+        adapter = RecycleAdapter(){ name ->
+            if (SearchHistory(name) == 0) {
+                insertHistory(name)
+                SubAllHistory()
+            }
+        }
 
+        horadapter = HorRecycleAdapter()
+        
         RecyclerView.adapter = adapter
         RecyclerView.layoutManager = LinearLayoutManager(this)
 
+        HolRecyclerView.adapter = horadapter
+        HolRecyclerView.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false)
+
+        SubAllHistory()
 
 
         Search.addTextChangedListener {
@@ -81,7 +96,38 @@ class MainActivity : AppCompatActivity() {
         adapter.SubmitCursor(cursor)
     }
 
-   
+    fun SearchHistory(name : String): Int {
+        val selection = "${HistoryEntry.COLUMN_NAME} = ?"
+        val selectionArgs = arrayOf(name)
+        HistoryDB = HistoryDBHelper.readableDatabase
+        val cursor = HistoryDB.query(
+            HistoryEntry.TABLE_NAME,
+            null,
+            selection,
+            selectionArgs,
+            null,
+            null,
+            null
+        )
+        if (cursor.moveToFirst()) {
+            return 1
+        }
+        return 0
+    }
+
+    fun SubAllHistory(){
+        HistoryDB = HistoryDBHelper.readableDatabase
+        val cursor = HistoryDB.query(
+            HistoryEntry.TABLE_NAME,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+        horadapter.SubmitCursor(cursor)
+    }
     fun MakeDummyData(category: String) {
         DB = DBHelper.writableDatabase
         for (i in 1..20) {
@@ -98,8 +144,16 @@ class MainActivity : AppCompatActivity() {
         DB.insert(PlaceEntry.TABLE_NAME, null, values)
     }
 
+    fun insertHistory(name : String){
+        HistoryDB = HistoryDBHelper.writableDatabase
+        val values = ContentValues()
+        values.put(HistoryEntry.COLUMN_NAME,name)
+        HistoryDB.insert(HistoryEntry.TABLE_NAME,null,values)
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()
     }
 }
+
