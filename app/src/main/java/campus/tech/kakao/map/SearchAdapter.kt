@@ -18,7 +18,7 @@ class SearchAdapter(private val onItemClicked: (String) -> Unit) : RecyclerView.
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.resutTextView.text = results[position]
+        holder.binding.resultTextView.text = results[position]
         holder.binding.root.setOnClickListener {
             onItemClicked(results[position])
         }
