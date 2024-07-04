@@ -20,7 +20,7 @@ class LocationDbAccessor(context: Context) {
         return db.insert(LocationEntry.TABLE_NAME, null, values)
     }
 
-    fun getLocationByCategory(category: String): List<String> {
+    fun getLocationAll(): MutableList<Location> {
         val db = dbHelper.readableDatabase
 
         val projection = arrayOf(
@@ -29,26 +29,28 @@ class LocationDbAccessor(context: Context) {
             LocationEntry.COLUMN_NAME_CATEGORY
         )
 
-        val selection = "${LocationEntry.COLUMN_NAME_CATEGORY} = ?"
-        val selectionArgs = arrayOf(category)
+//        val selection = "${LocationEntry.COLUMN_NAME_CATEGORY} = ?"
+//        val selectionArgs = arrayOf(category)
 
         val sortOrder = "${LocationEntry.COLUMN_NAME_TITLE} ASC"
 
         val cursor = db.query(
             LocationEntry.TABLE_NAME,
             projection,
-            selection,
-            selectionArgs,
+            null,
+            null,
             null,
             null,
             sortOrder
         )
 
-        val results = mutableListOf<String>()
+        val results = mutableListOf<Location>()
         with(cursor) {
             while (moveToNext()) {
                 val title = getString(getColumnIndexOrThrow(LocationEntry.COLUMN_NAME_TITLE))
-                results.add(title)
+                val address = getString(getColumnIndexOrThrow(LocationEntry.COLUMN_NAME_ADDRESS))
+                val category = getString(getColumnIndexOrThrow(LocationEntry.COLUMN_NAME_CATEGORY))
+                results.add(Location(title, address, category))
             }
         }
         cursor.close()

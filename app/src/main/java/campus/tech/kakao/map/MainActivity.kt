@@ -1,12 +1,12 @@
 package campus.tech.kakao.map
 
-import android.content.ContentValues
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import campus.tech.kakao.map.LocationContract.LocationEntry
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,17 +15,26 @@ class MainActivity : AppCompatActivity() {
 
         val dbAccessor = LocationDbAccessor(context=this)
 //        addLocationData(dbAccessor)
-//        readLocationData(dbAccessor)
         val xButton: ImageView = findViewById(R.id.xButton)
         val searchEditText: EditText = findViewById(R.id.searchEditText)
+        val searchResultRecyclerView: RecyclerView = findViewById(R.id.searchResultRecyclerView)
         xButton.setOnClickListener{
             searchEditText.setText("")
         }
+
+        val locationList: MutableList<Location> = readLocationData(dbAccessor)
+        val adapter: LocationAdapter = LocationAdapter()
+        searchResultRecyclerView.layoutManager = LinearLayoutManager(this@MainActivity)
+        searchResultRecyclerView.adapter = adapter
+
+        adapter.submitList(locationList)
+
     }
 
-    private fun readLocationData(dbAccessor: LocationDbAccessor) {
-        val result = dbAccessor.getLocationByCategory("카페")
+    private fun readLocationData(dbAccessor: LocationDbAccessor): MutableList<Location> {
+        val result: MutableList<Location> = dbAccessor.getLocationAll()
         Log.d("jieun", "$result")
+        return result
     }
 
     private fun addLocationData(dbAccessor: LocationDbAccessor) {
