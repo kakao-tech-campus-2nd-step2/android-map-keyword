@@ -18,4 +18,15 @@ class PlaceDBHelper private constructor(context: Context) : SQLiteOpenHelper(
         db?.execSQL(PlaceDBContract.PlaceEntry.DROP_QUERY)
         onCreate(db)
     }
+
+    companion object {
+        private var instance: PlaceDBHelper? = null
+
+        fun getInstance(context: Context): PlaceDBHelper {
+            if (instance == null) {
+                instance = PlaceDBHelper(context)
+            }
+            return instance!!
+        }
+    }
 }
