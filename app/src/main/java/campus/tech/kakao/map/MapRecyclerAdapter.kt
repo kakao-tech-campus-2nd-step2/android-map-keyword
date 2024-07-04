@@ -1,6 +1,8 @@
 package campus.tech.kakao.map
 
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,12 +13,20 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 class MapRecyclerAdapter(
     val locationList: List<Location>,
     val layoutInflater: LayoutInflater,
-    val mContext: Context
+    val mContext: Context,
+    val writeHistory: (String) -> Unit
 ) : RecyclerView.Adapter<MapRecyclerAdapter.MapViewHolder>() {
     inner class MapViewHolder(itemView: View) : ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.location_name)
         val category: TextView = itemView.findViewById(R.id.location_category)
         val address: TextView = itemView.findViewById(R.id.location_address)
+
+        init {
+            itemView.setOnClickListener {
+                if (bindingAdapterPosition != RecyclerView.NO_POSITION)
+                    writeHistory(name.text.toString())
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MapViewHolder {

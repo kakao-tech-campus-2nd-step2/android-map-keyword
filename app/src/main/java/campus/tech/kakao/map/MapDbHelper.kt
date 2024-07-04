@@ -10,11 +10,13 @@ import android.util.Log
 class MapDbHelper(mContext: Context) : SQLiteOpenHelper(mContext, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(SQL_CREATE_ENTRIES)
+        db?.execSQL(SQL_CREATE_ENTRIES_HISTORY)
         initializeDb(db)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db?.execSQL(SQL_DELETE_ENTRIES)
+        db?.execSQL(SQL_DELETE_ENTRIES_HISTORY)
         onCreate(db)
     }
 
@@ -47,5 +49,15 @@ class MapDbHelper(mContext: Context) : SQLiteOpenHelper(mContext, DATABASE_NAME,
                     ");"
         private const val SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS ${MapContract.MapEntry.TABLE_NAME}"
+
+//        const val DATABASE_NAME_HISTORY = "history.db"
+//        const val DATABASE_VERSION_HISTORY = 1
+        private const val SQL_CREATE_ENTRIES_HISTORY =
+            "CREATE TABLE ${MapContract.MapEntry.TABLE_NAME_HISTORY} (" +
+                    "${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "${MapContract.MapEntry.COLUMN_NAME_NAME} TEXT" +
+                    ");"
+        private const val SQL_DELETE_ENTRIES_HISTORY =
+            "DROP TABLE IF EXISTS ${MapContract.MapEntry.TABLE_NAME_HISTORY}"
     }
 }

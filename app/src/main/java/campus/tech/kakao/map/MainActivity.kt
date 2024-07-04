@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MapViewModel
     private lateinit var searchBox: EditText
+    private lateinit var searchHistoryView: RecyclerView
     private lateinit var searchResultView: RecyclerView
     private lateinit var message: TextView
     private lateinit var clear: ImageButton
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = MapViewModel(this)
         searchBox = findViewById(R.id.search_box)
+        searchHistoryView = findViewById(R.id.search_history)
         searchResultView = findViewById(R.id.search_result)
         message = findViewById(R.id.message)
         clear = findViewById(R.id.clear)
@@ -38,11 +40,12 @@ class MainActivity : AppCompatActivity() {
         clear.setOnClickListener {
             searchBox.text.clear()
         }
+
     }
 
     fun search(locName: String, isExactMatch: Boolean) {
         val searchResult = viewModel.searchLocation(locName, isExactMatch)
-        searchResultView.adapter = MapRecyclerAdapter(searchResult, layoutInflater, this@MainActivity)
+        searchResultView.adapter = MapRecyclerAdapter(searchResult, layoutInflater, this@MainActivity, ::writeHistory)
         if (searchResult.isNotEmpty() && locName.isNotEmpty()) {
             searchResultView.isVisible = true
             message.isVisible = false
@@ -52,4 +55,8 @@ class MainActivity : AppCompatActivity() {
         }
         searchResultView.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
     }
+    fun writeHistory(name: String): Unit {
+        viewModel.writeHistory(name)
+    }
+
 }

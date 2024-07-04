@@ -72,4 +72,12 @@ class MapModel(mContext: Context) {
 
         return Location(name, category, address)
     }
+
+    fun writeHistory(name: String) {
+        val writeableDb = helper.writableDatabase
+        val content = ContentValues()
+        content.put(MapContract.MapEntry.COLUMN_NAME_NAME, name)
+
+        writeableDb.insert(MapContract.MapEntry.TABLE_NAME_HISTORY, null, content)
+    }
 }
