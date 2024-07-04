@@ -1,12 +1,10 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.view
 
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import campus.tech.kakao.map.db.LocationDbHelper
+import campus.tech.kakao.map.R
+import campus.tech.kakao.map.model.LocationDbHelper
 
 class SearchLocationActivity : AppCompatActivity() {
 	private val dbHelper = LocationDbHelper(this)
