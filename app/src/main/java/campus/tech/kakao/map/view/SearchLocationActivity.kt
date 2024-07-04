@@ -1,19 +1,20 @@
 package campus.tech.kakao.map.view
 
-import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import campus.tech.kakao.map.R
-import campus.tech.kakao.map.model.LocationDbHelper
+import androidx.lifecycle.ViewModelProvider
+import campus.tech.kakao.map.databinding.ActivitySearchLocationBinding
+import campus.tech.kakao.map.viewmodel.SearchLocationViewModel
 
 class SearchLocationActivity : AppCompatActivity() {
-	private val dbHelper = LocationDbHelper(this)
-	private lateinit var db: SQLiteDatabase
+	private lateinit var viewModel: SearchLocationViewModel
+	private lateinit var binding: ActivitySearchLocationBinding
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_search_location)
+		viewModel = ViewModelProvider(this)[SearchLocationViewModel::class.java]
+		binding = ActivitySearchLocationBinding.inflate(layoutInflater)
+		setContentView(binding.root)
 
-		db = dbHelper.writableDatabase
 	}
 }
