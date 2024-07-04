@@ -3,6 +3,7 @@ package campus.tech.kakao.map
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -11,9 +12,15 @@ class SelectListAdapter(
 ) : RecyclerView.Adapter<SelectListAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name: TextView
+        val cancelBtn : ImageView
 
         init {
             name = itemView.findViewById<TextView>(R.id.name)
+            cancelBtn = itemView.findViewById<ImageView>(R.id.cancelBtn)
+
+//            cancelBtn.setOnClickListener {
+//
+//            }
         }
     }
 
@@ -28,5 +35,10 @@ class SelectListAdapter(
 
     override fun getItemCount(): Int {
         return selectItemList.size
+    }
+
+    fun updateMapItemList(mapItemList: MutableList<MapItem>) {
+        this.selectItemList = mapItemList
+        notifyDataSetChanged()
     }
 }

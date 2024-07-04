@@ -40,6 +40,15 @@ class MainActivity : AppCompatActivity() {
         selectList.adapter = selectListAdapter
         selectList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
+        mapListAdapter.setItemClickListener(object : MapListAdapter.ItemClickListener {
+            override fun onClick(v: View, position: Int) {
+                val mapItem = mapListAdapter.mapItemList.get(position)
+                Log.d("uin", ""+ position)
+                selectItemViewModel.insertSelectItem(mapItem.name, mapItem.address, mapItem.category, mapItem.id)
+                selectListAdapter.updateMapItemList(selectItemViewModel.getSelectItemList())
+            }
+        })
+
         inputSpace.addTextChangedListener(object: TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 

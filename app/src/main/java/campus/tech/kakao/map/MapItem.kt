@@ -9,6 +9,7 @@ import android.util.Log
 
 
 data class MapItem(
+    val id : Int,
     val name: String,
     val address: String,
     val category: String
@@ -65,6 +66,7 @@ class MapItemDbHelper(context: Context) : SQLiteOpenHelper(context, "mapItem.db"
         while (cursor.moveToNext()) {
             mapItemList.add(
                 MapItem(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(MapItemDB.TABLE_COLUMN_ID)),
                     cursor.getString(cursor.getColumnIndexOrThrow(MapItemDB.TABLE_COLUMN_NAME)),
                     cursor.getString(cursor.getColumnIndexOrThrow(MapItemDB.TABLE_COLUMN_ADDRESS)),
                     cursor.getString(cursor.getColumnIndexOrThrow(MapItemDB.TABLE_COLUMN_CATEGORY))
@@ -103,11 +105,11 @@ class MapItemDbHelper(context: Context) : SQLiteOpenHelper(context, "mapItem.db"
         )
 
         val mapItemList = mutableListOf<MapItem>()
-        //Log.d("uin", "" + cursor.getCount())
         if(cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 mapItemList.add(
                     MapItem(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(MapItemDB.TABLE_COLUMN_ID)),
                         cursor.getString(cursor.getColumnIndexOrThrow(MapItemDB.TABLE_COLUMN_NAME)),
                         cursor.getString(cursor.getColumnIndexOrThrow(MapItemDB.TABLE_COLUMN_ADDRESS)),
                         cursor.getString(cursor.getColumnIndexOrThrow(MapItemDB.TABLE_COLUMN_CATEGORY))
@@ -119,6 +121,4 @@ class MapItemDbHelper(context: Context) : SQLiteOpenHelper(context, "mapItem.db"
 
         return mapItemList
     }
-
-
 }

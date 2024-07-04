@@ -19,4 +19,9 @@ class SelectItemViewModel(context: Context) : ViewModel(){
     fun getSelectItemList() : MutableList<MapItem>{
         return selectItemList
     }
+
+    fun insertSelectItem(name: String, address: String, category: String, id : Int) {
+        selectItemDB.insertSelectItem(name, address, category, id)
+        selectItemList = selectItemDB.makeAllSelectItemList()
+    }
 }

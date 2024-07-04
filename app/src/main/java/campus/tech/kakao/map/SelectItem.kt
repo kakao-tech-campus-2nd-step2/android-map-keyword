@@ -7,7 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 
 data class SelectItem(
-    val name: String,
+    val id : Int,
+    val name: String
 )
 
 object SelectItemDB : BaseColumns {
@@ -57,6 +58,7 @@ class SelectItemDBHelper(context: Context) : SQLiteOpenHelper(context, "selectIt
         while (cursor.moveToNext()) {
             selectItemList.add(
                 MapItem(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(SelectItemDB.TABLE_COLUMN_ID)),
                     cursor.getString(cursor.getColumnIndexOrThrow(SelectItemDB.TABLE_COLUMN_NAME)),
                     cursor.getString(cursor.getColumnIndexOrThrow(SelectItemDB.TABLE_COLUMN_ADDRESS)),
                     cursor.getString(cursor.getColumnIndexOrThrow(SelectItemDB.TABLE_COLUMN_CATEGORY))
