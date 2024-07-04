@@ -1,5 +1,6 @@
 package campus.tech.kakao.map.model
 
+import android.content.ContentValues
 import android.content.Context
 
 class SearchLocationRepository(context: Context) {
@@ -26,6 +27,19 @@ class SearchLocationRepository(context: Context) {
 		db.close()
 
 		return result.toList()
+	}
+
+	fun addHistory(locationName: String) {
+		if (isExistHistory(locationName)) {
+			removeHistory(locationName)
+		}
+
+		val db = historyDbHelper.writableDatabase
+		val historyValues = ContentValues()
+		historyValues.put(HistoryContract.COLUMN_NAME, locationName)
+		db.insert(HistoryContract.TABLE_NAME, null, historyValues)
+
+		db.close()
 	}
 
 	private fun isExistHistory(locationName: String): Boolean {

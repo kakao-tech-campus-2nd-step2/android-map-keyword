@@ -36,7 +36,7 @@ class SearchLocationActivity : AppCompatActivity() {
 
 		viewModel.location.observe(this) {
 			it?.let { locationData ->
-				binding.searchResultRecyclerView.adapter = SearchLocationAdapter(locationData, this)
+				binding.searchResultRecyclerView.adapter = SearchLocationAdapter(locationData, this, viewModel)
 				binding.searchResultRecyclerView.layoutManager = LinearLayoutManager(this)
 				binding.emptyResultTextView.isVisible = locationData.isEmpty()
 			}

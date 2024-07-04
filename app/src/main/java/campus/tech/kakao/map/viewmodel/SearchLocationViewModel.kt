@@ -18,4 +18,8 @@ class SearchLocationViewModel : ViewModel() {
 	fun searchLocation(category: String) {
 		_location.value = repository.searchLocation(category)
 	}
+
+	fun addHistory(locationName: String) {
+		repository.addHistory(locationName)
+	}
 }
