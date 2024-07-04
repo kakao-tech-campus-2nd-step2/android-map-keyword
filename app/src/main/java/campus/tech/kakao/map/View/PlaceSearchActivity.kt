@@ -36,7 +36,6 @@ class PlaceSearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_place_search)
 
         val sqliteDB = SqliteDB(this, PlaceContract.DATABASE_NAME, null, 1)
-        sqliteDB.onCreate(sqliteDB.writableDatabase)
         val repository = PlaceRepository(sqliteDB)
         viewModel =
             ViewModelProvider(this, ViewModelFactory(repository))[SearchViewModel::class.java]
