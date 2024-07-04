@@ -3,7 +3,6 @@ package campus.tech.kakao.map
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.util.Log
 
 class MapModel(mContext: Context) {
     private val helper: MapDbHelper = MapDbHelper(mContext)
@@ -22,7 +21,7 @@ class MapModel(mContext: Context) {
         writableDb.insert(MapContract.MapEntry.TABLE_NAME, null, content)
     }
 
-    fun searchLocation(locName: String, isExactMatch: Boolean): List<Location> {
+    fun getSearchedLocation(locName: String, isExactMatch: Boolean): List<Location> {
         val readableDb = helper.readableDatabase
 
         val selection = "${MapContract.MapEntry.COLUMN_NAME_NAME} LIKE ?"
@@ -36,13 +35,7 @@ class MapModel(mContext: Context) {
             null,
             null
         )
-
-        val res = mutableListOf<Location>()
-        while (cursor.moveToNext()) {
-            res.add(createLocationFromData(cursor))
-        }
-        cursor.close()
-        return res
+        return getLocationResult(cursor)
     }
 
     fun getAllLocation() : List<Location> {
@@ -56,16 +49,19 @@ class MapModel(mContext: Context) {
             null,
             null
         )
+        return getLocationResult(cursor)
+    }
 
+    private fun getLocationResult(cursor: Cursor): List<Location> {
         val res = mutableListOf<Location>()
         while (cursor.moveToNext()) {
-            res.add(createLocationFromData(cursor))
+            res.add(getLocation(cursor))
         }
         cursor.close()
         return res
     }
 
-    private fun createLocationFromData(cursor: Cursor): Location {
+    private fun getLocation(cursor: Cursor): Location {
         val name = cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_NAME))
         val category = cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_CATEGORY))
         val address = cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_ADDRESS))
@@ -73,7 +69,7 @@ class MapModel(mContext: Context) {
         return Location(name, category, address)
     }
 
-    fun writeHistory(locName: String) {
+    fun insertHistory(locName: String) {
 
         if (isHistoryExist(locName))
             deleteHistory(locName)

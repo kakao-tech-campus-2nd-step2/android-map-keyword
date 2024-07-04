@@ -2,5 +2,7 @@ package campus.tech.kakao.map
 
 interface DatabaseListener {
     fun deleteHistory(historyName: String)
-    fun writeHistory(historyName: String)
+    fun insertHistory(historyName: String)
+    fun updateSearchResult()
+    fun updateSearchHistory()
 }

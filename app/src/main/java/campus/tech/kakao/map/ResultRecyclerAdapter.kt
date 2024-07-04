@@ -1,8 +1,5 @@
 package campus.tech.kakao.map
 
-import android.content.Context
-import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +7,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 
-class MapRecyclerAdapter(
-    val locationList: List<Location>,
+class ResultRecyclerAdapter(
+    var searchResult: List<Location>,
     val layoutInflater: LayoutInflater,
     val databaseListener: DatabaseListener
-) : RecyclerView.Adapter<MapRecyclerAdapter.MapViewHolder>() {
+) : RecyclerView.Adapter<ResultRecyclerAdapter.MapViewHolder>() {
     inner class MapViewHolder(itemView: View) : ViewHolder(itemView) {
         val name: TextView = itemView.findViewById(R.id.location_name)
         val category: TextView = itemView.findViewById(R.id.location_category)
@@ -22,8 +19,10 @@ class MapRecyclerAdapter(
 
         init {
             itemView.setOnClickListener {
-                if (bindingAdapterPosition != RecyclerView.NO_POSITION)
-                    databaseListener.writeHistory(name.text.toString())
+                if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
+                    databaseListener.insertHistory(name.text.toString())
+                    databaseListener.updateSearchHistory()
+                }
             }
         }
     }
@@ -34,12 +33,16 @@ class MapRecyclerAdapter(
     }
 
     override fun getItemCount(): Int {
-        return locationList.size
+        return searchResult.size
     }
 
     override fun onBindViewHolder(holder: MapViewHolder, position: Int) {
-        holder.name.text = locationList[position].name
-        holder.category.text = locationList[position].category
-        holder.address.text = locationList[position].address
+        holder.name.text = searchResult[position].name
+        holder.category.text = searchResult[position].category
+        holder.address.text = searchResult[position].address
+    }
+
+    fun refreshList() {
+        notifyDataSetChanged()
     }
 }

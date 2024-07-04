@@ -5,7 +5,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
-import android.util.Log
 
 class MapDbHelper(mContext: Context) : SQLiteOpenHelper(mContext, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(db: SQLiteDatabase?) {
@@ -50,8 +49,6 @@ class MapDbHelper(mContext: Context) : SQLiteOpenHelper(mContext, DATABASE_NAME,
         private const val SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS ${MapContract.MapEntry.TABLE_NAME}"
 
-//        const val DATABASE_NAME_HISTORY = "history.db"
-//        const val DATABASE_VERSION_HISTORY = 1
         private const val SQL_CREATE_ENTRIES_HISTORY =
             "CREATE TABLE ${MapContract.MapEntry.TABLE_NAME_HISTORY} (" +
                     "${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT," +
