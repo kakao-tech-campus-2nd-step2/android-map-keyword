@@ -50,15 +50,15 @@ class MainActivity : AppCompatActivity() {
             Log.d("MainActivity", "Inserting data")
             for (i in 1..10) {
                 val values = ContentValues().apply {
-                    put("name", "cafe$i")
+                    put("name", "카페$i")
                     put("location", "광주 북구 용봉동$i")
-                    put("category", "coffee")
+                    put("category", "커피")
                 }
                 writeDB.insert("LOCATION", null, values)
             }
             for (i in 1..10) {
                 val values = ContentValues().apply {
-                    put("name", "pharmacy$i")
+                    put("name", "약국$i")
                     put("location", "전주 완산구 효자동$i")
                     put("category", "약국")
                 }
@@ -117,11 +117,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun setSearchListener() {
         inputText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchLocations(s.toString())
             }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
 
             override fun afterTextChanged(s: Editable?) { }
         })
@@ -141,6 +141,9 @@ class MainActivity : AppCompatActivity() {
             searchAdapter.notifyItemInserted(0)
             searchView.scrollToPosition(0)
         }
+        searchView.visibility = View.VISIBLE
+
+        Log.d("MainActivity", "Item clicked: ${locationData.name}")
     }
 
     private fun searchLocations(key: String) {

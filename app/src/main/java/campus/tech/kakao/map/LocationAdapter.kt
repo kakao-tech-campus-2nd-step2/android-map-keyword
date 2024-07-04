@@ -12,17 +12,17 @@ class LocationAdapter(
     var inflater: LayoutInflater
     ): RecyclerView.Adapter<LocationAdapter.ViewHolder>() {
 
-        inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-            val name_text_view: TextView
-            val location_text_view: TextView
-            val category_text_view: TextView
+    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        val name_text_view: TextView
+        val location_text_view: TextView
+        val category_text_view: TextView
 
-            init {
-                name_text_view = itemView.findViewById(R.id.name)
-                location_text_view = itemView.findViewById(R.id.location)
-                category_text_view = itemView.findViewById(R.id.category)
-            }
+        init {
+            name_text_view = itemView.findViewById(R.id.name)
+            location_text_view = itemView.findViewById(R.id.location)
+            category_text_view = itemView.findViewById(R.id.category)
         }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = inflater.inflate(R.layout.item_view, parent, false)
@@ -36,10 +36,6 @@ class LocationAdapter(
         holder.name_text_view.text = locations.name
         holder.location_text_view.text = locations.location
         holder.category_text_view.text = locations.category
-
-        holder.itemView.setOnClickListener {
-
-        }
 
     }
 }
