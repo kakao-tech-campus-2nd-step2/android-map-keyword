@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 
 class MainViewModel(private val placeRepository: PlaceRepository): ViewModel() {
     fun insertPlace(place: Place) {
-            placeRepository.insertPlace(place)
+        placeRepository.insertPlace(place)
     }
 
     fun getPlace(): Place? {
