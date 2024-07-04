@@ -7,12 +7,10 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.AdapterView.OnItemClickListener
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -38,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         setRecyclerView()
         setSearchListener()
     }
+
     private fun createQuery() {
         db = DataDbHelper(context = this)
 
@@ -64,8 +63,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 writeDB.insert("LOCATION", null, values)
             }
-
-
+            
             Log.d("MainActivity", "Reading data")
             val readDB = db.readableDatabase
 
@@ -108,6 +106,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = locationAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
     }
+
     private fun setSearchView() {
         searchAdapter = SearchViewAdapter(searchList) { removedItem ->
             val index = searchList.indexOf(removedItem)
@@ -126,17 +125,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun setSearchListener() {
         inputText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 searchLocations(s.toString())
             }
 
-            override fun afterTextChanged(s: Editable?) { }
+            override fun afterTextChanged(s: Editable?) {}
         })
     }
 
-    private fun addSearchItem(locationData: LocationData) {
+    fun onItemClick(locationData: LocationData) {
         if (!searchList.contains(locationData)) {
             searchList.add(0, locationData)
             searchAdapter.notifyItemInserted(0)
@@ -151,10 +150,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
         searchView.visibility = View.VISIBLE
-    }
-
-    fun onItemClick(locationData: LocationData) {
-        addSearchItem(locationData)
         Log.d("MainActivity", "Item clicked: ${locationData.name}")
     }
 
@@ -193,8 +188,7 @@ class MainActivity : AppCompatActivity() {
     private fun isShowText() {
         if (locationList.isEmpty()) {
             resultView.visibility = View.VISIBLE
-        }
-        else {
+        } else {
             resultView.visibility = View.GONE
         }
     }

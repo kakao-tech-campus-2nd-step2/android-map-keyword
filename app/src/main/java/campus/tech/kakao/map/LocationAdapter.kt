@@ -1,6 +1,5 @@
 package campus.tech.kakao.map
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 class LocationAdapter(
     var locationList: ArrayList<LocationData>,
     var inflater: LayoutInflater,
-    private val onItemClick: (LocationData) -> Unit
+    private val onItemClick: (LocationData) -> Unit // 콜백 함수
     ): RecyclerView.Adapter<LocationAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

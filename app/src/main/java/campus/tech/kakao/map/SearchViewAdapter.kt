@@ -9,9 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 class SearchViewAdapter(
     private val searchList: ArrayList<LocationData>,
-    private val onRemoveClick: (LocationData) -> Unit
+    private val onRemoveClick: (LocationData) -> Unit // 콜백 함수
 ) : RecyclerView.Adapter<SearchViewAdapter.ViewHolder>() {
-
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val cancelBtn: Button = view.findViewById(R.id.searchViewCancelBtn)
