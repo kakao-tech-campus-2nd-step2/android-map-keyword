@@ -38,7 +38,7 @@ class MapModel(mContext: Context) {
         return getLocationResult(cursor)
     }
 
-    fun getAllLocation() : List<Location> {
+    fun getAllLocation(): List<Location> {
         val readableDb = helper.readableDatabase
         val cursor = readableDb.query(
             MapContract.MapEntry.TABLE_NAME,
@@ -62,9 +62,12 @@ class MapModel(mContext: Context) {
     }
 
     private fun getLocation(cursor: Cursor): Location {
-        val name = cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_NAME))
-        val category = cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_CATEGORY))
-        val address = cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_ADDRESS))
+        val name =
+            cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_NAME))
+        val category =
+            cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_CATEGORY))
+        val address =
+            cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_ADDRESS))
 
         return Location(name, category, address)
     }

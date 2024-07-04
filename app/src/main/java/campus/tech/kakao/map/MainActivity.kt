@@ -72,20 +72,25 @@ class MainActivity : AppCompatActivity(), DatabaseListener {
     override fun updateSearchHistory() {
         searchHistoryAdapter.refreshList()
     }
+
     private fun search(locName: String, isExactMatch: Boolean) {
         viewModel.searchLocation(locName, isExactMatch)
     }
 
     private fun initSearchResultView() {
-        searchResultAdapter = ResultRecyclerAdapter(viewModel.searchResult.value!!, layoutInflater, this)
+        searchResultAdapter =
+            ResultRecyclerAdapter(viewModel.searchResult.value!!, layoutInflater, this)
         searchResultView.adapter = searchResultAdapter
-        searchResultView.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+        searchResultView.layoutManager =
+            LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
     }
 
     private fun initSearchHistoryView() {
-        searchHistoryAdapter = HistoryRecyclerAdapter(viewModel.getAllHistory(), layoutInflater, this)
+        searchHistoryAdapter =
+            HistoryRecyclerAdapter(viewModel.getAllHistory(), layoutInflater, this)
         searchHistoryView.adapter = searchHistoryAdapter
-        searchHistoryView.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
+        searchHistoryView.layoutManager =
+            LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
     }
 
     private fun observeData() {
