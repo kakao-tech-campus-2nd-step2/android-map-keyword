@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
@@ -38,6 +39,11 @@ class MainActivity : AppCompatActivity() {
         val dbHelper = PlaceDBHelper(this)
         val repository = Repository(dbHelper)
         val viewModel = ViewModelProvider(this, ViewModelFactory(repository))[MainActivityViewModel::class.java]
+        val searchDeleteButton = findViewById<ImageView>(R.id.button_X)
+        searchDeleteButton.setOnClickListener{
+            inputSearchField.setText("")
+            inputSearchField.clearFocus()
+        }
 
         Log.d("testt", viewModel.place.toString())
         viewModel.place.observe(this, Observer { newData ->
