@@ -47,7 +47,6 @@ class PlaceAdapter(val items: List<Place>, val inflater: LayoutInflater): Recycl
             itemView.setOnClickListener {
                 itemClickListener?.onItemClick(absoluteAdapterPosition)
             }
-
         }
     }
 }

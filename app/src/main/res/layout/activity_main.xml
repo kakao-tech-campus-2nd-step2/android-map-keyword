@@ -41,11 +41,12 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/placeResult"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/searchHistory"
+        tools:listitem="@layout/place_item"
         />
     
     <ScrollView

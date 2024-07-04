@@ -10,6 +10,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import campus.tech.kakao.map.databinding.ActivityMainBinding
 import campus.tech.kakao.map.databinding.SearchHistoryItemBinding
 
@@ -26,13 +28,14 @@ class MainActivity : AppCompatActivity() {
         val mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
 
+        mainBinding.placeResult.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        
         val placeItems = viewModel.getPlace()
-
         // 검색 결과
         if (placeItems == null) {
             mainBinding.emptyMainText.visibility = View.VISIBLE
         } else {
-            placeAdapter = PlaceAdapter(placeItems)
+            placeAdapter = PlaceAdapter(placeItems, LayoutInflater.from(this))
             mainBinding.placeResult.adapter = placeAdapter
         }
 
