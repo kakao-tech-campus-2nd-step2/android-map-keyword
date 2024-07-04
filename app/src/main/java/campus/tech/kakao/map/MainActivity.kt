@@ -5,7 +5,9 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,22 +24,10 @@ class MainActivity : AppCompatActivity() {
         val mapList = findViewById<RecyclerView>(R.id.mapList)
         val selectList = findViewById<RecyclerView>(R.id.selectList)
         val inputSpace = findViewById<EditText>(R.id.inputSpace)
-
-        //val mapDB = MapItemDbHelper(context = this)
-        //mapDB.onUpgrade(mapDB.writableDatabase, 1, 2)
+        val mainText = findViewById<TextView>(R.id.main_text)
 
         //mapItemViewModel.updateMapItemList()
         //selectItemViewModel.updateSelectItemList()
-
-//        val mapItemList = mutableListOf<MapItem>()
-//        for (i in 1..20) {
-//            mapItemList.add(MapItem("약국" + i, "wnth", "약국"))
-//        }
-//
-//        val selectItemList = mutableListOf<SelectItem>()
-//        for (i in 1..20) {
-//            selectItemList.add(SelectItem("약국" + i))
-//        }
 
         val mapListAdapter = MapListAdapter(mapItemViewModel.getMapItemList(), LayoutInflater.from(this))
         val selectListAdapter = SelectListAdapter(selectItemViewModel.getSelectItemList(), LayoutInflater.from(this))
@@ -49,19 +39,19 @@ class MainActivity : AppCompatActivity() {
         selectList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
         inputSpace.addTextChangedListener(object: TextWatcher{
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val mapItemList = mapItemViewModel.searchMapItem(s.toString())
                 mapListAdapter.updateMapItemList(mapItemList)
-                // 여기서 if문으로 사이즈 체크해서 중간 텍스트뷰도 gone처리해주기
+                if(mapItemList.size == 0) {
+                    mainText.visibility = View.VISIBLE
+                } else {
+                    mainText.visibility = View.INVISIBLE
+                }
             }
 
-            override fun afterTextChanged(s: Editable?) {
-
-            }
+            override fun afterTextChanged(s: Editable?) {}
         })
     }
 }
