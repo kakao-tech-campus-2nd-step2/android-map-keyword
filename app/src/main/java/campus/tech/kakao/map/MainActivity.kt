@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         val placeItems = viewModel.getPlace()
 
+        // 검색 결과
         if (placeItems == null) {
             mainBinding.emptyMainText.visibility = View.VISIBLE
         } else {
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity() {
             mainBinding.placeResult.adapter = placeAdapter
         }
 
+        // 검색 기록
         val itemBinding = SearchHistoryItemBinding.inflate(layoutInflater, mainBinding.searchHistory, false)
         itemBinding.history.text = ""
         val layoutInflater = this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -42,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         var textView: TextView = customLayout.findViewById<TextView>(R.id.history)
         mainBinding.searchHistory.addView(customLayout)
 
+        // 검색 필터링
         val searchEditText = mainBinding.search
         searchEditText.addTextChangedListener(object: TextWatcher
         {
@@ -50,7 +53,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                
+
             }
 
             override fun afterTextChanged(s: Editable?) {

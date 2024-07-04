@@ -3,46 +3,51 @@ package campus.tech.kakao.map
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.BaseAdapter
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.recyclerview.widget.RecyclerView
 
-class PlaceAdapter(private val items: List<Place>): BaseAdapter() {
-    override fun getCount(): Int {
+class PlaceAdapter(val items: List<Place>, val inflater: LayoutInflater): RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder>() {
+
+    interface OnItemClickListener {
+        fun onItemClick(position: Int) {}
+    }
+    var itemClickListener: OnItemClickListener? = null
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): PlaceAdapter.PlaceViewHolder {
+        val view = inflater.inflate(R.layout.place_item, parent, false)
+        return  PlaceViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: PlaceAdapter.PlaceViewHolder, position: Int) {
+        holder.name.text = items[position].name
+        holder.address.text = items[position].address
+        holder.category.text = items[position].category
+    }
+
+    override fun getItemCount(): Int {
         return items.size
     }
 
-    override fun getItem(position: Int): Any {
-        return items[position]
-    }
+    inner class PlaceViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        val name: TextView
+        val address: TextView
+        val category: TextView
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
+        init {
+            name = itemView.findViewById<TextView>(R.id.place)
+            address = itemView.findViewById<TextView>(R.id.address)
+            category = itemView.findViewById<TextView>(R.id.category)
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view: View
-        val placeViewHolder : PlaceViewHolder
-        if (convertView == null) {
-            view =
-                LayoutInflater.from(parent?.context).inflate(R.layout.place_item, parent, false)
-            placeViewHolder = PlaceViewHolder(view)
-            view.tag = placeViewHolder
-        } else {
-            view = convertView
-            placeViewHolder = convertView.tag as PlaceViewHolder
+            itemView.setOnClickListener {
+                itemClickListener?.onItemClick(absoluteAdapterPosition)
+            }
+
         }
-
-        val item = items[position]
-        placeViewHolder.place.text = item.name
-        placeViewHolder.address.text = item.address
-        placeViewHolder.category.text = item.category
-        return view
-    }
-
-    class PlaceViewHolder(view: View) {
-        val place: TextView = view.findViewById(R.id.place)
-        val address: TextView = view.findViewById(R.id.address)
-        val category: TextView = view.findViewById(R.id.category)
     }
 }
