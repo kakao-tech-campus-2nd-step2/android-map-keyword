@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -35,7 +36,10 @@ class ViewActivity : AppCompatActivity() {
         test()
 
 
-        viewModel.searchText.observe(this, Observer { searchText -> locationAdapter.setLocations(viewModel.select(searchText)) })
+        viewModel.searchText.observe(this, Observer { searchText ->
+            if (locationAdapter.locationList.isNotEmpty()) binding.tvHelpMessage.visibility = View.GONE
+            locationAdapter.setLocations(viewModel.select(searchText))
+        })
 
         viewModel.locations.observe(this,  Observer { locations ->
             Log.d("sqlite55","$locations")
