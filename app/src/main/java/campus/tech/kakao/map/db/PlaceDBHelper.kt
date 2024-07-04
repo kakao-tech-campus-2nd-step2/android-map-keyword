@@ -23,8 +23,8 @@ class PlaceDBHelper(context:Context) : SQLiteOpenHelper(context, "place.db", nul
     }
 
     fun insertDummyData(){
-        val name = "카페"
-        val category = "카페"
+        val name = "약국"
+        val category = "약국"
         val location = "서울 성동구 성수동"
         for(i in 1..10){
             insertData(name + i, location + i, category)
@@ -45,5 +45,10 @@ class PlaceDBHelper(context:Context) : SQLiteOpenHelper(context, "place.db", nul
     fun readData(): Cursor {
         val rDb = this.readableDatabase
         return rDb.rawQuery("SELECT * FROM ${PlaceContract.PlaceEntry.TABLE_NAME};", null)
+    }
+
+    fun readDataWithCategory(category : String): Cursor {
+        val rDb = this.readableDatabase
+        return rDb.rawQuery("SELECT * FROM ${PlaceContract.PlaceEntry.TABLE_NAME} WHERE ${PlaceContract.PlaceEntry.COLUMN_CATEGORY} = '${category}';", null)
     }
 }
