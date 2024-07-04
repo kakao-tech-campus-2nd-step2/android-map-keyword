@@ -9,7 +9,7 @@ class MapItemViewModel(context: Context) : ViewModel(){
     val mapItemDB = MapItemDbHelper(context)
 
     init {
-        mapItemList = mapItemDB.makeAllMapItemList()
+        mapItemList = mapItemDB.searchMapItem("")
     }
 
     fun updateMapItemList() {
@@ -18,7 +18,12 @@ class MapItemViewModel(context: Context) : ViewModel(){
 
     fun getMapItemList() : MutableList<MapItem>{
         //mapItemList = mapItemDB.searchMapItem(category)
-        Log.d("uin", ""+mapItemList.size)
+        Log.d("uin", "" + mapItemList.size)
+        return mapItemList
+    }
+
+    fun searchMapItem(category : String) : MutableList<MapItem> {
+        mapItemList = mapItemDB.searchMapItem(category)
         return mapItemList
     }
 

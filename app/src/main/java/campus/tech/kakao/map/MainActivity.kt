@@ -1,6 +1,9 @@
 package campus.tech.kakao.map
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
@@ -23,8 +26,8 @@ class MainActivity : AppCompatActivity() {
         //val mapDB = MapItemDbHelper(context = this)
         //mapDB.onUpgrade(mapDB.writableDatabase, 1, 2)
 
-        mapItemViewModel.updateMapItemList()
-        selectItemViewModel.updateSelectItemList()
+        //mapItemViewModel.updateMapItemList()
+        //selectItemViewModel.updateSelectItemList()
 
 //        val mapItemList = mutableListOf<MapItem>()
 //        for (i in 1..20) {
@@ -45,7 +48,21 @@ class MainActivity : AppCompatActivity() {
         selectList.adapter = selectListAdapter
         selectList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        //mapItemViewModel.printAllMapItemList()
+        inputSpace.addTextChangedListener(object: TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val mapItemList = mapItemViewModel.searchMapItem(s.toString())
+                mapListAdapter.updateMapItemList(mapItemList)
+                // 여기서 if문으로 사이즈 체크해서 중간 텍스트뷰도 gone처리해주기
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+        })
     }
 }
 

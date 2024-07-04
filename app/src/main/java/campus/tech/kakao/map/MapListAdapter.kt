@@ -35,4 +35,10 @@ class MapListAdapter(
     override fun getItemCount(): Int {
         return mapItemList.size
     }
+
+    fun updateMapItemList(mapItemList: MutableList<MapItem>) {
+        this.mapItemList = mapItemList
+        notifyDataSetChanged()
+    }
+
 }

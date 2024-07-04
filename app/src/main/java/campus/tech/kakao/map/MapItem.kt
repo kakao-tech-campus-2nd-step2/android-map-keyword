@@ -89,5 +89,36 @@ class MapItemDbHelper(context: Context) : SQLiteOpenHelper(context, "mapItem.db"
         cursor.close()
     }
 
+    fun searchMapItem(category : String) : MutableList<MapItem>{
+        val rDb = readableDatabase
+
+        val cursor = rDb.query(
+            MapItemDB.TABLE_NAME, // 테이블
+            null, // 리턴 받고자 하는 컬럼
+            "${MapItemDB.TABLE_COLUMN_CATEGORY} = ?", // where 조건
+            arrayOf(category), // where 조건에 해당하는 값의 배열
+            null, // 그룹 조건
+            null, // having 조건
+            null // orderby 조건 지정
+        )
+
+        val mapItemList = mutableListOf<MapItem>()
+        //Log.d("uin", "" + cursor.getCount())
+        if(cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                mapItemList.add(
+                    MapItem(
+                        cursor.getString(cursor.getColumnIndexOrThrow(MapItemDB.TABLE_COLUMN_NAME)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(MapItemDB.TABLE_COLUMN_ADDRESS)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(MapItemDB.TABLE_COLUMN_CATEGORY))
+                    )
+                )
+            }
+        }
+        cursor.close()
+
+        return mapItemList
+    }
+
 
 }
