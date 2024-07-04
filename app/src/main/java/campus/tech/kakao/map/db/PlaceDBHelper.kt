@@ -44,7 +44,6 @@ class PlaceDBHelper(context:Context) : SQLiteOpenHelper(context, "place.db", nul
 
     fun readData(): Cursor {
         val rDb = this.readableDatabase
-
         return rDb.rawQuery("SELECT * FROM ${PlaceContract.PlaceEntry.TABLE_NAME};", null)
     }
 }
