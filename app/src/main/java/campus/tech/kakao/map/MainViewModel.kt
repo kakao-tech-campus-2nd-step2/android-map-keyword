@@ -1,6 +1,7 @@
 package campus.tech.kakao.map
 
 import android.util.Log
+import android.widget.EditText
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -32,9 +33,5 @@ class MainViewModel(private val placeRepository: PlaceRepository) : ViewModel() 
         }
 
 
-    }
-
-    private fun clearSearchResults() {
-        _placeList.postValue(emptyList())
     }
 }

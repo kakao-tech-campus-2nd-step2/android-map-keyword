@@ -88,5 +88,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
         )
+
+        // X 누르면 초기화
+        mainBinding.xmark.setOnClickListener {
+            searchEditText.setText("")
+        }
+
+
     }
 }
