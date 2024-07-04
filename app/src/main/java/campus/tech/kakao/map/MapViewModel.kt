@@ -16,10 +16,15 @@ class MapViewModel(mContext: Context) : ViewModel() {
         return model.searchLocation(locName, isExactMatch)
     }
 
+    fun getAllLocation(): List<Location> {
+        return model.getAllLocation()
+    }
+
     fun writeHistory(name: String) {
         model.writeHistory(name)
     }
-    fun getAllLocation(): List<Location> {
-        return model.getAllLocation()
+
+    fun getAllHistory(): List<String> {
+        return model.getAllHistory()
     }
 }

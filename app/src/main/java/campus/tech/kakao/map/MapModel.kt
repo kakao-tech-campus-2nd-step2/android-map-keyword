@@ -80,4 +80,25 @@ class MapModel(mContext: Context) {
 
         writeableDb.insert(MapContract.MapEntry.TABLE_NAME_HISTORY, null, content)
     }
+
+    fun getAllHistory(): List<String> {
+        val readableDb = helper.readableDatabase
+        val cursor = readableDb.query(
+            MapContract.MapEntry.TABLE_NAME_HISTORY,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+
+        val res = mutableListOf<String>()
+        while (cursor.moveToNext()) {
+            res.add(cursor.getString(cursor.getColumnIndexOrThrow(MapContract.MapEntry.COLUMN_NAME_NAME)))
+        }
+        cursor.close()
+
+        return res
+    }
 }

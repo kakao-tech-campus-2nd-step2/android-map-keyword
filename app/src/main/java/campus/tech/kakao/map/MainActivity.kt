@@ -40,6 +40,10 @@ class MainActivity : AppCompatActivity() {
         clear.setOnClickListener {
             searchBox.text.clear()
         }
+        val history = viewModel.getAllHistory()
+        searchHistoryView.adapter = HistoryRecyclerAdapter(history, layoutInflater)
+        searchHistoryView.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
+        searchHistoryView.isVisible = true
 
     }
 
@@ -55,8 +59,11 @@ class MainActivity : AppCompatActivity() {
         }
         searchResultView.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
     }
+
     fun writeHistory(name: String): Unit {
         viewModel.writeHistory(name)
+        val history = viewModel.getAllHistory()
+        searchHistoryView.adapter = HistoryRecyclerAdapter(history, layoutInflater)
     }
 
 }
