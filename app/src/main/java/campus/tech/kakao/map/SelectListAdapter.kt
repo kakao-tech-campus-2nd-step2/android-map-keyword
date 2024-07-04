@@ -18,11 +18,21 @@ class SelectListAdapter(
             name = itemView.findViewById<TextView>(R.id.name)
             cancelBtn = itemView.findViewById<ImageView>(R.id.cancelBtn)
 
-//            cancelBtn.setOnClickListener {
-//
-//            }
+            cancelBtn.setOnClickListener {
+                cancelBtnListener.onClick(it, bindingAdapterPosition)
+            }
         }
     }
+
+    interface CancelBtnClickListener {
+        fun onClick(v: View, position: Int)
+    }
+
+    fun setCancelBtnClickListener(cancelBtnClickListener: CancelBtnClickListener) {
+        this.cancelBtnListener = cancelBtnClickListener
+    }
+
+    lateinit var cancelBtnListener: CancelBtnClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = layoutInflater.inflate(R.layout.select_item, parent, false)

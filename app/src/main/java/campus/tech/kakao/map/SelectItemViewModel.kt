@@ -8,12 +8,12 @@ class SelectItemViewModel(context: Context) : ViewModel(){
     val selectItemDB = SelectItemDBHelper(context)
 
     init {
-        //selectItemDB.insertSelectItem("카페1", "서울 성동구 성수동", "카페", 1)
         selectItemList = selectItemDB.makeAllSelectItemList()
     }
 
     fun updateSelectItemList() {
         selectItemDB.onUpgrade(selectItemDB.writableDatabase, 1, 2)
+        selectItemList = selectItemDB.makeAllSelectItemList()
     }
 
     fun getSelectItemList() : MutableList<MapItem>{
@@ -22,6 +22,11 @@ class SelectItemViewModel(context: Context) : ViewModel(){
 
     fun insertSelectItem(name: String, address: String, category: String, id : Int) {
         selectItemDB.insertSelectItem(name, address, category, id)
+        selectItemList = selectItemDB.makeAllSelectItemList()
+    }
+
+    fun deleteSelectItem(id: Int) {
+        selectItemDB.deleteSelectItem(id)
         selectItemList = selectItemDB.makeAllSelectItemList()
     }
 }

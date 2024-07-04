@@ -52,13 +52,21 @@ class SelectItemDBHelper(context: Context) : SQLiteOpenHelper(context, "selectIt
             wDb.insert(SelectItemDB.TABLE_NAME, null, values)
     }
 
+    fun deleteSelectItem(id : Int) {
+        wDb.delete(
+            SelectItemDB.TABLE_NAME,
+            "${SelectItemDB.TABLE_COLUMN_MAP_ITEM_ID}=?",
+            arrayOf(id.toString())
+        )
+    }
+
     fun makeAllSelectItemList(): MutableList<MapItem> {
         val cursor = rDb.rawQuery("Select * from ${SelectItemDB.TABLE_NAME} order by ${SelectItemDB.TABLE_COLUMN_ID} desc", null)
         val selectItemList = mutableListOf<MapItem>()
         while (cursor.moveToNext()) {
             selectItemList.add(
                 MapItem(
-                    cursor.getInt(cursor.getColumnIndexOrThrow(SelectItemDB.TABLE_COLUMN_ID)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(SelectItemDB.TABLE_COLUMN_MAP_ITEM_ID)),
                     cursor.getString(cursor.getColumnIndexOrThrow(SelectItemDB.TABLE_COLUMN_NAME)),
                     cursor.getString(cursor.getColumnIndexOrThrow(SelectItemDB.TABLE_COLUMN_ADDRESS)),
                     cursor.getString(cursor.getColumnIndexOrThrow(SelectItemDB.TABLE_COLUMN_CATEGORY))

@@ -43,8 +43,17 @@ class MainActivity : AppCompatActivity() {
         mapListAdapter.setItemClickListener(object : MapListAdapter.ItemClickListener {
             override fun onClick(v: View, position: Int) {
                 val mapItem = mapListAdapter.mapItemList.get(position)
-                Log.d("uin", ""+ position)
+                Log.d("uin", "@"+ mapItem.name + "#"+ mapItem.id)
                 selectItemViewModel.insertSelectItem(mapItem.name, mapItem.address, mapItem.category, mapItem.id)
+                selectListAdapter.updateMapItemList(selectItemViewModel.getSelectItemList())
+            }
+        })
+
+        selectListAdapter.setCancelBtnClickListener(object : SelectListAdapter.CancelBtnClickListener{
+            override fun onClick(v: View, position: Int) {
+                val selectItem = selectListAdapter.selectItemList.get(position)
+                Log.d("uin", ""+ selectItem.name + "#"+ selectItem.id)
+                selectItemViewModel.deleteSelectItem(selectItem.id)
                 selectListAdapter.updateMapItemList(selectItemViewModel.getSelectItemList())
             }
         })
