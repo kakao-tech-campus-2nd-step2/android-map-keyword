@@ -1,5 +1,18 @@
 package campus.tech.kakao.map
 
-class MainViewModel {
+import androidx.lifecycle.ViewModel
 
+class MainViewModel(private val placeRepository: PlaceRepository): ViewModel() {
+    fun insertPlace(place: Place) {
+            placeRepository.insertPlace(place)
+    }
+
+    fun getPlace(): Place? {
+        return placeRepository.getPlace()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        placeRepository.dbClose()
+    }
 }

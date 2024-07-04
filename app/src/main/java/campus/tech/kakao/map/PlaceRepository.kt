@@ -1,12 +1,16 @@
 package campus.tech.kakao.map
 
 class PlaceRepository(private val dbHelper: DBHelper) {
+    val db = dbHelper.writableDatabase
     fun insertPlace(place: Place) {
-        val db = dbHelper.writableDatabase
         dbHelper.insert(db,place)
     }
 
     fun getPlace(): Place?{
         return null
+    }
+
+    fun dbClose() {
+        if(db.isOpen) db.close()
     }
 }
