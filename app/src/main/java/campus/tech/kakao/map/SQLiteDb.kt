@@ -76,11 +76,11 @@ class SQLiteDb(context: Context) {
         return database.insert(SQLiteHelper.TABLE_NAME_2, null, values)
     }
 
-    fun getAllSelectedData(): List<String> {
-        val selectedData = mutableListOf<String>()
+    fun getAllSelectedData(): List<Pair<Int, String>> {
+        val selectedData = mutableListOf<Pair<Int, String>>()
         val cursor = database.query(
             SQLiteHelper.TABLE_NAME_2,
-            arrayOf(SQLiteHelper.COL_NAME_2),
+            arrayOf(SQLiteHelper.COL_ID_2, SQLiteHelper.COL_NAME_2),
             null,
             null,
             null,
@@ -90,8 +90,9 @@ class SQLiteDb(context: Context) {
 
         if (cursor.moveToFirst()) {
             do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(SQLiteHelper.COL_ID_2))
                 val name = cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.COL_NAME_2))
-                selectedData.add(name)
+                selectedData.add(id to name)
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -99,6 +100,12 @@ class SQLiteDb(context: Context) {
         return selectedData.reversed()
     }
 
-
+    fun deleteFromSelectedData(id: Int): Int {
+        return database.delete(
+            SQLiteHelper.TABLE_NAME_2,
+            "$COL_ID_2 = ?",
+            arrayOf(id.toString())
+        )
+    }
 
 }

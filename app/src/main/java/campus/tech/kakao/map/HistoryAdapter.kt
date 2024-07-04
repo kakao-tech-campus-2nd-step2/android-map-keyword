@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,7 +8,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class HistoryAdapter(private var historyList: MutableList<String>, private val itemClickListener: (String) -> Unit) :
+class HistoryAdapter(private var historyList: MutableList<Pair<Int, String>>, private val itemClickListener: (Int) -> Unit) :
     RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
@@ -16,13 +17,11 @@ class HistoryAdapter(private var historyList: MutableList<String>, private val i
     }
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-        val historyItem = historyList[position]
+        val (id, historyItem) = historyList[position]
         holder.bind(historyItem)
 
         holder.delButton.setOnClickListener {
-            itemClickListener(historyItem)
-            historyList.remove(historyItem)
-            notifyDataSetChanged()
+            itemClickListener(id)
         }
     }
 
@@ -30,10 +29,18 @@ class HistoryAdapter(private var historyList: MutableList<String>, private val i
         return historyList.size
     }
 
-    fun updateData(newHistoryList: List<String>) {
+    fun updateData(newHistoryList: List<Pair<Int, String>>) {
         historyList.clear()
         historyList.addAll(newHistoryList)
         notifyDataSetChanged()
+    }
+
+    fun removeItemById(id: Int) {
+        val index = historyList.indexOfFirst { it.first == id }
+        if (index != -1) {
+            historyList.removeAt(index)
+            notifyItemRemoved(index)
+        }
     }
 
     inner class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
