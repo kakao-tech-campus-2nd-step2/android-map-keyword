@@ -14,8 +14,8 @@ class LocationViewModel(private val repository: Repository): ViewModel(){
 
     val searchText = MutableLiveData<String>()
 
-    fun select(){
-        Log.d("07/04d", repository.selectData(searchText.value.toString()).toString())
+    fun select(name: String): List<Location>{
+         return repository.selectData(name)
     }
 
     fun insert(location: Location){
