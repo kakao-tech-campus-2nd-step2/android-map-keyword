@@ -24,6 +24,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val Delete = binding.Delete
+        val SearchText = binding.SearchText
+
+        Delete.setOnClickListener{
+            SearchText.setText(null)
+        }
+
         DBHelper = DBHelper(this, "place.db", null, 2)
         
         MakeDummyData("카페")
