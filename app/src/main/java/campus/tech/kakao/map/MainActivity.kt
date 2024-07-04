@@ -15,6 +15,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
+import com.google.gson.Gson
 
 class MainActivity : AppCompatActivity() {
     private lateinit var db: DataDbHelper
@@ -32,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        loadSearchList()
         createQuery()
         initialize()
         setCancelBtn()
@@ -125,11 +128,30 @@ class MainActivity : AppCompatActivity() {
                 if (searchList.isEmpty()) {
                     searchView.visibility = View.GONE
                 }
+                saveSearchList()
             }
         }
         searchView.adapter = searchAdapter
         searchView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         searchView.visibility = View.GONE
+    }
+
+    private fun saveSearchList() {
+        val sharedPref = getPreferences(Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        val jsonString = Gson().toJson(searchList)
+        editor.putString("search_list", jsonString)
+        editor.apply()
+        Log.d("MainActivity", "Search list saved")
+    }
+
+    private fun loadSearchList() {
+        val sharedPref = getPreferences(Context.MODE_PRIVATE)
+        val jsonString = sharedPref.getString("search_list", null)
+        if (jsonString != null) {
+            val type = object : TypeToken<ArrayList<LocationData>>() {}.type
+            searchList = Gson().fromJson(jsonString, type)
+        }
     }
 
     private fun setSearchListener() {
@@ -142,15 +164,6 @@ class MainActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {}
         })
-    }
-
-    private fun saveSearchHistory(locationData: LocationData) {
-        val writeDB = db.writableDatabase
-
-        val values = ContentValues().apply {
-            put("name", locationData.name)
-        }
-        writeDB.insertWithOnConflict("SEARCH_HISTORY", null, values, SQLiteDatabase.CONFLICT_IGNORE)
     }
 
     fun onItemClick(locationData: LocationData) {
@@ -168,6 +181,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         searchView.visibility = View.VISIBLE
+        saveSearchList()
         Log.d("MainActivity", "Item clicked: ${locationData.name}")
     }
 
