@@ -6,13 +6,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.recyclerview.widget.RecyclerView
 
 
 data class MapItem(
@@ -22,23 +15,28 @@ data class MapItem(
 )
 
 object MapItemDB : BaseColumns {
-    const val TABLE_NAME = "map"
+    const val TABLE_NAME = "mapItem"
+    const val TABLE_COLUMN_ID = "id"
     const val TABLE_COLUMN_NAME = "name"
     const val TABLE_COLUMN_ADDRESS = "address"
     const val TABLE_COLUMN_CATEGORY = "category"
 }
 
-class MapItemDbHelper(context: Context) : SQLiteOpenHelper(context, "map.db", null, 1) {
+class MapItemDbHelper(context: Context) : SQLiteOpenHelper(context, "mapItem.db", null, 1) {
+    //val wDb = writableDatabase
+    //val rDb = readableDatabase
+
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(
             "CREATE TABLE ${MapItemDB.TABLE_NAME} (" +
+                    "${MapItemDB.TABLE_COLUMN_ID} Integer primary key autoincrement," +
                     "${MapItemDB.TABLE_COLUMN_NAME} varchar(15) not null," +
                     "${MapItemDB.TABLE_COLUMN_ADDRESS} varchar(30) not null," +
-                    "${MapItemDB.TABLE_COLUMN_CATEGORY} varchar(10) not null" +
+                    "${MapItemDB.TABLE_COLUMN_CATEGORY} varchar(10)" +
                     ");"
         )
-        insertMapItem("카페", "서울 성동구 성수동","카페")
-        insertMapItem("약국", "서울 강남구 대치동","약국")
+        insertMapItem(db, "카페", "서울 성동구 성수동", "카페")
+        insertMapItem(db, "약국", "서울 강남구 대치동", "약국")
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -46,22 +44,22 @@ class MapItemDbHelper(context: Context) : SQLiteOpenHelper(context, "map.db", nu
         onCreate(db)
     }
 
-    private fun insertMapItem(name : String, address : String, category : String) {
-        val wDb = writableDatabase
+    private fun insertMapItem(db: SQLiteDatabase?, name: String, address: String, category: String) {
+        if(db != null) {
+            for (i in 1..20) {
+                val values = ContentValues()
+                values.put(MapItemDB.TABLE_COLUMN_NAME, name + i)
+                values.put(MapItemDB.TABLE_COLUMN_ADDRESS, address + i)
+                values.put(MapItemDB.TABLE_COLUMN_CATEGORY, category)
 
-        for (i in 1..20) {
-            val values = ContentValues()
-            values.put(MapItemDB.TABLE_COLUMN_NAME, name + i)
-            values.put(MapItemDB.TABLE_COLUMN_ADDRESS, address + i)
-            values.put(MapItemDB.TABLE_COLUMN_CATEGORY, category)
-
-            wDb.insert(MapItemDB.TABLE_NAME, null, values)
+                db.insert(MapItemDB.TABLE_NAME, null, values)
+            }
         }
     }
 
-    fun makeMapItemList() : MutableList<MapItem> {
-        val rDb = readableDatabase
 
+    fun makeAllMapItemList(): MutableList<MapItem> {
+        val rDb = readableDatabase
         val cursor = rDb.rawQuery("Select * from ${MapItemDB.TABLE_NAME}", null)
         val mapItemList = mutableListOf<MapItem>()
         while (cursor.moveToNext()) {
@@ -77,4 +75,19 @@ class MapItemDbHelper(context: Context) : SQLiteOpenHelper(context, "map.db", nu
 
         return mapItemList
     }
+
+    fun printAllMapItemList() {
+        val rDb = readableDatabase
+        val cursor = rDb.rawQuery("Select * from ${MapItemDB.TABLE_NAME}", null)
+        while (cursor.moveToNext()) {
+            Log.d(
+                "uin",
+                "" + cursor.getInt(cursor.getColumnIndexOrThrow(MapItemDB.TABLE_COLUMN_ID)) +
+                        "" + cursor.getString(cursor.getColumnIndexOrThrow(MapItemDB.TABLE_COLUMN_NAME))
+            )
+        }
+        cursor.close()
+    }
+
+
 }

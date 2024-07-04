@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class SelectListAdapter(
-    val selectItemList: MutableList<SelectItem>, val layoutInflater: LayoutInflater
+    var selectItemList: MutableList<MapItem>, val layoutInflater: LayoutInflater
 ) : RecyclerView.Adapter<SelectListAdapter.ViewHolder>() {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val name: TextView

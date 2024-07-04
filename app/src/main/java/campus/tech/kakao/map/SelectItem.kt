@@ -1,11 +1,70 @@
 package campus.tech.kakao.map
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
+import android.content.ContentValues
+import android.content.Context
+import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteOpenHelper
+import android.provider.BaseColumns
 
-class SelectItem(
-    val name: String
+data class SelectItem(
+    val name: String,
 )
+
+object SelectItemDB : BaseColumns {
+    const val TABLE_NAME = "selectItem"
+    const val TABLE_COLUMN_ID = "id"
+    const val TABLE_COLUMN_NAME = "name"
+    const val TABLE_COLUMN_ADDRESS = "address"
+    const val TABLE_COLUMN_CATEGORY = "category"
+    const val TABLE_COLUMN_MAP_ITEM_ID = "mapItemID"
+}
+
+class SelectItemDBHelper(context: Context) : SQLiteOpenHelper(context, "selectItem.db", null, 1) {
+    private val wDb = writableDatabase
+    private val rDb = readableDatabase
+    override fun onCreate(db: SQLiteDatabase?) {
+        db?.execSQL(
+            "CREATE TABLE ${SelectItemDB.TABLE_NAME} (" +
+                    "${SelectItemDB.TABLE_COLUMN_ID} Integer primary key autoincrement," +
+                    "${SelectItemDB.TABLE_COLUMN_NAME} varchar(15) not null," +
+                    "${SelectItemDB.TABLE_COLUMN_ADDRESS} varchar(30) not null," +
+                    "${SelectItemDB.TABLE_COLUMN_CATEGORY} varchar(10) not null," +
+                    "${SelectItemDB.TABLE_COLUMN_MAP_ITEM_ID} Integer not null," +
+                    "FOREIGN KEY(${SelectItemDB.TABLE_COLUMN_MAP_ITEM_ID})" +
+                    " REFERENCES ${MapItemDB.TABLE_NAME}(${MapItemDB.TABLE_COLUMN_ID})" +
+                    ");"
+        )
+    }
+
+    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
+        db?.execSQL("DROP TABLE IF EXISTS ${SelectItemDB.TABLE_NAME}")
+        onCreate(db)
+    }
+
+    fun insertSelectItem(name: String, address: String, category: String, id : Int) {
+            val values = ContentValues()
+            values.put(SelectItemDB.TABLE_COLUMN_NAME, name)
+            values.put(SelectItemDB.TABLE_COLUMN_ADDRESS, address)
+            values.put(SelectItemDB.TABLE_COLUMN_CATEGORY, category)
+            values.put(SelectItemDB.TABLE_COLUMN_MAP_ITEM_ID, id)
+
+            wDb.insert(SelectItemDB.TABLE_NAME, null, values)
+    }
+
+    fun makeAllSelectItemList(): MutableList<MapItem> {
+        val cursor = rDb.rawQuery("Select * from ${SelectItemDB.TABLE_NAME} order by ${SelectItemDB.TABLE_COLUMN_ID} desc", null)
+        val selectItemList = mutableListOf<MapItem>()
+        while (cursor.moveToNext()) {
+            selectItemList.add(
+                MapItem(
+                    cursor.getString(cursor.getColumnIndexOrThrow(SelectItemDB.TABLE_COLUMN_NAME)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(SelectItemDB.TABLE_COLUMN_ADDRESS)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(SelectItemDB.TABLE_COLUMN_CATEGORY))
+                )
+            )
+        }
+        cursor.close()
+
+        return selectItemList
+    }
+}

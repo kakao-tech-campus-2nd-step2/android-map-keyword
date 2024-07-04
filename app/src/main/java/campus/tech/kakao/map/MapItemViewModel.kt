@@ -1,19 +1,29 @@
 package campus.tech.kakao.map
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 
 class MapItemViewModel(context: Context) : ViewModel(){
     private var mapItemList : MutableList<MapItem>
-    val mapDB = MapItemDbHelper(context)
+    val mapItemDB = MapItemDbHelper(context)
 
     init {
-        mapItemList = mapDB.makeMapItemList()
+        mapItemList = mapItemDB.makeAllMapItemList()
+    }
+
+    fun updateMapItemList() {
+        mapItemDB.onUpgrade(mapItemDB.writableDatabase, 1, 2)
     }
 
     fun getMapItemList() : MutableList<MapItem>{
-        //mapItemList = mapDB.searchMapItem(category)
+        //mapItemList = mapItemDB.searchMapItem(category)
+        Log.d("uin", ""+mapItemList.size)
         return mapItemList
+    }
+
+    fun printAllMapItemList() {
+        mapItemDB.printAllMapItemList()
     }
 
 
