@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 class LocationAdapter(
     var locationList: ArrayList<LocationData>,
-    var inflater: LayoutInflater
+    var inflater: LayoutInflater,
+    private val onItemClick: (LocationData) -> Unit
     ): RecyclerView.Adapter<LocationAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -37,5 +38,8 @@ class LocationAdapter(
         holder.location_text_view.text = locations.location
         holder.category_text_view.text = locations.category
 
+        holder.itemView.setOnClickListener {
+            onItemClick(locations)
+        }
     }
 }

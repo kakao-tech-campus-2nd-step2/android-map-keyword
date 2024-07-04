@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var resultView: TextView
     private lateinit var searchView: RecyclerView
     private lateinit var locationAdapter: LocationAdapter
-    private lateinit var searchAdapter: LocationAdapter
+    private lateinit var searchAdapter: SearchViewAdapter
     private var locationList = ArrayList<LocationData>()
     private var searchList = ArrayList<LocationData>()
 
@@ -34,8 +34,8 @@ class MainActivity : AppCompatActivity() {
 
         createQuery()
         initialize()
-        setRecyclerView()
         setSearchView()
+        setRecyclerView()
         setSearchListener()
     }
     private fun createQuery() {
@@ -102,17 +102,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setRecyclerView() {
-        recyclerView.adapter = LocationAdapter(locationList, LayoutInflater.from(this))
+        locationAdapter = LocationAdapter(locationList, LayoutInflater.from(this)) { locationData ->
+            onItemClick(locationData)
+        }
+        recyclerView.adapter = locationAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
-        Log.d("recyclerView", "recyclerView Adapter")
     }
-
     private fun setSearchView() {
-        searchAdapter = LocationAdapter(searchList, LayoutInflater.from(this))
+        searchAdapter = SearchViewAdapter(searchList) { removedItem ->
+            val index = searchList.indexOf(removedItem)
+            if (index != -1) {
+                searchList.removeAt(index)
+                searchAdapter.notifyItemRemoved(index)
+                if (searchList.isEmpty()) {
+                    searchView.visibility = View.GONE
+                }
+            }
+        }
         searchView.adapter = searchAdapter
         searchView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         searchView.visibility = View.GONE
-
     }
 
     private fun setSearchListener() {
@@ -127,8 +136,12 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    fun onItemClick(locationData: LocationData) {
-        if (searchList.contains(locationData)) {
+    private fun addSearchItem(locationData: LocationData) {
+        if (!searchList.contains(locationData)) {
+            searchList.add(0, locationData)
+            searchAdapter.notifyItemInserted(0)
+            searchView.scrollToPosition(0)
+        } else {
             val index = searchList.indexOf(locationData)
             if (index > 0) {
                 searchList.removeAt(index)
@@ -136,13 +149,12 @@ class MainActivity : AppCompatActivity() {
                 searchAdapter.notifyItemMoved(index, 0)
                 searchView.scrollToPosition(0)
             }
-        } else {
-            searchList.add(0, locationData)
-            searchAdapter.notifyItemInserted(0)
-            searchView.scrollToPosition(0)
         }
         searchView.visibility = View.VISIBLE
+    }
 
+    fun onItemClick(locationData: LocationData) {
+        addSearchItem(locationData)
         Log.d("MainActivity", "Item clicked: ${locationData.name}")
     }
 
@@ -174,7 +186,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateRecyclerView() {
-        (recyclerView.adapter as LocationAdapter).notifyDataSetChanged()
+        locationAdapter.notifyDataSetChanged()
     }
 
 
