@@ -2,6 +2,7 @@ package campus.tech.kakao.map
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -134,6 +135,15 @@ class MainActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {}
         })
+    }
+
+    private fun saveSearchHistory(locationData: LocationData) {
+        val writeDB = db.writableDatabase
+
+        val values = ContentValues().apply {
+            put("name", locationData.name)
+        }
+        writeDB.insertWithOnConflict("SEARCH_HISTORY", null, values, SQLiteDatabase.CONFLICT_IGNORE)
     }
 
     fun onItemClick(locationData: LocationData) {
