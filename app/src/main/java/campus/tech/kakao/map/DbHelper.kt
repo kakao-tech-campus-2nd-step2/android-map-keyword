@@ -45,7 +45,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     //DB가 비어있는지 확인
-    fun isDBEmpty(dbHelper: DbHelper): Boolean {
+    fun isDBEmpty(): Boolean {
         return readableDatabase.use { db ->
             db.rawQuery("SELECT COUNT(*) FROM ${PlaceContract.TABLE_NAME}", null).use { cursor ->
                 if(cursor.moveToFirst()) {
@@ -65,5 +65,30 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         ).use { cursor ->
             cursor.moveToFirst()
         }
+    }
+
+    fun searchDatabase(query: String): List<String> {
+        val results = mutableListOf<String>()
+
+        readableDatabase.use { db ->
+            db.rawQuery(
+                "SELECT * FROM ${PlaceContract.TABLE_NAME} WHERE " +
+                        "${PlaceContract.COLUMN_NAME} LIKE ? OR " +
+                        "${PlaceContract.COLUMN_ADDRESS} LIKE ? OR " +
+                        "${PlaceContract.COLUMN_CATEGORY} LIKE ?",
+                arrayOf("%$query%", "%$query%", "%$query%")
+            ).use { cursor ->
+                while (cursor.moveToNext()) {
+                    val name =
+                        cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_NAME))
+                    val address =
+                        cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_ADDRESS))
+                    val category =
+                        cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_CATEGORY))
+                    results.add("Name: $name, Address: $address, Category: $category")
+                }
+            }
+        }
+        return results
     }
 }

@@ -8,7 +8,9 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import campus.tech.kakao.map.databinding.ActivityMainBinding
 
@@ -21,7 +23,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var searchListView: ListView
     */
     private lateinit var binding: ActivityMainBinding
-    private lateinit var dbHelper: DbHelper
+    private val viewModel: MainViewModel by viewModels()
+    //private lateinit var dbHelper: DbHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,12 +41,20 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        dbHelper = DbHelper(this)
+        //dbHelper = DbHelper(this)
 
         //DB가 비어있을 때만 기본 데이터 추가
+        /*
         if (dbHelper.isDBEmpty(dbHelper)) {
             insertInitialData(dbHelper)
-        }
+        } */
+        viewModel.insertInitialData()
+
+        viewModel.searchResults.observe(this, Observer { results ->
+            binding.searchRecyclerView.adapter = SearchAdapter(results)
+            binding.searchRecyclerView.visibility = if (results.isEmpty()) View.GONE else View.VISIBLE
+        })
+
 
         /* ViewBinding을 사용하기 때문에 주석 처리
         buttonX.setOnClickListener {
@@ -58,44 +69,4 @@ class MainActivity : AppCompatActivity() {
         binding.searchRecyclerView.layoutManager = LinearLayoutManager(this)
     }
 
-    private fun insertInitialData(dbHelper: DbHelper) {
-        for(i in 1..10) {
-            val name = "카페 $i"
-            val address = "서울 성동구 성수동 $i"
-            val category = "카페"
-            dbHelper.insertData(name, address, category)
-        }
-
-        for(i in 1..10) {
-            val name = "약국 $i"
-            val address = "서울 강남구 대치동 $i"
-            val category = "약국"
-            dbHelper.insertData(name, address, category)
-        }
-    }
-
-    private fun searchDatabase(query: String) {
-        val results = mutableListOf<String>()
-
-        dbHelper.readableDatabase.use { db ->
-            db.rawQuery(
-                "SELECT * FROM ${PlaceContract.TABLE_NAME} WHERE " +
-                        "${PlaceContract.COLUMN_NAME} LIKE ? OR " +
-                        "${PlaceContract.COLUMN_ADDRESS} LIKE ? OR " +
-                        "${PlaceContract.COLUMN_CATEGORY} LIKE ?",
-                arrayOf("%$query%", "%$query%", "%$query%")
-            ).use { cursor ->
-                while (cursor.moveToNext()) {
-                    val name = cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_NAME))
-                    val address = cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_ADDRESS))
-                    val category = cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_CATEGORY))
-                    results.add("Name: $name, Address: $address, Category: $category")
-                }
-            }
-        }
-
-        //RecyclerView 어댑터 설정
-        binding.searchRecyclerView.adapter = SearchAdapter(results)
-        binding.searchRecyclerView.visibility = if (results.isEmpty()) View.GONE else View.VISIBLE
-    }
 }
