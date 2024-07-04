@@ -12,5 +12,13 @@ object PlaceDBContract {
         const val COLUMN_NAME = "name"
         const val COLUMN_TYPE = "type"
         const val COLUMN_ADDRESS = "address"
+
+        const val CREATE_QUERY = "CREATE TABLE $TABLE_NAME (" +
+                "$COLUMN_PLACE_ID TEXT PRIMARY KEY," +
+                "$COLUMN_NAME TEXT," +
+                "$COLUMN_TYPE TEXT," +
+                "$COLUMN_ADDRESS TEXT)"
+
+        const val DROP_QUERY = "DROP TABLE IF EXISTS $TABLE_NAME"
     }
 }
