@@ -27,29 +27,65 @@ class PlaceActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_place)
-        placeViewModelFactory = PlaceViewModelFactory(this)
-        placeViewModel =
-            ViewModelProvider(this, placeViewModelFactory).get(PlaceViewModel::class.java)
 
+        initializeViews()
+        initializeViewModel()
+        initializeRecyclerView()
+
+        setUpSearchEditText()
+        setUpRemoveButton()
+    }
+
+
+    private fun showEmptyMessage() {
+        emptyMessage.visibility = TextView.VISIBLE
+        placeRecyclerView.visibility = RecyclerView.GONE
+    }
+
+    private fun clearSearchEditText() {
+        searchEditText.text.clear()
+    }
+
+    private fun showRecyclerView(places: List<Place>) {
+        emptyMessage.visibility = TextView.GONE
+        placeRecyclerView.visibility = RecyclerView.VISIBLE
+        placeAdapter.updateData(places)
+    }
+
+    private fun initializeViews() {
         searchEditText = findViewById(R.id.searchEditText)
         removeButton = findViewById(R.id.cancelButton)
         placeRecyclerView = findViewById(R.id.placeRecyclerView)
         emptyMessage = findViewById(R.id.emptyMessage)
         placeAdapter = PlaceAdapter()
+    }
 
-        placeRecyclerView.layoutManager = LinearLayoutManager(this)
-        placeRecyclerView.adapter = placeAdapter
+    private fun initializeViewModel() {
+        placeViewModelFactory = PlaceViewModelFactory(this)
+        placeViewModel =
+            ViewModelProvider(this, placeViewModelFactory).get(PlaceViewModel::class.java)
 
+        placeViewModel.places.observe(this) { places ->
+            updateUI(places)
+        }
+    }
+
+    private fun updateUI(place: List<Place>) {
         placeViewModel.places.observe(this) { places ->
             if (places.isEmpty()) {
                 showEmptyMessage()
             } else {
-                emptyMessage.visibility = TextView.GONE
-                placeRecyclerView.visibility = RecyclerView.VISIBLE
-                placeAdapter.updateData(places)
+                showRecyclerView(places)
             }
         }
+    }
 
+    private fun initializeRecyclerView() {
+        placeRecyclerView.layoutManager = LinearLayoutManager(this)
+        placeRecyclerView.adapter = placeAdapter
+    }
+
+    private fun setUpSearchEditText() {
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 //
@@ -63,20 +99,11 @@ class PlaceActivity : AppCompatActivity() {
                 //
             }
         })
-
+    }
+    private fun setUpRemoveButton() {
         removeButton.setOnClickListener {
             clearSearchEditText()
             showEmptyMessage()
         }
-    }
-
-
-    private fun showEmptyMessage() {
-        emptyMessage.visibility = TextView.VISIBLE
-        placeRecyclerView.visibility = RecyclerView.GONE
-    }
-
-    private fun clearSearchEditText() {
-        searchEditText.text.clear()
     }
 }
