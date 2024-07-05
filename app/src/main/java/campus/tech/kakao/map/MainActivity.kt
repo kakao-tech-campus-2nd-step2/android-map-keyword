@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -49,10 +50,10 @@ class MainActivity : AppCompatActivity() {
         setupSearchEditText()
         setupXButton()
 
-        addLocationData()
+//        addLocationData()
         val locationList: MutableList<Location> = readLocationData()
         locationViewModel.setLocations(locationList)
-        observeFilteredLocations()
+        observeFilteredLocation()
         locationAdapter.submitList(locationList)
 
         val savedLocationList: MutableList<SavedLocation> = readSavedLocationData()
@@ -73,8 +74,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupSavedLocationRecyclerView() {
         savedLocationAdapter = SavedLocationAdapter { savedLocation ->
-            savedLocationViewModel.deleteSavedLocation(SavedLocation(savedLocation.title))
             deleteSavedLocationData(savedLocation.title)
+            savedLocationViewModel.deleteSavedLocation(SavedLocation(savedLocation.title))
         }
         savedLocationRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         savedLocationRecyclerView.adapter = savedLocationAdapter
@@ -99,15 +100,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeFilteredLocations() {
-        locationViewModel.filteredLocations.observe(this, { locations ->
-            locationAdapter.submitList(locations)
+    private fun observeFilteredLocation() {
+        locationViewModel.filteredLocations.observe(this, Observer {
+            locationAdapter.submitList(it?.toMutableList())
         })
     }
 
     private fun observeSavedLocation() {
-        savedLocationViewModel.savedLocation.observe(this, { history ->
-            // 검색어 저장 목록 어답터 변경하기!
+        savedLocationViewModel.savedLocation.observe(this, Observer {
+            Log.d("jieun", "observeSavedLocation")
+            savedLocationAdapter.submitList(it?.toMutableList())
         })
     }
 
@@ -124,7 +126,7 @@ class MainActivity : AppCompatActivity() {
         locationDbAccessor.insertSavedLocation(title)
     }
 
-    private fun readLocationData(): MutableList<Location> {
+        private fun readLocationData(): MutableList<Location> {
         val result: MutableList<Location> = locationDbAccessor.getLocationAll()
         Log.d("jieun", "$result")
         return result

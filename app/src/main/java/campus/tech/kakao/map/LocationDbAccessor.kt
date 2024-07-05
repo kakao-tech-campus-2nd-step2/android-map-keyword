@@ -96,9 +96,9 @@ class LocationDbAccessor(private val dbHelper : LocationDbHelper) {
     fun deleteSavedLocation(title: String) {
         val db = dbHelper.writableDatabase
 
-        val selection = "title = ?"
+        val selection = "${Contract.SavedLocationEntry.COLUMN_NAME_TITLE} = ?"
         val selectionArgs = arrayOf(title)
 
-        db.delete("SavedLocation", selection, selectionArgs)
+        db.delete(Contract.SavedLocationEntry.TABLE_NAME, selection, selectionArgs)
     }
 }

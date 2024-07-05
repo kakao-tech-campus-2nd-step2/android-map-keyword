@@ -19,8 +19,9 @@ class SavedLocationViewModel : ViewModel() {
     }
 
     fun deleteSavedLocation(savedLocation: SavedLocation) {
-        val currentList = _savedLocation.value
-        currentList?.remove(savedLocation)
-        _savedLocation.value = currentList
+        val currentList = _savedLocation.value ?: return
+        if (currentList.remove(savedLocation)) {
+            _savedLocation.value = currentList
+        }
     }
 }

@@ -13,6 +13,5 @@ object Contract {
     object SavedLocationEntry: BaseColumns{
         const val TABLE_NAME = "saved_locations"
         const val COLUMN_NAME_TITLE = "name"
-        const val COLUMN_NAME_ADDRESS = "address"
     }
 }
