@@ -12,6 +12,7 @@ class HistoryAdapter(var items: List<SearchHistory>, val inflater: LayoutInflate
 
     interface OnItemClickListener {
         fun onItemClick(position: Int)
+        fun onXMarkClick(position: Int)
     }
 
     var itemClickListener: OnItemClickListener? = null
@@ -42,6 +43,10 @@ class HistoryAdapter(var items: List<SearchHistory>, val inflater: LayoutInflate
         init {
             itemView.setOnClickListener {
                 itemClickListener?.onItemClick(absoluteAdapterPosition)
+            }
+
+            binding.xmark.setOnClickListener {
+                itemClickListener?.onXMarkClick(absoluteAdapterPosition)
             }
         }
     }

@@ -100,5 +100,16 @@ class MainActivity : AppCompatActivity() {
                 historyAdapter.setData(searchHistoryList)
             }
         }
+
+        historyAdapter.itemClickListener = object : HistoryAdapter.OnItemClickListener {
+            override fun onItemClick(position: Int) {
+                val item = searchHistoryList[position]
+                searchEditText.setText(item.searchHistory)
+            }
+
+            override fun onXMarkClick(position: Int) {
+                
+            }
+        }
     }
 }
