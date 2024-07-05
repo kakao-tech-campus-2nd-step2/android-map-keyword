@@ -38,6 +38,11 @@ class MainActivity : AppCompatActivity() {
         }
         savedKeywordsRecyclerView.adapter = savedKeywordsAdapter
 
+        searchResultsAdapter = SearchResultsAdapter(emptyList()) { keyword ->
+            viewModel.saveKeyword(keyword)
+        }
+        searchResultsRecyclerView.adapter = searchResultsAdapter
+
         viewModel.searchResults.observe(this) { results ->
             searchResultsAdapter.updateData(results)
             noResultsTextView.visibility = if (results.isEmpty()) View.VISIBLE else View.GONE

@@ -1,12 +1,16 @@
 package campus.tech.kakao.map
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.database.Cursor
 import android.util.Log
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class Repository(context: Context) {
     private val dbHelper = DatabaseHelper.getInstance(context)
     private val db = dbHelper.writableDatabase
+    private val sharedPreferences: SharedPreferences = context.getSharedPreferences("search_prefs", Context.MODE_PRIVATE)
 
     fun populateInitialData() {
         val dataCategories = listOf("cafe", "pharmacy", "cinema")
@@ -58,6 +62,20 @@ class Repository(context: Context) {
         }
         cursor.close()
         return keywords
+    }
+
+    fun saveKeywordToPrefs(keyword: Keyword) {
+        val savedKeywords = getAllSavedKeywordsFromPrefs().toMutableList()
+        savedKeywords.add(0, keyword)
+        val editor = sharedPreferences.edit()
+        editor.putString("saved_keywords", Gson().toJson(savedKeywords))
+        editor.apply()
+    }
+
+    fun getAllSavedKeywordsFromPrefs(): List<Keyword> {
+        val savedKeywordsJson = sharedPreferences.getString("saved_keywords", null) ?: return emptyList()
+        val type = object : TypeToken<List<Keyword>>() {}.type
+        return Gson().fromJson(savedKeywordsJson, type)
     }
 
 

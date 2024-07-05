@@ -12,9 +12,21 @@ class SearchViewModel(private val context: Context) {
     private val _searchResults = MutableLiveData<List<Keyword>>()
     val searchResults: LiveData<List<Keyword>> = _searchResults
 
+    private val _savedKeywords = MutableLiveData<List<Keyword>>()
+    val savedKeywords: LiveData<List<Keyword>> = _savedKeywords
+
     fun search(query: String) {
         val results = repository.search(query)
         _searchResults.value = results
+    }
+
+    fun saveKeyword(keyword: Keyword) {
+        val currentSavedKeywords = _savedKeywords.value?.toMutableList() ?: mutableListOf()
+        if (!currentSavedKeywords.contains(keyword)) {
+            currentSavedKeywords.add(0, keyword) // 최신 키워드를 앞에 추가
+            _savedKeywords.value = currentSavedKeywords
+            repository.saveKeywordToPrefs(keyword)
+        }
     }
 
     fun deleteKeyword(keyword: Keyword) {
