@@ -8,10 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import campus.tech.kakao.map.models.contracts.SearchKeywordContract
 import campus.tech.kakao.map.models.contracts.SearchResultContract
-import campus.tech.kakao.map.models.contracts.SearchResultContract.COLUMN_ADDRESS_INDEX
-import campus.tech.kakao.map.models.contracts.SearchResultContract.COLUMN_NAME_INDEX
-import campus.tech.kakao.map.models.contracts.SearchResultContract.COLUMN_TYPE_INDEX
-import campus.tech.kakao.map.models.contracts.SearchResultContract.TABLE_NAME
 
 data class SearchResult(val name: String, val address: String, val type: String)
 
