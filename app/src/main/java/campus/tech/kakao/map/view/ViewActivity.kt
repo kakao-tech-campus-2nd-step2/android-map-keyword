@@ -117,7 +117,7 @@ class ViewActivity : AppCompatActivity() {
     private fun updateLocationList(searchText: String){
         val foundLocations =viewModel.findData(searchText)
 
-        locationAdapter.setAdapterList(foundLocations)
+        locationAdapter.updateAdapterList(foundLocations)
     }
 
     private fun updateHelpMessageVisibility(){

@@ -2,7 +2,10 @@ package campus.tech.kakao.map.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.DiffUtilCallback
+import campus.tech.kakao.map.ListUtil
 import campus.tech.kakao.map.databinding.ListItemBinding
 import campus.tech.kakao.map.model.Location
 
@@ -11,7 +14,7 @@ class LocationAdapter(
     private var onItemClicked: (Location) -> Unit
 ): RecyclerView.Adapter<LocationAdapter.LocationViewHolder>() {
 
-    var locationList :  List<Location> = listOf()
+    var locationList : List<Location> = listOf()
     inner class LocationViewHolder(private val binding: ListItemBinding )
         :RecyclerView.ViewHolder(binding.root){
             fun bind(location: Location){
@@ -33,8 +36,13 @@ class LocationAdapter(
 
     override fun getItemCount(): Int = locationList.size
 
-    fun setAdapterList(locations: List<Location>){
+    fun updateAdapterList(locations: List<Location>){
+
+        notifyListUpdate(locations)
         locationList = locations
-        notifyDataSetChanged()
+    }
+
+    fun notifyListUpdate(newList: List<Location>){
+        ListUtil.notifyListchanged(this, locationList, newList)
     }
 }
