@@ -10,12 +10,9 @@ class PlaceViewModel(private val context: Context) : ViewModel() {
     private val _places = MutableLiveData<List<Place>>()
     val places: LiveData<List<Place>> get() = _places
 
-    init {
-        loadPlaces()
-    }
 
     private fun loadPlaces() {
-        val loadedPlaces = repository.getPlaces()
+        val loadedPlaces = repository.getAllPlaces()
         _places.postValue(loadedPlaces)
     }
 
@@ -24,8 +21,13 @@ class PlaceViewModel(private val context: Context) : ViewModel() {
         loadPlaces()
     }
 
-    fun getPlaces() {
+    fun getAllPlaces() {
         loadPlaces()
+    }
+
+    fun searchPlaces(query: String) {
+        val searchedPlacees = repository.searchPlaces(query)
+        _places.postValue(searchedPlacees)
     }
 
 

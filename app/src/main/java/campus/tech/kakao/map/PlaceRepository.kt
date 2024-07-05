@@ -19,10 +19,10 @@ class PlaceRepository(context: Context) {
             put(PlaceDBContract.PlaceEntry.COLUMN_TYPE, place.type)
         }
         db.insert(PlaceDBContract.PlaceEntry.TABLE_NAME, null, values)
-       // db.close()
+        db.close()
     }
 
-    fun getPlaces(): MutableList<Place> {
+    fun getAllPlaces(): MutableList<Place> {
         val db = dbHelper.readableDatabase
         val cursor: Cursor = db.query(
             PlaceDBContract.PlaceEntry.TABLE_NAME,
@@ -79,5 +79,36 @@ class PlaceRepository(context: Context) {
             db.endTransaction()
         }
         db.close()
+    }
+
+    fun searchPlaces(query: String): MutableList<Place> {
+        val searchedPlaces = mutableListOf<Place>()
+        val db = dbHelper.readableDatabase
+        // Selection : WHERE 절에 들어가는 조건을 쓴다.
+        val selection = "${PlaceDBContract.PlaceEntry.COLUMN_NAME} LIKE ?"
+        // Selection Arguments : 조건에 대한 값
+        val selectionArgs = arrayOf("%$query%")
+
+        val cursor : Cursor = db.query(
+            PlaceDBContract.PlaceEntry.TABLE_NAME,
+            arrayOf(
+                PlaceDBContract.PlaceEntry.COLUMN_NAME,
+                PlaceDBContract.PlaceEntry.COLUMN_ADDRESS,
+                PlaceDBContract.PlaceEntry.COLUMN_TYPE
+            ),
+            selection, selectionArgs, null, null, null)
+
+        with(cursor) {
+            while (moveToNext()) {
+                val name = getString(getColumnIndexOrThrow(PlaceDBContract.PlaceEntry.COLUMN_NAME))
+                val address =
+                    getString(getColumnIndexOrThrow(PlaceDBContract.PlaceEntry.COLUMN_ADDRESS))
+                val type = getString(getColumnIndexOrThrow(PlaceDBContract.PlaceEntry.COLUMN_TYPE))
+                searchedPlaces.add(Place(name, address, type))
+            }
+            close()
+        }
+        db.close()
+        return searchedPlaces
     }
 }
