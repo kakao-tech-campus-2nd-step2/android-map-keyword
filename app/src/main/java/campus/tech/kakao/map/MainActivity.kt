@@ -17,13 +17,13 @@ import androidx.recyclerview.widget.RecyclerView
 class MainActivity : AppCompatActivity() {
     private lateinit var locationViewModel: LocationViewModel
     private lateinit var locationAdapter: LocationAdapter
+    private lateinit var locationRecyclerView: RecyclerView
 
     private lateinit var savedLocationViewModel: SavedLocationViewModel
     private lateinit var savedLocationAdapter: SavedLocationAdapter
-
-    private lateinit var locationRecyclerView: RecyclerView
     private lateinit var savedLocationRecyclerView: RecyclerView
 
+    private lateinit var locationDbHelper: LocationDbHelper
     private lateinit var locationDbAccessor: LocationDbAccessor
 
     private lateinit var xButton: ImageView
@@ -34,39 +34,56 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        locationViewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
-        savedLocationViewModel = ViewModelProvider(this).get(SavedLocationViewModel::class.java)
+        initViews()
+        setupSearchFeature()
+        setupSavedLocationsFeature()
+        setupLocationsFeature()
+    }
 
-        val locationDbHelper = LocationDbHelper(this)
+    private fun setupSavedLocationsFeature() {
+        initializeSavedLocationViewModel()
+        initializeSavedLocationRecyclerView()
+        observeSavedLocation()
+    }
+
+    private fun setupLocationsFeature() {
+        initializeLocationViewModel()
+        initializeLocationRecyclerView()
+    }
+
+    private fun setupSearchFeature() {
+        setupSearchEditText()
+        observeSearchedLocations()
+        setupXButton()
+    }
+
+    private fun initializeSavedLocationViewModel() {
+        val savedLocationList: MutableList<SavedLocation> = readSavedLocationData()
+        savedLocationViewModel.setSavedLocation(savedLocationList)
+    }
+
+    private fun initializeLocationViewModel() {
+        addLocationData() // 앱 설치 시 최초 1번만 실행하게 하려면 어떻게 해야할까?
+        val locationList: MutableList<Location> = readLocationData()
+        locationViewModel.setLocations(locationList)
+    }
+
+    private fun initViews() {
+        locationDbHelper = LocationDbHelper(this)
         locationDbAccessor = LocationDbAccessor(locationDbHelper)
+
+        locationViewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
+        locationRecyclerView = findViewById(R.id.locationRecyclerView)
+
+        savedLocationViewModel = ViewModelProvider(this).get(SavedLocationViewModel::class.java)
+        savedLocationRecyclerView = findViewById(R.id.savedLocationRecyclerView)
 
         xButton = findViewById(R.id.xButton)
         searchEditText = findViewById(R.id.searchEditText)
         NoResultTextView = findViewById(R.id.NoResultTextView)
-
-        locationRecyclerView = findViewById(R.id.locationRecyclerView)
-        setupLocationRecyclerView()
-
-        savedLocationRecyclerView = findViewById(R.id.savedLocationRecyclerView)
-        setupSavedLocationRecyclerView()
-
-
-        setupSearchEditText()
-        setupXButton()
-
-//        addLocationData()
-        val locationList: MutableList<Location> = readLocationData()
-        locationViewModel.setLocations(locationList)
-        observeFilteredLocation()
-
-        val savedLocationList: MutableList<SavedLocation> = readSavedLocationData()
-        savedLocationViewModel.setSavedLocation(savedLocationList)
-        observeSavedLocation()
-        savedLocationAdapter.submitList(savedLocationList)
-
     }
 
-    private fun setupLocationRecyclerView() {
+    private fun initializeLocationRecyclerView() {
         locationAdapter = LocationAdapter { location ->
             savedLocationViewModel.addSavedLocation(SavedLocation(location.title))
             addSavedLocationData(location.title)
@@ -75,7 +92,7 @@ class MainActivity : AppCompatActivity() {
         locationRecyclerView.adapter = locationAdapter
     }
 
-    private fun setupSavedLocationRecyclerView() {
+    private fun initializeSavedLocationRecyclerView() {
         savedLocationAdapter = SavedLocationAdapter { savedLocation ->
             deleteSavedLocationData(savedLocation.title)
             savedLocationViewModel.deleteSavedLocation(SavedLocation(savedLocation.title))
@@ -95,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                     locationAdapter.submitList(emptyList())
                     NoResultTextView.visibility = View.VISIBLE
                 } else {
-                    locationViewModel.filterLocations(query)
+                    locationViewModel.searchLocations(query)
                     NoResultTextView.visibility = View.GONE
                 }
             }
@@ -110,8 +127,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun observeFilteredLocation() {
-        locationViewModel.filteredLocations.observe(this, Observer {
+    private fun observeSearchedLocations() {
+        locationViewModel.SearchedLocations.observe(this, Observer {
             locationAdapter.submitList(it?.toMutableList())
         })
     }

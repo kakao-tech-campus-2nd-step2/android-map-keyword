@@ -8,20 +8,20 @@ class LocationViewModel : ViewModel() {
     private val _locations = MutableLiveData<List<Location>>()
     val locations: LiveData<List<Location>> get() = _locations
 
-    private val _filteredLocations = MutableLiveData<List<Location>>()
-    val filteredLocations: LiveData<List<Location>> get() = _filteredLocations
+    private val _SearchedLocations = MutableLiveData<List<Location>>()
+    val SearchedLocations: LiveData<List<Location>> get() = _SearchedLocations
 
     fun setLocations(locations: List<Location>) {
         _locations.value = locations
-        _filteredLocations.value = null
+        _SearchedLocations.value = null
     }
 
-    fun filterLocations(query: String) {
+    fun searchLocations(query: String) {
         val filteredList = _locations.value?.filter {
             it.title.contains(query, ignoreCase = true) ||
                     it.address.contains(query, ignoreCase = true) ||
                     it.category.contains(query, ignoreCase = true)
         }
-        _filteredLocations.value = filteredList
+        _SearchedLocations.value = filteredList
     }
 }
