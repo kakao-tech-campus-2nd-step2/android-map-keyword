@@ -21,12 +21,14 @@ class PlaceDbHelper(context: Context):SQLiteOpenHelper(
 
 	fun addPlace(place: Place) {
 		val db = writableDatabase
-		val values = ContentValues()
-		values.put(PlaceContract.COLUMN_NAME_NAME, place.name)
-		values.put(PlaceContract.COLUMN_NAME_ADDRESS, place.address)
-		values.put(PlaceContract.COLUMN_NAME_TYPE, place.type)
-		db.insert(PlaceContract.TABLE_NAME, null, values)
-		db.close()
+		if (!existPlace(place, db)){
+			val values = ContentValues()
+			values.put(PlaceContract.COLUMN_NAME_NAME, place.name)
+			values.put(PlaceContract.COLUMN_NAME_ADDRESS, place.address)
+			values.put(PlaceContract.COLUMN_NAME_TYPE, place.type)
+			db.insert(PlaceContract.TABLE_NAME, null, values)
+			db.close()
+		}
 	}
 
 	fun existPlace(place: Place, db: SQLiteDatabase): Boolean{
