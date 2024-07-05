@@ -43,7 +43,6 @@ class MainActivity : AppCompatActivity() {
         val searchEditText = mainBinding.search
 
         // 검색 결과 토대로 UI 업데이트
-
         viewModel.placeList.observe(this@MainActivity, Observer {
             Log.d("여기인가ㅌ", "호출!")
             (mainBinding.placeResult.adapter as? PlaceAdapter)?.setData(it)
@@ -108,7 +107,9 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onXMarkClick(position: Int) {
-                
+                MyApplication.prefs.deleteArrayListItem(Constants.SEARCH_HISTORY_KEY, position)
+                searchHistoryList = MyApplication.prefs.getArrayList(Constants.SEARCH_HISTORY_KEY)
+                historyAdapter.setData(searchHistoryList)
             }
         }
     }
