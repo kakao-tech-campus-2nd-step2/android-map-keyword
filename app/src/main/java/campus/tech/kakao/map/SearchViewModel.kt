@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-class SearchViewModel(private val context: Context) {
+class SearchViewModel(private val context: Context) : ViewModel() {
     private val repository: Repository = Repository(context)
 
     private val _searchResults = MutableLiveData<List<Keyword>>()
@@ -50,5 +50,3 @@ class SearchViewModelFactory(private val context: Context) : ViewModelProvider.F
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
-
-

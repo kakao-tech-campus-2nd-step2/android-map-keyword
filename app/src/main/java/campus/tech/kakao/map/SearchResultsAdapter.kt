@@ -32,5 +32,4 @@ class SearchResultsAdapter(
         keywords = newKeywords
         notifyDataSetChanged()
     }
-
 }

@@ -2,8 +2,6 @@ package campus.tech.kakao.map
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.database.Cursor
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -27,26 +25,15 @@ class Repository(context: Context) {
                 }
             }
         }
-
         db.setTransactionSuccessful()
         db.endTransaction()
     }
 
     private fun isDataExist(name: String): Boolean {
-        val cursor: Cursor = db.rawQuery("SELECT 1 FROM ${DatabaseHelper.TABLE_NAME} WHERE ${DatabaseHelper.COLUMN_NAME} = ?", arrayOf(name))
+        val cursor = db.rawQuery("SELECT 1 FROM ${DatabaseHelper.TABLE_NAME} WHERE ${DatabaseHelper.COLUMN_NAME} = ?", arrayOf(name))
         val exists = cursor.count > 0
         cursor.close()
         return exists
-    }
-
-    fun printAllData() {
-        val cursor = db.rawQuery("SELECT * FROM ${DatabaseHelper.TABLE_NAME}", null)
-        if (cursor.moveToFirst()) {
-            do {
-                Log.d("database", "ID: ${cursor.getInt(0)}, Name: ${cursor.getString(1)}, Address: ${cursor.getString(2)}")
-            } while (cursor.moveToNext())
-        }
-        cursor.close()
     }
 
     fun search(query: String): List<Keyword> {
@@ -85,6 +72,4 @@ class Repository(context: Context) {
         val type = object : TypeToken<List<Keyword>>() {}.type
         return Gson().fromJson(savedKeywordsJson, type)
     }
-
-
 }

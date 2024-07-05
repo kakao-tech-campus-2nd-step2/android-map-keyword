@@ -1,17 +1,12 @@
 package campus.tech.kakao.map
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import android.widget.EditText
-import androidx.activity.viewModels
-import campus.tech.kakao.map.R
 import campus.tech.kakao.map.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -72,13 +67,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeDatabase() {
-        val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
         val isFirstRun = prefs.getBoolean("isFirstRun", true)
         if (isFirstRun) {
             val repository = Repository(this)
             repository.populateInitialData()
             prefs.edit().putBoolean("isFirstRun", false).apply()
         }
-        Repository(this).printAllData()
     }
 }
