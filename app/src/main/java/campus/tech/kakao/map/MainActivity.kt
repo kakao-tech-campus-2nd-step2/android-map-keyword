@@ -64,6 +64,10 @@ class MainActivity : AppCompatActivity() {
         binding.buttonX.setOnClickListener {
             Log.d("MainActivity", "Clear search input")
             binding.inputSearch.text.clear()
+            searchAdapter.updateResults(emptyList())
+            binding.searchRecyclerView.visibility = View.GONE
+            binding.noResult.visibility = View.VISIBLE
+            //binding.savedSearchRecyclerView.visibility = View.VISIBLE
         }
 
         binding.inputSearch.addTextChangedListener ( object : TextWatcher {
@@ -74,6 +78,7 @@ class MainActivity : AppCompatActivity() {
                 if(query.isNotEmpty()) {
                     viewModel.searchDatabase(query)
                 } else {
+                    searchAdapter.updateResults(emptyList())
                     binding.searchRecyclerView.visibility = View.GONE
                     binding.noResult.visibility = View.VISIBLE
                     binding.savedSearchRecyclerView.visibility = View.GONE
