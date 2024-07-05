@@ -86,7 +86,8 @@ class MainActivity : AppCompatActivity() {
 
     fun setupRecyclerViews() {
         searchAdapter = SearchAdapter { place ->
-            viewModel.addSearch(place)
+            val placeName = place.split(", ")[0].split(": ")[1]
+            viewModel.addSearch(placeName)
         }
 
         savedSearchAdapter = SavedSearchAdapter { place ->

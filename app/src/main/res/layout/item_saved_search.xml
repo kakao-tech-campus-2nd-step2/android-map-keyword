@@ -12,7 +12,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:padding="8dp"/>
+        app:layout_constraintEnd_toStartOf="@+id/deleteButton"
+        android:padding="8dp"
+        android:layout_marginEnd="15dp"/>
 
     <Button
         android:id="@+id/deleteButton"
@@ -22,6 +24,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:padding="8dp"/>
+        android:padding="8dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
