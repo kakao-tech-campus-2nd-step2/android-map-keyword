@@ -129,7 +129,7 @@ class SearchDbHelper(context: Context) :
 
         try {
             while (cursor?.moveToNext() == true) {
-                result.add(cursor.getString(SearchKeywordContract.COLUMN_KEYWORD_INDEX))
+                result.add(cursor.getString(1))
             }
         } catch (e: Exception) {
             e.printStackTrace()
