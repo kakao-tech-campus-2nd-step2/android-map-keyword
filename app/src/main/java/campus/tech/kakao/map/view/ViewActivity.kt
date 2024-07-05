@@ -17,11 +17,13 @@ import campus.tech.kakao.map.R
 import campus.tech.kakao.map.viewmodel.LocationViewModel
 import campus.tech.kakao.map.databinding.ActivityMainBinding
 import campus.tech.kakao.map.view.adapter.LocationAdapter
+import campus.tech.kakao.map.view.adapter.LogAdapter
 
 class ViewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: LocationViewModel
     private lateinit var locationAdapter: LocationAdapter
+    private lateinit var logAdapter: LogAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -29,10 +31,14 @@ class ViewActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main)
         binding.viewModel = viewModel
 
-        locationAdapter = LocationAdapter()
+        locationAdapter = LocationAdapter{location -> logAdapter.addLog(location)  }
+        logAdapter = LogAdapter()
+
         binding.recyclerLocation.layoutManager = LinearLayoutManager(this)
         binding.recyclerLocation.adapter = locationAdapter
 
+        binding.recyclerLog.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL,false )
+        binding.recyclerLog.adapter = logAdapter
         test()
 
 
