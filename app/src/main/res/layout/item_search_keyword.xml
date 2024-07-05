@@ -6,19 +6,19 @@
     android:layout_height="40dp">
     <TextView
         android:id="@+id/view_delete_keyword"
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:foreground="@drawable/x_icon"
         android:layout_width="30dp"
         android:layout_height="30dp"
         />
     <TextView
         android:id="@+id/text_search_keyword"
-        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:gravity="center_vertical|left"
-        android:text="카페 1"
+        android:gravity="center_vertical|start"
+        android:text=""
 
         />
 
