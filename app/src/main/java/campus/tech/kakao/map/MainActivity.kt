@@ -29,9 +29,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("MainActivity", "onCreate called")
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        Log.d("MainActivity", "View binding initialized")
+
+        setupRecyclerViews()
 
         //dbHelper = DbHelper(this)
 
@@ -43,6 +47,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.insertInitialData()
 
         viewModel.searchResults.observe(this, Observer { results ->
+            Log.d("MainActivity", "Search results updated: %results")
             //binding.searchRecyclerView.adapter = SearchAdapter(results)
             searchAdapter.updateResults(results)
             binding.searchRecyclerView.visibility = if (results.isEmpty()) View.GONE else View.VISIBLE
@@ -50,11 +55,13 @@ class MainActivity : AppCompatActivity() {
         })
 
         viewModel.savedSearches.observe(this, Observer { searches ->
+            Log.d("MainActivity", "Saved searches updated: $searches")
             savedSearchAdapter.updateSearches(searches)
         })
 
         //X 버튼 클릭 시 입력창 초기화
         binding.buttonX.setOnClickListener {
+            Log.d("MainActivity", "Clear search input")
             binding.inputSearch.text.clear()
         }
 
@@ -62,6 +69,7 @@ class MainActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val query = s.toString()
+                Log.d("MainActivity", "Search query: $query")
                 if(query.isNotEmpty()) {
                     viewModel.searchDatabase(query)
                 } else {
@@ -74,7 +82,6 @@ class MainActivity : AppCompatActivity() {
 
         //RecyclerView 설정
         //binding.searchRecyclerView.layoutManager = LinearLayoutManager(this)
-        setupRecyclerViews()
     }
 
     fun setupRecyclerViews() {
@@ -86,11 +93,13 @@ class MainActivity : AppCompatActivity() {
             viewModel.removeSearch(place)
         }
 
-        binding.savedSearchRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.searchRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.searchRecyclerView.adapter = searchAdapter
 
         binding.savedSearchRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         binding.savedSearchRecyclerView.adapter = savedSearchAdapter
+
+        Log.d("MainActivity", "RecyclerViews set up")
     }
 
 }

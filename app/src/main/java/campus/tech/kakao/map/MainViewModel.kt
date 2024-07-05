@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.temporal.TemporalQuery
+import android.util.Log
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -36,6 +37,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                         dbHelper.insertData("카페 $i", "서울 성동구 성수동 $i", "카페")
                         dbHelper.insertData("약국 $i", "서울 강남구 대치동 $i", "약국")
                     }
+                    Log.d("MainViewModel", "Initial data inserted")
                 }
             }
         }
@@ -46,6 +48,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             val results = withContext(Dispatchers.IO) {
                 dbHelper.searchDatabase(query)
             }
+            Log.d("MainViewModel", "Search results: $results")
             _searchResults.postValue(results)
         }
     }
