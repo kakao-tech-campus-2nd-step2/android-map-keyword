@@ -1,14 +1,13 @@
 package campus.tech.kakao.map.repository
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import campus.tech.kakao.map.db.PlaceContract
 import campus.tech.kakao.map.db.PlaceDBHelper
 import campus.tech.kakao.map.model.Place
 
-class Repository (val dbHelper: PlaceDBHelper){
+class PlaceRepository (val dbHelper: PlaceDBHelper){
     fun getAllPlace() : MutableList<Place>{
-        val cursor = dbHelper.readData()
+        val cursor = dbHelper.readPlaceData()
         val placeList = mutableListOf<Place>()
 
         while (cursor.moveToNext()) {
@@ -32,11 +31,11 @@ class Repository (val dbHelper: PlaceDBHelper){
     }
 
     fun writePlace(place: Place){
-        dbHelper.insertData(place.name, place.location, place.category)
+        dbHelper.insertPlaceData(place.name, place.location, place.category)
     }
 
     fun getPlaceWithCategory(category : String): MutableList<Place>{
-        val cursor = dbHelper.readDataWithCategory(category)
+        val cursor = dbHelper.readPlaceDataWithSamedCategory(category)
         val placeList = mutableListOf<Place>()
 
         while (cursor.moveToNext()) {
