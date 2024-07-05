@@ -65,4 +65,4 @@ app
 <img src="https://github.com/YJY1220/DATA/assets/93771689/d5b085ae-0acc-4ca6-9767-a408d5a11b48" width="200" height="400"/>
 
 ### 실행 화면 
-https://youtube.com/shorts/Pe93VjSbMnk?feature=share
+https://youtube.com/shorts/DeB316hwOG0?feature=share
