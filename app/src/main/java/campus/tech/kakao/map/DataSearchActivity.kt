@@ -1,39 +1,56 @@
 package campus.tech.kakao.map
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class DataSearchActivity : AppCompatActivity() {
     private lateinit var searchViewModel: SearchViewModel
+    private lateinit var recentViewModel: RecentViewModel
     private lateinit var editText: EditText
     private lateinit var textWatcher :TextWatcher
-    private lateinit var adapter:SearchDataAdapter
+    private lateinit var resultDataAdapter:SearchDataAdapter
     private lateinit var resultData: List<SearchData>
-    private lateinit var searchDataList: RecyclerView
+    private lateinit var searchDataListView: RecyclerView
+    private lateinit var recentSearchListView: ListView
     private lateinit var noResultNotice: TextView
+    private lateinit var deleteBtn: ImageButton
 
+
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_data_search)
 
         searchViewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))[SearchViewModel::class.java]
+        recentViewModel = ViewModelProvider(this)[RecentViewModel::class.java]
 
-        searchDataList= findViewById(R.id.searchResulList)
+        searchDataListView= findViewById(R.id.searchResulListView)
         editText = findViewById(R.id.searchBar)
         noResultNotice = findViewById(R.id.noResult)
+        deleteBtn = findViewById(R.id.deleteInput)
+        recentSearchListView = findViewById(R.id.recentSearchListView)
+
+        recentViewModel.getRecentDataLiveData().observe(this, Observer{
+            recentData -> recentSearchListView.adapter = RecentSearchAdapter(recentData)
+        })
 
         addSearchData()
+        clickDeleteBtn()
 
-        searchDataList.layoutManager = LinearLayoutManager(this)
+        searchDataListView.layoutManager = LinearLayoutManager(this)
 
         setTextWatcher()
         editText.addTextChangedListener(textWatcher)
@@ -56,16 +73,22 @@ class DataSearchActivity : AppCompatActivity() {
                 resultData = searchViewModel.loadSearchData(searchInput)
                 if (searchInput.isNotEmpty() && resultData.isNotEmpty()){
                     noResultNotice.visibility = View.GONE
-                    adapter = SearchDataAdapter(resultData)
-                    searchDataList.adapter = adapter
+                    resultDataAdapter = SearchDataAdapter(resultData,recentViewModel)
+                    searchDataListView.adapter = resultDataAdapter
                 }else{noResultNotice.visibility = View.VISIBLE
-                    adapter = SearchDataAdapter(emptyList())
-                    searchDataList.adapter = adapter
+                    resultDataAdapter = SearchDataAdapter(emptyList(),recentViewModel)
+                    searchDataListView.adapter = resultDataAdapter
                 }
             }
 
             override fun afterTextChanged(s: Editable?) {
             }
+        }
+    }
+
+    private fun clickDeleteBtn(){
+        deleteBtn.setOnClickListener{
+            editText.text.clear()
         }
     }
 }
