@@ -8,9 +8,9 @@ import campus.tech.kakao.map.model.Location
 
 
 class LocationAdapter(
-    var locationList: List<Location> = listOf(),
     private var onItemClicked: (Location) -> Unit
 ): RecyclerView.Adapter<LocationAdapter.LocationViewHolder>() {
+    var locationList: List<Location> = listOf()
     inner class LocationViewHolder(private val binding: ListItemBinding )
         :RecyclerView.ViewHolder(binding.root){
             fun bind(location: Location){

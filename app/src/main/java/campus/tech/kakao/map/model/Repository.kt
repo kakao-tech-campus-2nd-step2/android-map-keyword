@@ -11,11 +11,37 @@ class Repository(context: Context):
         //CRUD
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(LocationContract.CREATE_QUERY)
+        initDB(db)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db?.execSQL(LocationContract.DROP_QUERY)
         onCreate(db)
+    }
+
+    private fun initDB(db: SQLiteDatabase?){
+        val initData = generateInitData()
+
+        initData.forEach {
+            val values = ContentValues().apply {
+                put(LocationContract.COLUMN_NAME, it.name)
+                put(LocationContract.COLUMN_LOCATION, it.location)
+                put(LocationContract.COLUMN_TYPE, it.type)
+            }
+            db?.insert(LocationContract.TABLE_NAME, null, values)
+        }
+    }
+
+    private fun generateInitData(): List<Location> {
+        val initData = mutableListOf<Location>()
+
+        for (i in 1..20) {
+            initData.add(Location("cafe$i", "부산시 수영구$i", "카페"))
+        }
+        for (i in 1..20) {
+            initData.add(Location("pharmacy$i", "서울시 성동구$i", "약국"))
+        }
+        return initData
     }
 
     fun insertData(location: Location){
