@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupLocationRecyclerView() {
         locationAdapter = LocationAdapter { location ->
             savedLocationViewModel.addSavedLocation(SavedLocation(location.title))
-            inseartSavedLocation(location.title)
+            insertSavedLocation(location.title)
         }
         locationRecyclerView.layoutManager = LinearLayoutManager(this)
         locationRecyclerView.adapter = locationAdapter
@@ -151,7 +151,7 @@ class MainActivity : AppCompatActivity() {
         savedLocationAdapter.submitList(savedLocationList)
     }
 
-    private fun inseartSavedLocation(title: String) {
+    private fun insertSavedLocation(title: String) {
         locationDbAccessor.insertSavedLocation(title)
     }
     private fun readSavedLocationData(): MutableList<SavedLocation> {
