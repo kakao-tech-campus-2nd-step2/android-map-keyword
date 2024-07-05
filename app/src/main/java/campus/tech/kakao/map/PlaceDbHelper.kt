@@ -66,7 +66,7 @@ class PlaceDbHelper(context: Context):SQLiteOpenHelper(
 		return if (result) true else false
 	}
 
-	fun searchPlaceName(name: String): List<Place>{
+	fun searchPlaceName(name: String): MutableList<Place>{
 		val results = mutableListOf<Place>()
 		var searchResult = "%${name}%"
 		val cursor = readableDatabase.query(
