@@ -50,6 +50,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
                     put(PlaceContract.COLUMN_CATEGORY, category)
                 }
                 db.insert(PlaceContract.TABLE_NAME, null, values)
+                Log.d("DbHelper", "Inserted data: $name, $address, $category")
             }
         }
     }
@@ -96,6 +97,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
                     val category =
                         cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_CATEGORY))
                     results.add("Name: $name, Address: $address, Category: $category")
+                    Log.d("DbHelper", "Found data: $name, $address, $category")
                 }
             }
         }

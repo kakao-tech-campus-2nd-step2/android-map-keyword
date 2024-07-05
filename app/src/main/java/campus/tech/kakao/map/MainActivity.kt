@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.insertInitialData()
 
         viewModel.searchResults.observe(this, Observer { results ->
-            Log.d("MainActivity", "Search results updated: %results")
+            Log.d("MainActivity", "Search results updated: $results")
             //binding.searchRecyclerView.adapter = SearchAdapter(results)
             searchAdapter.updateResults(results)
             binding.searchRecyclerView.visibility = if (results.isEmpty()) View.GONE else View.VISIBLE
