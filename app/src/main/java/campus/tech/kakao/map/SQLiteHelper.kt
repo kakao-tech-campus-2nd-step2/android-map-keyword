@@ -44,10 +44,8 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         return cnt == 0
     }
 
-    // db update 때마다 호출
+    // 데이터베이스 업그레이드 시 기존 데이터 유지
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
-        onCreate(db)
     }
 
     // 초기 데이터 삽입 메서드
