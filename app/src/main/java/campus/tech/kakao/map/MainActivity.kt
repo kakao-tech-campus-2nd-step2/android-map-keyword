@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeLocationViewModel() {
-        addLocationData() // 앱 설치 시 최초 1번만 실행하게 하려면 어떻게 해야할까?
+        insertLocation() // 앱 설치 시 최초 1번만 실행하게 하려면 어떻게 해야할까?
         val locationList: MutableList<Location> = readLocationData()
         locationViewModel.setLocations(locationList)
     }
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
     private fun initializeLocationRecyclerView() {
         locationAdapter = LocationAdapter { location ->
             savedLocationViewModel.addSavedLocation(SavedLocation(location.title))
-            addSavedLocationData(location.title)
+            inseartSavedLocation(location.title)
         }
         locationRecyclerView.layoutManager = LinearLayoutManager(this)
         locationRecyclerView.adapter = locationAdapter
@@ -149,7 +149,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun addLocationData() {
+    private fun insertLocation() {
         for (i in 1..9) {
             locationDbAccessor.insertLocation("카페$i", "부산 부산진구 전포대로$i", "카페")
         }
@@ -158,14 +158,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun addSavedLocationData(title: String) {
+    private fun inseartSavedLocation(title: String) {
         locationDbAccessor.insertSavedLocation(title)
     }
 
-        private fun readLocationData(): MutableList<Location> {
-        val result: MutableList<Location> = locationDbAccessor.getLocationAll()
-        Log.d("jieun", "$result")
-        return result
+    private fun readLocationData(): MutableList<Location> {
+    val result: MutableList<Location> = locationDbAccessor.getLocationAll()
+    Log.d("jieun", "$result")
+    return result
     }
 
     private fun readSavedLocationData(): MutableList<SavedLocation> {
