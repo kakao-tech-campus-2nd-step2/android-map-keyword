@@ -16,8 +16,10 @@ class MainActivityViewModel(
     private val _place = MutableLiveData<MutableList<Place>>()
     private val _savedPlace = MutableLiveData<MutableList<SavedPlace>>()
     val place: LiveData<MutableList<Place>> get() = _place
-    val SavedPlace: LiveData<MutableList<SavedPlace>> get() = _savedPlace
-
+    val savedPlace: LiveData<MutableList<SavedPlace>> get() = _savedPlace
+    init{
+        getSavedPlace()
+    }
     fun getPlace() {
         _place.postValue(placeRepository.getAllPlace())
     }

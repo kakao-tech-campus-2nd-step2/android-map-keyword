@@ -34,12 +34,15 @@ class MainActivity : AppCompatActivity(), OnClickPlaceListener {
     lateinit var noResultText: TextView
     lateinit var inputSearchField: EditText
     lateinit var viewModel : MainActivityViewModel
+    lateinit var savedPlaceRecyclerView : RecyclerView
+    lateinit var searchRecyclerView : RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         noResultText = findViewById<TextView>(R.id.no_search_result)
-        val recyclerView = findViewById<RecyclerView>(R.id.search_result_recyclerView)
+        searchRecyclerView = findViewById<RecyclerView>(R.id.search_result_recyclerView)
         inputSearchField = findViewById<EditText>(R.id.input_search_field)
+        savedPlaceRecyclerView = findViewById<RecyclerView>(R.id.saved_search_recyclerView)
         val dbHelper = PlaceDBHelper(this)
         val placeRepository = PlaceRepository(dbHelper)
         val savedPlaceRepository = SavedPlaceRepository(dbHelper)
@@ -53,18 +56,31 @@ class MainActivity : AppCompatActivity(), OnClickPlaceListener {
             inputSearchField.setText("")
             inputSearchField.clearFocus()
         }
+        val searchRecyclerViewAdapter = PlaceViewAdapter(viewModel.place, LayoutInflater.from(this), this)
+        val savedPlaceRecyclerViewAdapter = SavedPlaceViewAdapter(viewModel.savedPlace, LayoutInflater.from(this))
+        searchRecyclerView.layoutManager = LinearLayoutManager(this)
+        searchRecyclerView.adapter = searchRecyclerViewAdapter
+        savedPlaceRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        savedPlaceRecyclerView.adapter =savedPlaceRecyclerViewAdapter
+
 
         Log.d("testt", viewModel.place.toString())
-        viewModel.place.observe(this, Observer { newData ->
-            Log.d("readData", "데이터 변경 감지")
+        viewModel.place.observe(this, Observer {
+            Log.d("readData", "검색창 결과 변경 감지")
             val place = viewModel.place
             Log.d("testt", "place")
             place?.let {
-                recyclerView.layoutManager = LinearLayoutManager(this)
-                recyclerView.adapter = PlaceViewAdapter(place, LayoutInflater.from(this), this)
+                searchRecyclerViewAdapter.notifyDataSetChanged()
                 noResultText.visibility = View.INVISIBLE
             }
             if (place.value?.isEmpty() == true) noResultText.visibility = View.VISIBLE
+        })
+
+        viewModel.savedPlace.observe(this, Observer {
+            Log.d("readData", "저장된 장소들 변경 감지")
+            val savedPlace = viewModel.savedPlace
+            savedPlaceRecyclerViewAdapter.notifyDataSetChanged()
+            if (savedPlace.value?.isEmpty() == true) savedPlaceRecyclerView.visibility = View.GONE
         })
 
         inputSearchField.addTextChangedListener(object : TextWatcher {
@@ -115,9 +131,7 @@ class PlaceViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceViewHolder {
         val view = inflater.inflate(R.layout.place_item, parent, false)
-        Log.d("testt", "onCreateViewHolder")
-        // onCreateViewHolder에서 리스너?
-
+        Log.d("testt", "검색 결과 뷰 생성")
         return PlaceViewHolder(view)
     }
 
@@ -132,3 +146,28 @@ class PlaceViewAdapter(
     }
 }
 
+class SavedPlaceViewAdapter(
+    val savedPlaceList: LiveData<MutableList<SavedPlace>>,
+    val inflater: LayoutInflater
+): RecyclerView.Adapter<SavedPlaceViewAdapter.SavedPlaceViewHolder>(){
+
+    inner class SavedPlaceViewHolder(itemView : View) :RecyclerView.ViewHolder(itemView){
+        val name = itemView.findViewById<TextView>(R.id.saved_place_name)
+        val deleteButton = itemView.findViewById<ImageView>(R.id.button_saved_delete)
+
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SavedPlaceViewHolder {
+        val view = inflater.inflate(R.layout.saved_place_item, parent, false)
+        Log.d("testt", "저장된 장소를 띄우는 뷰 홀더 생성")
+        return SavedPlaceViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: SavedPlaceViewHolder, position: Int) {
+        holder.name.text = savedPlaceList.value?.get(position)?.name ?: ""
+    }
+
+    override fun getItemCount(): Int {
+        return savedPlaceList.value?.size ?: 0
+    }
+}
