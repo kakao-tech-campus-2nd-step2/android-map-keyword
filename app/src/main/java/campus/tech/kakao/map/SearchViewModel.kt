@@ -15,6 +15,10 @@ class SearchViewModel(private val context: Context) {
     private val _savedKeywords = MutableLiveData<List<Keyword>>()
     val savedKeywords: LiveData<List<Keyword>> = _savedKeywords
 
+    init {
+        _savedKeywords.value = repository.getAllSavedKeywordsFromPrefs()
+    }
+
     fun search(query: String) {
         val results = repository.search(query)
         _searchResults.value = results
