@@ -7,6 +7,10 @@ import android.text.TextWatcher
 import android.view.View
 import campus.tech.kakao.map.databinding.ActivityMainBinding
 import androidx.lifecycle.ViewModelProvider //viewmodel 초기화
+import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,34 +33,52 @@ class MainActivity : AppCompatActivity() {
         val viewModelInit = ViewModelProvider.AndroidViewModelFactory.getInstance(application)
         viewModel = ViewModelProvider(this, viewModelInit).get(MapViewModel::class.java)
 
-        //검색란 텍스트 입력
-        val searchEditText = binding.searchEditText
-        val clearTextButton = binding.clearTextButton
+        setupRecyclerViews()
+        setupSearchEditText()
+        setupClearTextButton()
+        observeViewModel()
+    }
 
-        //검색 변경 리스터
-        searchEditText.addTextChangedListener(object : TextWatcher {
-            //before
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+    private fun setupRecyclerViews() {
+        //검색 결과 데이터 목록 RecyclerView 설정
+        binding.searchResultsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = searchAdapter
+        }
+        //선택된 항목 어댑터 초기화
+        selectedAdapter = SelectedAdapter { item -> viewModel.removeSelectedItem(item) }
+        //선택 데이터 RecyclerView 가로
+        binding.selectedItemsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity, RecyclerView.HORIZONTAL, false)
+            adapter = selectedAdapter
+        }
+    }
 
-            //Edit
+    //검색 시 Edit
+    private fun setupSearchEditText() {
+        binding.searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 //차있는 경우
                 if (s.toString().isNotEmpty()) {
-                    clearTextButton.visibility = View.VISIBLE
+                    binding.clearTextButton.visibility = View.VISIBLE
                 } else { //비어있는 경우
-                    clearTextButton.visibility = View.GONE
+                    binding.clearTextButton.visibility = View.GONE
                 }
+                viewModel.searchQuery.value = s.toString()
             }
 
-            //after
             override fun afterTextChanged(s: Editable?) {
+
             }
         })
+    }
 
-        //clearTextButton 클릭 시 검색란 내용 삭제
-        clearTextButton.setOnClickListener {
-            searchEditText.text.clear()
+    //text 지우는 버튼
+    private fun setupClearTextButton() {
+        binding.clearTextButton.setOnClickListener {
+            binding.searchEditText.text.clear()
         }
     }
 }
