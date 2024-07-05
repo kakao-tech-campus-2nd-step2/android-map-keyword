@@ -55,6 +55,11 @@ app
 ```
 
 ### 구현 화면
-
+<img src="https://github.com/YJY1220/DATA/assets/93771689/ae287ed5-0a0b-4ef7-8214-0b39f9e01bba" width="200" height="400"/>
+<img src="https://github.com/YJY1220/DATA/assets/93771689/cf8d23cd-3f89-4bc0-9cfe-e3d03e9b8e1d" width="200" height="400"/>
+<img src="https://github.com/YJY1220/DATA/assets/93771689/3cf47693-6e45-4ea1-8819-5c8889b99a83" width="200" height="400"/>
+<img src="https://github.com/YJY1220/DATA/assets/93771689/7ccd9316-d501-4e9c-b1c4-e68da9f63a7a" width="200" height="400"/>
+<img src="https://github.com/YJY1220/DATA/assets/93771689/d5b085ae-0acc-4ca6-9767-a408d5a11b48" width="200" height="400"/>
 
 ### 실행 화면 
+https://youtube.com/shorts/Pe93VjSbMnk?feature=share
