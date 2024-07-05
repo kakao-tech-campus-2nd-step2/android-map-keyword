@@ -2,10 +2,14 @@ package campus.tech.kakao.map
 
 import android.content.ContentValues
 import android.content.Context
+import android.content.SharedPreferences
 import android.database.Cursor
+import androidx.core.content.edit
 
 class PlaceRepository(context: Context) {
     private val dbHelper = PlaceDBHelper.getInstance(context)
+    private val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("search_history", Context.MODE_PRIVATE)
 
     init {
         insertDummies()
@@ -89,14 +93,15 @@ class PlaceRepository(context: Context) {
         // Selection Arguments : 조건에 대한 값
         val selectionArgs = arrayOf("%$query%")
 
-        val cursor : Cursor = db.query(
+        val cursor: Cursor = db.query(
             PlaceDBContract.PlaceEntry.TABLE_NAME,
             arrayOf(
                 PlaceDBContract.PlaceEntry.COLUMN_NAME,
                 PlaceDBContract.PlaceEntry.COLUMN_ADDRESS,
                 PlaceDBContract.PlaceEntry.COLUMN_TYPE
             ),
-            selection, selectionArgs, null, null, null)
+            selection, selectionArgs, null, null, null
+        )
 
         with(cursor) {
             while (moveToNext()) {
@@ -111,4 +116,28 @@ class PlaceRepository(context: Context) {
         db.close()
         return searchedPlaces
     }
+
+    fun getSearchHistory(): Set<String> {
+        return sharedPreferences.getStringSet("history", setOf()) ?: setOf()
+    }
+
+    fun saveSearchHistory(query: String) {
+        val currentHistory = getSearchHistory().toMutableList()
+        currentHistory.add(query)
+        sharedPreferences.edit {
+            putStringSet("history", currentHistory.toSet())
+        }
+    }
+
+    fun removeSearchQuery(query: String) {
+        val currentHistory = getSearchHistory().toMutableList()
+        if (currentHistory.contains(query)) {
+            currentHistory.remove(query)
+            sharedPreferences.edit {
+                putStringSet("history", currentHistory.toSet())
+            }
+        }
+    }
+
+
 }

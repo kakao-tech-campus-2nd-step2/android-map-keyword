@@ -3,15 +3,10 @@ package campus.tech.kakao.map
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,7 +18,9 @@ class PlaceActivity : AppCompatActivity() {
     private lateinit var removeButton: ImageButton
     private lateinit var emptyMessage: TextView
     private lateinit var placeRecyclerView: RecyclerView
+    private lateinit var historyRecyclerView: RecyclerView
     private lateinit var placeAdapter: PlaceAdapter
+    private lateinit var historyAdapter: SearchHistoryAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_place)
@@ -57,7 +54,10 @@ class PlaceActivity : AppCompatActivity() {
         removeButton = findViewById(R.id.cancelButton)
         placeRecyclerView = findViewById(R.id.placeRecyclerView)
         emptyMessage = findViewById(R.id.emptyMessage)
-        placeAdapter = PlaceAdapter()
+        historyRecyclerView = findViewById(R.id.historyRecyclerView)
+        placeAdapter = PlaceAdapter { place ->
+            placeViewModel.saveSearchQuery(place.name)
+        }
     }
 
     private fun initializeViewModel() {
@@ -65,9 +65,19 @@ class PlaceActivity : AppCompatActivity() {
         placeViewModel =
             ViewModelProvider(this, placeViewModelFactory).get(PlaceViewModel::class.java)
 
+        historyAdapter = SearchHistoryAdapter(emptyList(), placeViewModel::removeSearchQuery) { query ->
+            searchEditText.setText(query)
+            placeViewModel.searchPlaces(query)
+        }
+
         placeViewModel.places.observe(this) { places ->
             updateUI(places)
         }
+
+        placeViewModel.searchHistory.observe(this) { history ->
+            historyAdapter.updateData(history)
+        }
+        placeViewModel.loadSearchHistory()
     }
 
     private fun updateUI(place: List<Place>) {
@@ -83,6 +93,9 @@ class PlaceActivity : AppCompatActivity() {
     private fun initializeRecyclerView() {
         placeRecyclerView.layoutManager = LinearLayoutManager(this)
         placeRecyclerView.adapter = placeAdapter
+
+        historyRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        historyRecyclerView.adapter = historyAdapter
     }
 
     private fun setUpSearchEditText() {

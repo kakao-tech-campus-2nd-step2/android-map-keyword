@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class PlaceAdapter: RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder>() {
+class PlaceAdapter(
+    private val onItemClick: (Place) -> Unit
+): RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder>() {
     private var places : List<Place> = emptyList()
 
     class PlaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -30,6 +32,9 @@ class PlaceAdapter: RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder>() {
         holder.nameTextView.text = place.name
         holder.addressTextView.text = place.address
         holder.typeTextView.text = place.type
+        holder.itemView.setOnClickListener {
+            onItemClick(place)
+        }
     }
 
     fun updateData(newPlaces: List<Place>) {
