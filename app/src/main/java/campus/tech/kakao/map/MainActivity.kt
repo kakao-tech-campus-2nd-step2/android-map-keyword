@@ -34,9 +34,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        initialize()
         loadSearchList()
         createQuery()
-        initialize()
         setCancelBtn()
         setSearchView()
         setRecyclerView()
@@ -133,7 +133,6 @@ class MainActivity : AppCompatActivity() {
         }
         searchView.adapter = searchAdapter
         searchView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        searchView.visibility = View.GONE
     }
 
     private fun saveSearchList() {
@@ -151,6 +150,15 @@ class MainActivity : AppCompatActivity() {
         if (jsonString != null) {
             val type = object : TypeToken<ArrayList<LocationData>>() {}.type
             searchList = Gson().fromJson(jsonString, type)
+        }
+        Log.d("searchList", "$searchList")
+
+        if (searchList.isNotEmpty()) {
+            searchView.visibility = View.VISIBLE
+            Log.d("MainActivity", "SearchView should be visible, items: ${searchList.size}")
+        } else {
+            searchView.visibility = View.GONE
+            Log.d("MainActivity", "SearchView should be invisible, items: ${searchList.size}")
         }
     }
 
