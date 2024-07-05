@@ -9,7 +9,7 @@
     tools:context=".MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/savedSearchWord"
+        android:id="@+id/savedSearchWordRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="horizontal"
@@ -25,7 +25,7 @@
         android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/savedSearchWord" />
+        app:layout_constraintTop_toBottomOf="@id/savedSearchWordRecyclerView" />
 
     <FrameLayout
         android:id="@+id/searchbar"

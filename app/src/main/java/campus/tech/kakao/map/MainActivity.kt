@@ -24,6 +24,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var deleteSearchWord: Button
     private lateinit var searchNothing: TextView
 
+    private lateinit var savedSearchWordRecyclerView: RecyclerView
+
     private var searchDataList = mutableListOf<SearchData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         searchWord = findViewById(R.id.searchWord)
         deleteSearchWord = findViewById(R.id.deleteSearchWord)
         searchNothing = findViewById(R.id.searchNothing)
+        savedSearchWordRecyclerView = findViewById(R.id.savedSearchWordRecyclerView)
 
         adapter = SearchAdapter()
 
