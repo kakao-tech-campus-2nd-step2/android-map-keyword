@@ -2,11 +2,10 @@ package campus.tech.kakao.map
 
 import android.content.ContentValues
 import android.content.Context
-import campus.tech.kakao.map.LocationContract.LocationEntry
+import android.util.Log
+import campus.tech.kakao.map.Contract.LocationEntry
 
-class LocationDbAccessor(context: Context) {
-
-    private val dbHelper = LocationDbHelper(context)
+class LocationDbAccessor(private val dbHelper : LocationDbHelper) {
 
     fun insertLocation(title: String, address: String, category: String): Long {
         val db = dbHelper.writableDatabase
@@ -51,6 +50,43 @@ class LocationDbAccessor(context: Context) {
                 val address = getString(getColumnIndexOrThrow(LocationEntry.COLUMN_NAME_ADDRESS))
                 val category = getString(getColumnIndexOrThrow(LocationEntry.COLUMN_NAME_CATEGORY))
                 results.add(Location(title, address, category))
+            }
+        }
+        cursor.close()
+        return results
+    }
+
+    fun insertSavedLocation(title: String): Long {
+        val db = dbHelper.writableDatabase
+        val values = ContentValues().apply {
+            put(Contract.SavedLocationEntry.COLUMN_NAME_TITLE, title)
+        }
+        Log.d("jieun", "저장완료")
+        return db.insert(Contract.SavedLocationEntry.TABLE_NAME, null, values)
+    }
+
+    fun getSavedLocationAll(): MutableList<SavedLocation> {
+        val db = dbHelper.readableDatabase
+
+        val projection = arrayOf(
+            Contract.SavedLocationEntry.COLUMN_NAME_TITLE,
+        )
+        val sortOrder = "${Contract.SavedLocationEntry.COLUMN_NAME_TITLE} ASC"
+        val cursor = db.query(
+            Contract.SavedLocationEntry.TABLE_NAME,
+            projection,
+            null,
+            null,
+            null,
+            null,
+            sortOrder
+        )
+
+        val results = mutableListOf<SavedLocation>()
+        with(cursor) {
+            while (moveToNext()) {
+                val title = getString(getColumnIndexOrThrow(Contract.SavedLocationEntry.COLUMN_NAME_TITLE))
+                results.add(SavedLocation(title))
             }
         }
         cursor.close()

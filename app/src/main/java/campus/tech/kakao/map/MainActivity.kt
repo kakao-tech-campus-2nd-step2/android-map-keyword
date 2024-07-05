@@ -12,39 +12,52 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var locationViewModel: LocationViewModel
     private lateinit var locationAdapter: LocationAdapter
+    private lateinit var savedLocationViewModel: SavedLocationViewModel
+    private lateinit var searchResultRecyclerView: RecyclerView
+    private lateinit var locationDbAccessor: LocationDbAccessor
+
+    private lateinit var xButton: ImageView
+    private lateinit var searchEditText: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         locationViewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
+        savedLocationViewModel = ViewModelProvider(this).get(SavedLocationViewModel::class.java)
 
-        val dbAccessor = LocationDbAccessor(context = this)
-        val xButton: ImageView = findViewById(R.id.xButton)
-        val searchEditText: EditText = findViewById(R.id.searchEditText)
-        val searchResultRecyclerView: RecyclerView = findViewById(R.id.searchResultRecyclerView)
+        val locationDbHelper = LocationDbHelper(this)
+        locationDbAccessor = LocationDbAccessor(locationDbHelper)
 
-        setupRecyclerView(searchResultRecyclerView)
-        setupSearchEditText(searchEditText)
-        setupXButton(xButton, searchEditText)
+        xButton = findViewById(R.id.xButton)
+        searchEditText = findViewById(R.id.searchEditText)
 
-        val locationList: MutableList<Location> = readLocationData(dbAccessor)
+        searchResultRecyclerView = findViewById(R.id.searchResultRecyclerView)
+        setupRecyclerView()
+
+        setupSearchEditText()
+        setupXButton()
+
+        addLocationData()
+        val locationList: MutableList<Location> = readLocationData()
         locationViewModel.setLocations(locationList)
         observeFilteredLocations()
 
         locationAdapter.submitList(locationList)
     }
 
-    private fun setupRecyclerView(recyclerView: RecyclerView) {
-        locationAdapter = LocationAdapter()
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = locationAdapter
+    private fun setupRecyclerView() {
+        locationAdapter = LocationAdapter { location ->
+            savedLocationViewModel.addSearchQuery(location.title)
+            addSavedLocationData(location.title)
+        }
+        searchResultRecyclerView.layoutManager = LinearLayoutManager(this)
+        searchResultRecyclerView.adapter = locationAdapter
     }
 
-    private fun setupSearchEditText(searchEditText: EditText) {
+    private fun setupSearchEditText() {
         searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -56,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun setupXButton(xButton: ImageView, searchEditText: EditText) {
+    private fun setupXButton() {
         xButton.setOnClickListener {
             searchEditText.setText("")
         }
@@ -68,18 +81,28 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun readLocationData(dbAccessor: LocationDbAccessor): MutableList<Location> {
-        val result: MutableList<Location> = dbAccessor.getLocationAll()
-        Log.d("jieun", "$result")
-        return result
+    private fun observeSavedLocation() {
+        savedLocationViewModel.locationHistory.observe(this, { history ->
+            // 검색어 저장 목록 어답터 변경하기!
+        })
     }
 
-    private fun addLocationData(dbAccessor: LocationDbAccessor) {
+    private fun addLocationData() {
         for (i in 1..9) {
-            dbAccessor.insertLocation("카페$i", "부산 부산진구 전포대로$i", "카페")
+            locationDbAccessor.insertLocation("카페$i", "부산 부산진구 전포대로$i", "카페")
         }
         for (i in 1..9) {
-            dbAccessor.insertLocation("음식점$i", "부산 부산진구 중앙대로$i", "음식점")
+            locationDbAccessor.insertLocation("음식점$i", "부산 부산진구 중앙대로$i", "음식점")
         }
+    }
+
+    private fun addSavedLocationData(title: String) {
+        locationDbAccessor.insertSavedLocation(title)
+    }
+
+    private fun readLocationData(): MutableList<Location> {
+        val result: MutableList<Location> = locationDbAccessor.getLocationAll()
+        Log.d("jieun", "$result")
+        return result
     }
 }

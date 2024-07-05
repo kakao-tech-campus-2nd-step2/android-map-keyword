@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-class LocationAdapter: ListAdapter<Location, LocationAdapter.LocationHolder>(
+class LocationAdapter(private val onLocationSelected: (Location) -> Unit) : ListAdapter<Location, LocationAdapter.LocationHolder>(
     object : DiffUtil.ItemCallback<Location>() {
         override fun areItemsTheSame(oldItem: Location, newItem: Location): Boolean {
             return oldItem.title == newItem.title
@@ -25,10 +25,7 @@ class LocationAdapter: ListAdapter<Location, LocationAdapter.LocationHolder>(
         init {
             itemView.setOnClickListener {
                 val location = getItem(bindingAdapterPosition)
-                val updatedLocation = location.copy(isChecked = location.isChecked.not())
-                submitList(currentList.toMutableList().apply {
-                    this[bindingAdapterPosition] = updatedLocation
-                })
+                onLocationSelected(location)
             }
         }
     }
