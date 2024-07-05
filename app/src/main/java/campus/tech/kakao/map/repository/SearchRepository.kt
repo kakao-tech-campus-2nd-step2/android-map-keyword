@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
+import campus.tech.kakao.map.model.Place
 import campus.tech.kakao.map.model.PlaceContract
 import campus.tech.kakao.map.model.PlaceDBHelper
 
@@ -44,22 +45,25 @@ class SearchRepository(context: Context) {
         }
     }
 
-    fun getAllPlaces() {
+    fun getSearchPlaces(placeName: String): MutableList<Place> {
         val db: SQLiteDatabase = dbHelper.readableDatabase
+        val places = mutableListOf<Place>()
         var cursor: Cursor? = null
         try {
+            val selection = "${PlaceContract.PlaceEntry.COLUMN_PLACE_NAME} LIKE ?"
+            val selectionArgs = arrayOf("$placeName%")
+
             cursor = db.query(
                 PlaceContract.PlaceEntry.TABLE_NAME,
                 null,
-                null,
-                null,
+                selection,
+                selectionArgs,
                 null,
                 null,
                 null
             )
 
             if (cursor != null) {
-                val places = mutableListOf<String>()
                 while (cursor.moveToNext()) {
                     val name =
                         cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.PlaceEntry.COLUMN_PLACE_NAME))
@@ -67,11 +71,8 @@ class SearchRepository(context: Context) {
                         cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.PlaceEntry.COLUMN_PLACE_ADDRESS))
                     val category =
                         cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.PlaceEntry.COLUMN_PLACE_CATEGORY))
-                    places.add("Name: $name, Address: $address, Category: $category")
-                }
 
-                for (place in places) {
-                    Log.d("ddangcong80", place)
+                    places.add(Place(name, address, category))
                 }
             }
         } catch (e: Exception) {
@@ -80,7 +81,8 @@ class SearchRepository(context: Context) {
             cursor?.close()
             db.close()
         }
-    }
 
+        return places
+    }
 
 }
