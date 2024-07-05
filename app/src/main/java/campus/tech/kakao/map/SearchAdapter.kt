@@ -19,6 +19,7 @@ class SearchAdapter() : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
             searchName.text = searchData.name
             searchAddress.text = searchData.address
             searchCategory.text = searchData.category
+
         }
 
     }

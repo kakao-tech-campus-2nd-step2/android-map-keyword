@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         searchNothing = findViewById(R.id.searchNothing)
 
         adapter = SearchAdapter()
+
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
@@ -145,6 +146,7 @@ class MainActivity : AppCompatActivity() {
             searchNothing.visibility = android.view.View.GONE
         }
     }
+
 }
 
 
