@@ -41,5 +41,12 @@ class SearchLocationActivity : AppCompatActivity() {
 				binding.emptyResultTextView.isVisible = locationData.isEmpty()
 			}
 		}
+
+		viewModel.history.observe(this) {
+			it?.let { historyData ->
+				binding.searchHistoryRecyclerView.adapter = HistoryAdapter(historyData, this)
+				binding.searchHistoryRecyclerView.isVisible = historyData.isNotEmpty()
+			}
+		}
 	}
 }
