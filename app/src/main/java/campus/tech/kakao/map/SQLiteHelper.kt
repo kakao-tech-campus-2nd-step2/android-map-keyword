@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.database.Cursor
 
 class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -59,5 +60,14 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
             }
             db.insert(TABLE_NAME, null, values)
         }
+    }
+
+    //항목 검색
+    fun searchItems(query: String): Cursor {
+        val db = this.readableDatabase
+        return db.rawQuery( //cursor로 반환
+            "SELECT * FROM $TABLE_NAME WHERE $COL_NAME LIKE ?",
+            arrayOf("%$query%")
+        )
     }
 }
