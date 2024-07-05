@@ -49,4 +49,34 @@ class PlaceDbHelper(context: Context):SQLiteOpenHelper(
 		cursor.close()
 		return if (result) true else false
 	}
+
+	fun searchPlaceName(name: String): List<Place>{
+		val results = mutableListOf<Place>()
+		var searchResult = "%${name}%"
+		val cursor = readableDatabase.query(
+			PlaceContract.TABLE_NAME,
+			arrayOf(PlaceContract.COLUMN_NAME_NAME,
+				PlaceContract.COLUMN_NAME_ADDRESS,
+				PlaceContract.COLUMN_NAME_TYPE),
+			"${PlaceContract.COLUMN_NAME_NAME} like ?",
+			arrayOf(searchResult),
+			null,
+			null,
+			"${PlaceContract.COLUMN_NAME_NAME} ASC"
+		)
+
+		while (cursor.moveToNext()) {
+			val name = cursor.getString(
+				cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_NAME_NAME)
+			)
+			val address = cursor.getString(
+				cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_NAME_ADDRESS)
+			)
+			val type = cursor.getString(
+				cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_NAME_TYPE))
+			results.add(Place(name, address, type))
+		}
+		cursor.close()
+		return results
+	}
 }
