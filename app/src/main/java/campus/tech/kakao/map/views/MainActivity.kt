@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initiateViews()
-        initiateSaveKeywordRecyclerView()
+
         setInitialValueToAdapter()
         initiateLiveDataObservation()
     }
@@ -51,11 +51,10 @@ class MainActivity : AppCompatActivity() {
         }, {
             searchViewModel.clickKeywordDeleteButton(it)
         })
-        keywordRecyclerView = findViewById(R.id.saved_search_bar)
+
         keywordRecyclerView.adapter = adapter
         keywordRecyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-
     }
 
     private fun setKeywordRecyclerViewActive(active: Boolean) {
@@ -63,7 +62,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initiateSearchView(){
-        searchInput = findViewById(R.id.input_search)
 
         searchInput.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -78,8 +76,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initiateViews() {
+        searchInput = findViewById(R.id.input_search)
+        keywordRecyclerView = findViewById(R.id.saved_search_bar)
         searchResultFragmentContainer = findViewById(R.id.fragment_container_search_result)
         keywordRecyclerView = findViewById(R.id.saved_search_bar)
         initiateSearchView()
+        initiateSaveKeywordRecyclerView()
     }
 }

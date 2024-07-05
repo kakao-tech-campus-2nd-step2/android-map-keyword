@@ -16,15 +16,14 @@ import campus.tech.kakao.map.view_models.SearchActivityViewModel
 import campus.tech.kakao.map.views.adapters.SearchResultAdapter
 
 class SearchResultFragment : Fragment() {
-    lateinit var searchResultRecyclerView: RecyclerView
-    lateinit var noResultHelpText: View
+    private lateinit var searchResultRecyclerView: RecyclerView
+    private lateinit var noResultHelpText: View
     private val viewModel by activityViewModels<SearchActivityViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_search_result, container, false)
     }
 

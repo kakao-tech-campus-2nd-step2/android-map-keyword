@@ -50,6 +50,8 @@ class SearchResultAdapter(
 
     var results: List<SearchResult> = listOf()
 
+    override fun getItemCount(): Int =results.size
+
     fun updateResult(results: List<SearchResult>) {
         val diffUtil = SearchResultDiffUtil(this.results, results)
         val diffResult = DiffUtil.calculateDiff(diffUtil)
@@ -73,9 +75,6 @@ class SearchResultAdapter(
         return holder
     }
 
-    override fun getItemCount(): Int {
-        return results.size
-    }
 
     override fun onBindViewHolder(holder: SearchResultViewHolder, position: Int) {
         val item = results[position]
