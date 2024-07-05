@@ -28,4 +28,23 @@ class PlaceDbHelper(context: Context):SQLiteOpenHelper(
 		db.insert(PlaceContract.TABLE_NAME, null, values)
 		db.close()
 	}
+
+	fun existPlace(place: Place, db: SQLiteDatabase): Boolean{
+		val selection = "${PlaceContract.COLUMN_NAME_NAME} like ? AND " +
+				"${PlaceContract.COLUMN_NAME_ADDRESS} like ? AND " +
+				"${PlaceContract.COLUMN_NAME_TYPE} like ?"
+		val cursor = db.query(
+			PlaceContract.TABLE_NAME,
+			arrayOf(PlaceContract.COLUMN_NAME_NAME),
+			selection,
+			arrayOf(place.name, place.address, place.type),
+			null,
+			null,
+			"${PlaceContract.COLUMN_NAME_NAME} DESC"
+		)
+
+		val result = cursor.moveToFirst()
+		cursor.close()
+		return if (result) true else false
+	}
 }
