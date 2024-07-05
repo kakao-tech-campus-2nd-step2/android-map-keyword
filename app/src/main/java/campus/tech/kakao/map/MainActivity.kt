@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var searchWord: EditText
     private lateinit var deleteSearchWord: Button
+    private lateinit var searchNothing: TextView
 
     private var searchDataList = mutableListOf<SearchData>()
 
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
         searchWord = findViewById(R.id.searchWord)
         deleteSearchWord = findViewById(R.id.deleteSearchWord)
+        searchNothing = findViewById(R.id.searchNothing)
 
         adapter = SearchAdapter()
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -113,9 +116,11 @@ class MainActivity : AppCompatActivity() {
         if (searchWord.text.isEmpty()) {
             adapter.searchDataList = emptyList()
             recyclerView.visibility = android.view.View.GONE
+            searchNothing.visibility = android.view.View.VISIBLE
         } else {
             adapter.searchDataList = searchDataList
             recyclerView.visibility = android.view.View.VISIBLE
+            searchNothing.visibility = android.view.View.GONE
         }
         adapter.notifyDataSetChanged()
     }
@@ -134,8 +139,10 @@ class MainActivity : AppCompatActivity() {
 
         if (filteredList.isEmpty()) {
             recyclerView.visibility = android.view.View.GONE
+            searchNothing.visibility = android.view.View.VISIBLE
         } else {
             recyclerView.visibility = android.view.View.VISIBLE
+            searchNothing.visibility = android.view.View.GONE
         }
     }
 }
