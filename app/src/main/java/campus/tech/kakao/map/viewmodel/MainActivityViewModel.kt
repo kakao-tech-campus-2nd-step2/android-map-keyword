@@ -37,5 +37,10 @@ class MainActivityViewModel(
         getSavedPlace()
     }
 
+    fun deleteSavedPlace(savedPlace: SavedPlace){
+        savedPlaceRepository.deleteSavedPlace(savedPlace)
+        getSavedPlace()
+    }
+
 
 }

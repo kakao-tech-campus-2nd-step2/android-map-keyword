@@ -30,7 +30,7 @@ import campus.tech.kakao.map.viewmodel.MainActivityViewModel
 import campus.tech.kakao.map.viewmodel.ViewModelFactory
 
 
-class MainActivity : AppCompatActivity(), OnClickPlaceListener {
+class MainActivity : AppCompatActivity(), OnClickPlaceListener, OnClickSavedPlaceListener {
     lateinit var noResultText: TextView
     lateinit var inputSearchField: EditText
     lateinit var viewModel : MainActivityViewModel
@@ -57,11 +57,11 @@ class MainActivity : AppCompatActivity(), OnClickPlaceListener {
             inputSearchField.clearFocus()
         }
         val searchRecyclerViewAdapter = PlaceViewAdapter(viewModel.place, LayoutInflater.from(this), this)
-        val savedPlaceRecyclerViewAdapter = SavedPlaceViewAdapter(viewModel.savedPlace, LayoutInflater.from(this))
+        val savedPlaceRecyclerViewAdapter = SavedPlaceViewAdapter(viewModel.savedPlace, LayoutInflater.from(this), this)
         searchRecyclerView.layoutManager = LinearLayoutManager(this)
         searchRecyclerView.adapter = searchRecyclerViewAdapter
         savedPlaceRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-        savedPlaceRecyclerView.adapter =savedPlaceRecyclerViewAdapter
+        savedPlaceRecyclerView.adapter = savedPlaceRecyclerViewAdapter
 
 
         Log.d("testt", viewModel.place.toString())
@@ -99,6 +99,11 @@ class MainActivity : AppCompatActivity(), OnClickPlaceListener {
 
     }
 
+    override fun deleteSavedPlace(savedPlace: SavedPlace) {
+        Log.d("testt", "삭제 콜백함수 처리")
+        viewModel.deleteSavedPlace(savedPlace)
+    }
+
     override fun savePlace(place: Place) {
         Log.d("testt", "콜백함수 처리")
         viewModel.savePlace(place)
@@ -107,6 +112,10 @@ class MainActivity : AppCompatActivity(), OnClickPlaceListener {
 
 interface OnClickPlaceListener {
     fun savePlace(place: Place)
+}
+
+interface OnClickSavedPlaceListener {
+    fun deleteSavedPlace(savedPlace: SavedPlace)
 }
 
 class PlaceViewAdapter(
@@ -148,12 +157,20 @@ class PlaceViewAdapter(
 
 class SavedPlaceViewAdapter(
     val savedPlaceList: LiveData<MutableList<SavedPlace>>,
-    val inflater: LayoutInflater
+    val inflater: LayoutInflater,
+    val listener : OnClickSavedPlaceListener
 ): RecyclerView.Adapter<SavedPlaceViewAdapter.SavedPlaceViewHolder>(){
 
     inner class SavedPlaceViewHolder(itemView : View) :RecyclerView.ViewHolder(itemView){
         val name = itemView.findViewById<TextView>(R.id.saved_place_name)
         val deleteButton = itemView.findViewById<ImageView>(R.id.button_saved_delete)
+        init {
+            deleteButton.setOnClickListener{
+                val position = absoluteAdapterPosition
+                Log.d("testt", "삭제 콜백함수 호출")
+                savedPlaceList.value?.get(position)?.let { listener.deleteSavedPlace(it) }
+            }
+        }
 
     }
 

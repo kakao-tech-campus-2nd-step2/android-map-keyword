@@ -36,4 +36,8 @@ class SavedPlaceRepository (val dbHelper: PlaceDBHelper){
             dbHelper.insertSavedPlaceData(place.name)
         }
     }
+
+    fun deleteSavedPlace(savedPlace: SavedPlace){
+        dbHelper.deleteSavedPlace(savedPlace.name)
+    }
 }
