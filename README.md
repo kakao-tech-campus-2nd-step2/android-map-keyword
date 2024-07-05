@@ -54,6 +54,9 @@ app
 └── proguard-rules.pro
 ```
 
+### DB 데이터 
+<img src="https://github.com/YJY1220/DATA/assets/93771689/c5931af5-a08d-47a7-908e-137d73437617"/>
+
 ### 구현 화면
 <img src="https://github.com/YJY1220/DATA/assets/93771689/ae287ed5-0a0b-4ef7-8214-0b39f9e01bba" width="200" height="400"/>
 <img src="https://github.com/YJY1220/DATA/assets/93771689/cf8d23cd-3f89-4bc0-9cfe-e3d03e9b8e1d" width="200" height="400"/>
