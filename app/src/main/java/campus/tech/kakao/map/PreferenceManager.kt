@@ -24,7 +24,7 @@ class PreferenceManager(context: Context) {
         }
     }
 
-    fun setArrayList(key: String, list: ArrayList<SearchHistory>) {
+    private fun setArrayList(key: String, list: ArrayList<SearchHistory>) {
         val jsonString = GsonBuilder().create().toJson(list)
         prefs.edit().putString(key, jsonString).apply()
     }

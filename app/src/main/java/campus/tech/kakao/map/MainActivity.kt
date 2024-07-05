@@ -20,7 +20,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var placeAdapter: PlaceAdapter
     private lateinit var historyAdapter: HistoryAdapter
-    private lateinit var container: LinearLayout
     private var placeList: List<Place> = emptyList()
     private lateinit var searchHistoryList: ArrayList<SearchHistory>
 
