@@ -118,8 +118,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun observeSavedLocation() {
         savedLocationViewModel.savedLocation.observe(this, Observer {
-            Log.d("jieun", "observeSavedLocation")
-            savedLocationAdapter.submitList(it?.toMutableList())
+            Log.d("jieun", "observeSavedLocation"+it)
+            if(it.size != 0) {
+                savedLocationAdapter.submitList(it.toMutableList())
+                savedLocationRecyclerView.visibility = View.VISIBLE
+            }
+            else {
+                Log.d("jieun", "비었음")
+                savedLocationAdapter.submitList(emptyList())
+                savedLocationRecyclerView.visibility = View.GONE
+            }
+
         })
     }
 

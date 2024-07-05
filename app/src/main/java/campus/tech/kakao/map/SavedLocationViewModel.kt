@@ -8,10 +8,12 @@ class SavedLocationViewModel : ViewModel() {
     private val _savedLocation = MutableLiveData<MutableList<SavedLocation>>()
     val savedLocation: LiveData<MutableList<SavedLocation>> get() = _savedLocation
 
-    fun addSavedLocation(query: SavedLocation) {
+    fun addSavedLocation(savedLocation: SavedLocation) {
         val currentList = _savedLocation.value ?: mutableListOf()
-        currentList.add(query)
-        _savedLocation.value = currentList
+        if (!currentList.contains(savedLocation)) {
+            currentList.add(savedLocation)
+            _savedLocation.value = currentList
+        }
     }
 
     fun setSavedLocation(savedLocationList: MutableList<SavedLocation>) {

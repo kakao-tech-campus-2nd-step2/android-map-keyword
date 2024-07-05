@@ -61,7 +61,7 @@ class LocationDbAccessor(private val dbHelper : LocationDbHelper) {
         val values = ContentValues().apply {
             put(Contract.SavedLocationEntry.COLUMN_NAME_TITLE, title)
         }
-        Log.d("jieun", "저장완료")
+        Log.d("jieun", "insertSavedLocation 저장완료")
         return db.insert(Contract.SavedLocationEntry.TABLE_NAME, null, values)
     }
 
