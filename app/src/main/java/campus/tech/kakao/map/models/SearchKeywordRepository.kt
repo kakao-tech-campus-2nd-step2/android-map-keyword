@@ -47,7 +47,7 @@ class SearchKeywordRepository(context: Context) {
             if (instance == null) {
                 instance = SearchKeywordRepository(context)
             }
-            return instance!!
+            return instance as SearchKeywordRepository
         }
     }
 }

@@ -32,7 +32,7 @@ class SearchResultRepository(context: Context) {
             if (instance == null) {
                 instance = SearchResultRepository(context)
             }
-            return instance!!
+            return instance as SearchResultRepository
         }
     }
 }
