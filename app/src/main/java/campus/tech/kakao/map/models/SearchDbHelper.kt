@@ -7,9 +7,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import campus.tech.kakao.map.models.contracts.SearchResultContract
-import campus.tech.kakao.map.models.contracts.SearchResultContract.COLUMN_ADDRESS_INDEX
-import campus.tech.kakao.map.models.contracts.SearchResultContract.COLUMN_NAME_INDEX
-import campus.tech.kakao.map.models.contracts.SearchResultContract.COLUMN_TYPE_INDEX
 import campus.tech.kakao.map.models.contracts.SearchResultContract.TABLE_NAME
 
 data class SearchResult(val name: String, val address: String, val type: String)
@@ -81,9 +78,9 @@ class SearchDbHelper(context: Context) :
             while (cursor?.moveToNext() == true) {
                 result.add(
                     SearchResult(
-                        cursor.getString(COLUMN_NAME_INDEX),
-                        cursor.getString(COLUMN_ADDRESS_INDEX),
-                        cursor.getString(COLUMN_TYPE_INDEX)
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3)
                     )
                 )
             }
@@ -124,7 +121,7 @@ class SearchDbHelper(context: Context) :
             if (instance == null) {
                 instance = SearchDbHelper(context)
             }
-            return instance!!
+            return instance as SearchDbHelper
         }
     }
 }
