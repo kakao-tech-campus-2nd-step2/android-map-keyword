@@ -5,15 +5,21 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.databinding.ItemHistoryBinding
+import campus.tech.kakao.map.viewmodel.SearchLocationViewModel
 
 class HistoryAdapter(
 	private val dataList: List<String>,
-	private val context: Context
+	private val context: Context,
+	private val viewModel: SearchLocationViewModel
 ) : RecyclerView.Adapter<HistoryAdapter.MyViewHolder>() {
 
 	inner class MyViewHolder(private val binding: ItemHistoryBinding) :
 		RecyclerView.ViewHolder(binding.root) {
-
+		init {
+			binding.removeLocationHistoryButton.setOnClickListener {
+				viewModel.removeHistory(dataList[bindingAdapterPosition])
+			}
+		}
 		fun binding(historyData: String) {
 			binding.locationHistoryNameTextView.text = historyData
 		}

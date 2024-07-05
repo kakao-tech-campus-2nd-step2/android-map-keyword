@@ -27,4 +27,9 @@ class SearchLocationViewModel : ViewModel() {
 		repository.addHistory(locationName)
 		_history.value = repository.getHistory()
 	}
+
+	fun removeHistory(locationName: String) {
+		repository.removeHistory(locationName)
+		_history.value = repository.getHistory()
+	}
 }
