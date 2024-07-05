@@ -2,6 +2,8 @@ package campus.tech.kakao.map
 
 import android.content.ContentValues
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -19,6 +21,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var searchWord: EditText
     private lateinit var deleteSearchWord: Button
+
+    private var searchDataList = mutableListOf<SearchData>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -36,6 +41,21 @@ class MainActivity : AppCompatActivity() {
         deleteWord()
         saveDb()
         loadDb()
+
+        searchWord.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val searchTerm = s.toString()
+                if (searchTerm.isEmpty()) {
+                    recyclerView.visibility = android.view.View.GONE
+                } else {
+                    filterByCategory(searchTerm)
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
 
     }
 
@@ -78,7 +98,8 @@ class MainActivity : AppCompatActivity() {
             null
         )
 
-        val searchDataList = mutableListOf<SearchData>()
+        searchDataList.clear()
+
         with(cursor) {
             while (moveToNext()) {
                 val name = getString(getColumnIndexOrThrow(SearchData.TABLE_COLUMN_NAME))
@@ -89,13 +110,32 @@ class MainActivity : AppCompatActivity() {
         }
         cursor.close()
 
-        adapter.searchDataList = searchDataList
+        if (searchWord.text.isEmpty()) {
+            adapter.searchDataList = emptyList()
+            recyclerView.visibility = android.view.View.GONE
+        } else {
+            adapter.searchDataList = searchDataList
+            recyclerView.visibility = android.view.View.VISIBLE
+        }
         adapter.notifyDataSetChanged()
     }
 
     private fun deleteWord() {
         deleteSearchWord.setOnClickListener {
             searchWord.text.clear()
+            loadDb()
+        }
+    }
+
+    private fun filterByCategory(category: String) {
+        val filteredList = searchDataList.filter { it.category == category }
+        adapter.searchDataList = filteredList
+        adapter.notifyDataSetChanged()
+
+        if (filteredList.isEmpty()) {
+            recyclerView.visibility = android.view.View.GONE
+        } else {
+            recyclerView.visibility = android.view.View.VISIBLE
         }
     }
 }
