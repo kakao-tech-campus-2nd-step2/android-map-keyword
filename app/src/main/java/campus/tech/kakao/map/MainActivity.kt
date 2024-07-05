@@ -97,6 +97,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // HistoryAdapter OnclickListener
         historyAdapter.itemClickListener = object : HistoryAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
                 val item = searchHistoryList[position]
