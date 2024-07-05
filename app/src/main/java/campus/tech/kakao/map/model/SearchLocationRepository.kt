@@ -42,6 +42,21 @@ class SearchLocationRepository(context: Context) {
 		db.close()
 	}
 
+	fun getHistory(): List<String> {
+		val db = historyDbHelper.readableDatabase
+		val searchQuery = "SELECT * FROM ${HistoryContract.TABLE_NAME}"
+		val cursor = db.rawQuery(searchQuery, null)
+
+		val result = mutableListOf<String>()
+		while (cursor.moveToNext()) {
+			result.add(cursor.getString(cursor.getColumnIndexOrThrow(HistoryContract.COLUMN_NAME)))
+		}
+
+		cursor.close()
+		db.close()
+		return result.toList()
+	}
+
 	private fun isExistHistory(locationName: String): Boolean {
 		val db = historyDbHelper.readableDatabase
 		val searchQuery = "SELECT * FROM ${HistoryContract.TABLE_NAME} " +
