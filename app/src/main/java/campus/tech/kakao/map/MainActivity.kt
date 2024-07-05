@@ -3,6 +3,8 @@ package campus.tech.kakao.map
 import android.content.ContentValues
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +16,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: SearchAdapter
     private lateinit var db: SearchDbHelper
+
+    private lateinit var searchWord: EditText
+    private lateinit var deleteSearchWord: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -21,10 +26,14 @@ class MainActivity : AppCompatActivity() {
         db = SearchDbHelper(context = this)
 
         recyclerView = findViewById(R.id.recyclerView)
+        searchWord = findViewById(R.id.searchWord)
+        deleteSearchWord = findViewById(R.id.deleteSearchWord)
+
         adapter = SearchAdapter()
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
+        deleteWord()
         saveDb()
         loadDb()
 
@@ -82,6 +91,12 @@ class MainActivity : AppCompatActivity() {
 
         adapter.searchDataList = searchDataList
         adapter.notifyDataSetChanged()
+    }
+
+    private fun deleteWord() {
+        deleteSearchWord.setOnClickListener {
+            searchWord.text.clear()
+        }
     }
 }
 
