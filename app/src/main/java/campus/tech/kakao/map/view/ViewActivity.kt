@@ -81,8 +81,8 @@ class ViewActivity : AppCompatActivity() {
 
     private fun observeViewModel() {
         viewModel.searchText.observe(this, Observer { searchText ->
-            if (locationAdapter.locationList.isNotEmpty()) binding.tvHelpMessage.visibility = View.GONE
             locationAdapter.setLocations(viewModel.select(searchText))
+            if (locationAdapter.locationList.isNotEmpty()) binding.tvHelpMessage.visibility = View.GONE
         })
     }
 
