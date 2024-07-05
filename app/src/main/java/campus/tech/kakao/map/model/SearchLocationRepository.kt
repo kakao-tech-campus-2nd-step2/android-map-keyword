@@ -70,7 +70,7 @@ class SearchLocationRepository(context: Context) {
 		return result
 	}
 
-	private fun removeHistory(locationName: String) {
+	fun removeHistory(locationName: String) {
 		val db = historyDbHelper.writableDatabase
 		val deleteQuery = "DELETE FROM ${HistoryContract.TABLE_NAME} " +
 				"WHERE ${HistoryContract.COLUMN_NAME} = '$locationName'"
