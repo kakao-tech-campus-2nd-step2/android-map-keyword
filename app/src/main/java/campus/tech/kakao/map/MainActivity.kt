@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -26,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var xButton: ImageView
     private lateinit var searchEditText: EditText
+    private lateinit var NoResultTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +42,7 @@ class MainActivity : AppCompatActivity() {
 
         xButton = findViewById(R.id.xButton)
         searchEditText = findViewById(R.id.searchEditText)
+        NoResultTextView = findViewById(R.id.NoResultTextView)
 
         locationRecyclerView = findViewById(R.id.locationRecyclerView)
         setupLocationRecyclerView()
@@ -54,7 +58,6 @@ class MainActivity : AppCompatActivity() {
         val locationList: MutableList<Location> = readLocationData()
         locationViewModel.setLocations(locationList)
         observeFilteredLocation()
-        locationAdapter.submitList(locationList)
 
         val savedLocationList: MutableList<SavedLocation> = readSavedLocationData()
         savedLocationViewModel.setSavedLocation(savedLocationList)
@@ -87,7 +90,14 @@ class MainActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                locationViewModel.filterLocations(s.toString())
+                val query = s.toString()
+                if (query.isEmpty()) {
+                    locationAdapter.submitList(emptyList())
+                    NoResultTextView.visibility = View.VISIBLE
+                } else {
+                    locationViewModel.filterLocations(query)
+                    NoResultTextView.visibility = View.GONE
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {}

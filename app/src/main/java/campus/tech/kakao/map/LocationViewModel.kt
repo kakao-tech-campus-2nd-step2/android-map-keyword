@@ -13,7 +13,7 @@ class LocationViewModel : ViewModel() {
 
     fun setLocations(locations: List<Location>) {
         _locations.value = locations
-        _filteredLocations.value = locations
+        _filteredLocations.value = null
     }
 
     fun filterLocations(query: String) {
