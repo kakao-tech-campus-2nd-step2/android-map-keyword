@@ -43,7 +43,6 @@ class MainActivity : AppCompatActivity() {
 
         // 검색 결과 토대로 UI 업데이트
         viewModel.placeList.observe(this@MainActivity, Observer {
-            Log.d("여기인가ㅌ", "호출!")
             (mainBinding.placeResult.adapter as? PlaceAdapter)?.setData(it)
             if (it.isNullOrEmpty()) {
                 mainBinding.emptyMainText.visibility = View.VISIBLE
@@ -90,7 +89,6 @@ class MainActivity : AppCompatActivity() {
 
         placeAdapter.itemClickListener = object : PlaceAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
-                Log.d("여기인가", "왜 안 돼 미친!")
                 val item = placeAdapter.getItem(position)
                 val searchHistory = SearchHistory(item.name)
 
