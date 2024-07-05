@@ -26,8 +26,8 @@ class SearchDbHelper(context: Context) :
     }
 
     private fun insertInitialData(db: SQLiteDatabase) {
-        val datas = InitialDataset.initialData
-        for (data in datas) {
+        val dataList = InitialDataset.initialData
+        for (data in dataList) {
             val contentValues = ContentValues().apply {
                 put(SearchResultContract.COLUMN_NAME, data.name)
                 put(SearchResultContract.COLUMN_ADDRESS, data.address)
