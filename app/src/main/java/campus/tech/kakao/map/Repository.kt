@@ -72,6 +72,14 @@ class Repository(context: Context) {
         editor.apply()
     }
 
+    fun deleteKeywordFromPrefs(keyword: Keyword) {
+        val savedKeywords = getAllSavedKeywordsFromPrefs().toMutableList()
+        savedKeywords.remove(keyword)
+        val editor = sharedPreferences.edit()
+        editor.putString("saved_keywords", Gson().toJson(savedKeywords))
+        editor.apply()
+    }
+
     fun getAllSavedKeywordsFromPrefs(): List<Keyword> {
         val savedKeywordsJson = sharedPreferences.getString("saved_keywords", null) ?: return emptyList()
         val type = object : TypeToken<List<Keyword>>() {}.type

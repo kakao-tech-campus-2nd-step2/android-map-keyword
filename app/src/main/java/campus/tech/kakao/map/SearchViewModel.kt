@@ -30,7 +30,10 @@ class SearchViewModel(private val context: Context) {
     }
 
     fun deleteKeyword(keyword: Keyword) {
-
+        val currentSavedKeywords = _savedKeywords.value?.toMutableList() ?: mutableListOf()
+        currentSavedKeywords.remove(keyword)
+        _savedKeywords.value = currentSavedKeywords
+        repository.deleteKeywordFromPrefs(keyword)
     }
 }
 

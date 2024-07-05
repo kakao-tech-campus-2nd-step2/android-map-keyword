@@ -48,6 +48,10 @@ class MainActivity : AppCompatActivity() {
             noResultsTextView.visibility = if (results.isEmpty()) View.VISIBLE else View.GONE
         }
 
+        viewModel.savedKeywords.observe(this) { keywords ->
+            savedKeywordsAdapter.updateKeywords(keywords)
+        }
+
         clearButton.setOnClickListener {
             searchEditText.text.clear()
             searchResultsAdapter.updateData(emptyList())
