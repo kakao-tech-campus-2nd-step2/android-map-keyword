@@ -12,6 +12,13 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
     //검색한 쿼리 저장 LiveData
     val searchQuery = MutableLiveData<String>()
 
+    private val _searchResults = MutableLiveData<List<MapItem>>()
+    val searchResults: LiveData<List<MapItem>> get() = _searchResults
+    //선택된 항목 저장 MutableLiveData
+    private val _selectedItems = MutableLiveData<List<MapItem>>(emptyList())
+    //초기값: 빈리스트
+    val selectedItems: LiveData<List<MapItem>> get() = _selectedItems
+
     // 검색쿼리 변화 계속
     init {
         searchQuery.observeForever { query ->

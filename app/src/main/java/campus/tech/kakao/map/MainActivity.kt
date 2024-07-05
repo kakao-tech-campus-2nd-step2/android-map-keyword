@@ -12,12 +12,15 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
+
 class MainActivity : AppCompatActivity() {
 
     //private 필드 변수화
     private lateinit var binding: ActivityMainBinding
     private lateinit var sqLiteHelper: SQLiteHelper
     private lateinit var viewModel: MapViewModel
+    private lateinit var searchAdapter: SearchAdapter
+    private lateinit var selectedAdapter: SelectedAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
