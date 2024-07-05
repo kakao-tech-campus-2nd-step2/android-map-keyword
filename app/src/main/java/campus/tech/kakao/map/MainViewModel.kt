@@ -7,7 +7,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class MainViewModel(private val placeRepository: PlaceRepository) : ViewModel() {
+    private val searchRepository: SearchRepository = SearchRepository()
+
     private var _placeList = MutableLiveData<List<Place>>()
+    private val _searchHistoryList = MutableLiveData<List<SearchHistory>>()
+
+    val searchHistoryList: LiveData<List<SearchHistory>>
+        get() = _searchHistoryList
+    init {
+        _searchHistoryList.value = searchRepository.getSearchHistory()
+    }
     val placeList: LiveData<List<Place>>
         get() = _placeList
 
@@ -31,5 +40,19 @@ class MainViewModel(private val placeRepository: PlaceRepository) : ViewModel() 
             val results = placeRepository.getSearchResults(searchText)
             _placeList.postValue(results)
         }
+    }
+
+    fun saveSearchHistory(searchHistory: SearchHistory) {
+        searchRepository.saveSearchHistory(searchHistory)
+        _searchHistoryList.value = searchRepository.getSearchHistory()
+    }
+
+    fun deleteSearchHistory(position: Int) {
+        searchRepository.deleteSearchHistory(position)
+        _searchHistoryList.value = searchRepository.getSearchHistory()
+    }
+
+    fun getSearchHistoryList() {
+        _searchHistoryList.value = searchRepository.getSearchHistory()
     }
 }
