@@ -27,10 +27,8 @@ private const val SQL_DELETE_SAVED_LOCATION_TABLE =
 class LocationDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     override fun onCreate(db: SQLiteDatabase) {
-        Log.d("jieun","location onCreate")
         db.execSQL(SQL_CREATE_LOCATION_TABLE)
         db.execSQL(SQL_CREATE_SAVED_LOCATION_TABLE)
-
     }
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL(SQL_DELETE_LOCATION_TABLE)

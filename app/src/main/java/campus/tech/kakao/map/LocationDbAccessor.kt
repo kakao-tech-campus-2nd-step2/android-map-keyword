@@ -28,9 +28,6 @@ class LocationDbAccessor(private val dbHelper : LocationDbHelper) {
             LocationEntry.COLUMN_NAME_CATEGORY
         )
 
-//        val selection = "${LocationEntry.COLUMN_NAME_CATEGORY} = ?"
-//        val selectionArgs = arrayOf(category)
-
         val sortOrder = "${LocationEntry.COLUMN_NAME_TITLE} ASC"
 
         val cursor = db.query(

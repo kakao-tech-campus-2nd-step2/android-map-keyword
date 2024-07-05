@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var locationDbHelper: LocationDbHelper
     private lateinit var locationDbAccessor: LocationDbAccessor
 
-    private lateinit var xButton: ImageView
+    private lateinit var clearButton: ImageView
     private lateinit var searchEditText: EditText
     private lateinit var NoResultTextView: TextView
 
@@ -35,37 +35,35 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         initViews()
+        insertLocation() // 앱 설치 시 최초 1번만 실행하게 하려면 어떻게 해야할까?
+
         setupSearchFeature()
-        setupSavedLocationsFeature()
+        setupSavedLocations()
         setupLocationsFeature()
     }
+    private fun setupSearchFeature() {
+        setupSearchEditText()
+        setupClearButton()
+    }
 
-    private fun setupSavedLocationsFeature() {
-        initializeSavedLocationViewModel()
-        initializeSavedLocationRecyclerView()
-        observeSavedLocation()
+    private fun setupSavedLocations() {
+        setupSavedLocationViewModel()
+        setupSavedLocationRecyclerView()
     }
 
     private fun setupLocationsFeature() {
-        initializeLocationViewModel()
-        initializeLocationRecyclerView()
+        setupLocationViewModel()
+        setupLocationRecyclerView()
     }
 
-    private fun setupSearchFeature() {
-        setupSearchEditText()
-        observeSearchedLocations()
-        setupXButton()
+    private fun setupSavedLocationViewModel() {
+        savedLocationViewModel.setSavedLocation(readSavedLocationData())
+        observeSavedLocationViewModel()
     }
 
-    private fun initializeSavedLocationViewModel() {
-        val savedLocationList: MutableList<SavedLocation> = readSavedLocationData()
-        savedLocationViewModel.setSavedLocation(savedLocationList)
-    }
-
-    private fun initializeLocationViewModel() {
-        insertLocation() // 앱 설치 시 최초 1번만 실행하게 하려면 어떻게 해야할까?
-        val locationList: MutableList<Location> = readLocationData()
-        locationViewModel.setLocations(locationList)
+    private fun setupLocationViewModel() {
+        locationViewModel.setLocations(readLocationData())
+        observeLocationsViewModel()
     }
 
     private fun initViews() {
@@ -78,12 +76,12 @@ class MainActivity : AppCompatActivity() {
         savedLocationViewModel = ViewModelProvider(this).get(SavedLocationViewModel::class.java)
         savedLocationRecyclerView = findViewById(R.id.savedLocationRecyclerView)
 
-        xButton = findViewById(R.id.xButton)
+        clearButton = findViewById(R.id.clearButton)
         searchEditText = findViewById(R.id.searchEditText)
         NoResultTextView = findViewById(R.id.NoResultTextView)
     }
 
-    private fun initializeLocationRecyclerView() {
+    private fun setupLocationRecyclerView() {
         locationAdapter = LocationAdapter { location ->
             savedLocationViewModel.addSavedLocation(SavedLocation(location.title))
             inseartSavedLocation(location.title)
@@ -92,7 +90,7 @@ class MainActivity : AppCompatActivity() {
         locationRecyclerView.adapter = locationAdapter
     }
 
-    private fun initializeSavedLocationRecyclerView() {
+    private fun setupSavedLocationRecyclerView() {
         savedLocationAdapter = SavedLocationAdapter { savedLocation ->
             deleteSavedLocationData(savedLocation.title)
             savedLocationViewModel.deleteSavedLocation(SavedLocation(savedLocation.title))
@@ -116,39 +114,54 @@ class MainActivity : AppCompatActivity() {
                     NoResultTextView.visibility = View.GONE
                 }
             }
-
             override fun afterTextChanged(s: Editable?) {}
         })
     }
 
-    private fun setupXButton() {
-        xButton.setOnClickListener {
+    private fun setupClearButton() {
+        clearButton.setOnClickListener {
             searchEditText.setText("")
         }
     }
 
-    private fun observeSearchedLocations() {
-        locationViewModel.SearchedLocations.observe(this, Observer {
-            locationAdapter.submitList(it?.toMutableList())
+    private fun observeLocationsViewModel() {
+        locationViewModel.searchedLocations.observe(this, Observer {
+            locationAdapter.submitList(it?.toList())
         })
     }
 
-    private fun observeSavedLocation() {
+    private fun observeSavedLocationViewModel() {
         savedLocationViewModel.savedLocation.observe(this, Observer {
             Log.d("jieun", "observeSavedLocation"+it)
-            if(it.size != 0) {
-                savedLocationAdapter.submitList(it.toMutableList())
+            if(it.isNotEmpty()) {
+                updateSavedLocationAdapter(it.toList())
                 savedLocationRecyclerView.visibility = View.VISIBLE
             }
             else {
                 Log.d("jieun", "비었음")
-                savedLocationAdapter.submitList(emptyList())
+                updateSavedLocationAdapter(emptyList())
                 savedLocationRecyclerView.visibility = View.GONE
             }
-
         })
     }
 
+
+
+    private fun updateSavedLocationAdapter(savedLocationList: List<SavedLocation>) {
+        savedLocationAdapter.submitList(savedLocationList)
+    }
+
+    private fun inseartSavedLocation(title: String) {
+        locationDbAccessor.insertSavedLocation(title)
+    }
+    private fun readSavedLocationData(): MutableList<SavedLocation> {
+        val result: MutableList<SavedLocation> = locationDbAccessor.getSavedLocationAll()
+        Log.d("jieun", "$result")
+        return result
+    }
+    private fun deleteSavedLocationData(title: String) {
+        locationDbAccessor.deleteSavedLocation(title)
+    }
     private fun insertLocation() {
         for (i in 1..9) {
             locationDbAccessor.insertLocation("카페$i", "부산 부산진구 전포대로$i", "카페")
@@ -157,23 +170,9 @@ class MainActivity : AppCompatActivity() {
             locationDbAccessor.insertLocation("음식점$i", "부산 부산진구 중앙대로$i", "음식점")
         }
     }
-
-    private fun inseartSavedLocation(title: String) {
-        locationDbAccessor.insertSavedLocation(title)
-    }
-
     private fun readLocationData(): MutableList<Location> {
-    val result: MutableList<Location> = locationDbAccessor.getLocationAll()
-    Log.d("jieun", "$result")
-    return result
-    }
-
-    private fun readSavedLocationData(): MutableList<SavedLocation> {
-        val result: MutableList<SavedLocation> = locationDbAccessor.getSavedLocationAll()
+        val result: MutableList<Location> = locationDbAccessor.getLocationAll()
         Log.d("jieun", "$result")
         return result
-    }
-    private fun deleteSavedLocationData(title: String) {
-        locationDbAccessor.deleteSavedLocation(title)
     }
 }
