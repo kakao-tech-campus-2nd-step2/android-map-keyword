@@ -6,4 +6,5 @@
     <string name="placeName">이름</string>
     <string name="placeAddress">장소</string>
     <string name="placeCategory">카테고리</string>
+    <string name="saveplace">장소</string>
 </resources>
