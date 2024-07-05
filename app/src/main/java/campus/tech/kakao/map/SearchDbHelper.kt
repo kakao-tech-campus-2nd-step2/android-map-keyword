@@ -12,7 +12,6 @@ class SearchDbHelper(context: Context) : SQLiteOpenHelper(context, "searchDb", n
                     "   ${SearchData.TABLE_COLUMN_ADDRESS} varchar(255)," +
                     "   ${SearchData.TABLE_COLUMN_CATEGORY} varchar(255)" +
                     ");"
-
         )
     }
 
