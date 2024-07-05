@@ -3,15 +3,15 @@ package campus.tech.kakao.map.view
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
+import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.R
-import campus.tech.kakao.map.model.Place
 import campus.tech.kakao.map.viewmodel.SearchViewModel
 
 class SearchActivity : AppCompatActivity() {
@@ -19,6 +19,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var editText: EditText
     private lateinit var cancelBtn: ImageView
     private lateinit var recyclerView: RecyclerView
+    private lateinit var noSearchLayout: LinearLayout
     private lateinit var searchAdapter: SearchAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +33,8 @@ class SearchActivity : AppCompatActivity() {
         editText = findViewById<EditText>(R.id.searchText)
         cancelBtn = findViewById<ImageView>(R.id.cancelBtn)
         recyclerView = findViewById(R.id.searchPlaceView)
+        noSearchLayout = findViewById(R.id.noSearch)
+
         setCancelBtnClickListener()
         editTextWatcher()
 
@@ -39,19 +42,20 @@ class SearchActivity : AppCompatActivity() {
         viewModel.places.observe(this) { places ->
             searchAdapter = SearchAdapter(places)
             recyclerView.adapter = searchAdapter
+            updateViewVisibility(places.isNotEmpty())
         }
 
         viewModel.insertDummyData("카페", "대전 유성구 궁동", "카페")
         viewModel.insertDummyData("약국", "대전 유성구 봉명동", "약국")
     }
 
-
     private fun editTextWatcher() {
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.isNullOrEmpty()) {
+                if(s.isNullOrEmpty()) {
+                    updateViewVisibility(false)
                 } else {
                     viewModel.searchPlaces(s.toString())
                 }
@@ -64,6 +68,17 @@ class SearchActivity : AppCompatActivity() {
     private fun setCancelBtnClickListener() {
         cancelBtn.setOnClickListener {
             editText.setText("")
+            updateViewVisibility(false)
+        }
+    }
+
+    private fun updateViewVisibility(hasPlaces: Boolean) {
+        if (hasPlaces) {
+            recyclerView.visibility = View.VISIBLE
+            noSearchLayout.visibility = View.GONE
+        } else {
+            recyclerView.visibility = View.GONE
+            noSearchLayout.visibility = View.VISIBLE
         }
     }
 }
