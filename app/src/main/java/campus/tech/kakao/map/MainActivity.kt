@@ -92,4 +92,40 @@ class MainActivity : AppCompatActivity() {
             binding.searchEditText.text.clear()
         }
     }
+
+    private fun observeViewModel() {
+        viewModel.searchResults.observe(this, Observer { results ->
+            // 검색 결과를 어댑터에 제출
+            searchAdapter.submitList(results)
+
+            // 결과가 없으면 메시지 표시
+            if (results.isEmpty()) {
+                // 검색 쿼리가 비어있으면 '검색 결과가 없습니다' 메시지 표시
+                if (viewModel.searchQuery.value.isNullOrEmpty()) {
+                    binding.noResultsTextView.visibility = View.VISIBLE
+                } else {
+                    binding.noResultsTextView.visibility = View.GONE
+                }
+            } else {
+                binding.noResultsTextView.visibility = View.GONE
+            }
+
+            // 결과가 없으면 목록 숨기기
+            if (results.isEmpty()) {
+                // 검색 쿼리가 비어있으면 목록 숨기기
+                if (viewModel.searchQuery.value.isNullOrEmpty()) {
+                    binding.searchResultsRecyclerView.visibility = View.GONE
+                } else {
+                    binding.searchResultsRecyclerView.visibility = View.VISIBLE
+                }
+            } else {
+                binding.searchResultsRecyclerView.visibility = View.VISIBLE
+            }
+        })
+
+        //선택된 항목을 UI에 업데이트
+        viewModel.selectedItems.observe(this, Observer { selectedItems ->
+            selectedAdapter.submitList(selectedItems) //선택된 항목 어댑터에 넘기기
+        })
+    }
 }
