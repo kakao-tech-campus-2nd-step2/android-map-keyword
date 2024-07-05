@@ -27,6 +27,16 @@ class ViewActivity : AppCompatActivity() {
         init()
     }
 
+    override fun onStop() {
+        super.onStop()
+        clearAndSaveLog()
+    }
+
+    private fun clearAndSaveLog(){
+        viewModel.dropLogTable()
+        viewModel.saveLog(logAdapter.logList)
+    }
+
     private fun init(){
         initBinding()
         initViewModel()
@@ -58,7 +68,7 @@ class ViewActivity : AppCompatActivity() {
     }
 
     private fun initLogAdapter() {
-        logAdapter = LogAdapter()
+        logAdapter = LogAdapter(viewModel.getLog())
         binding.recyclerLog.apply {
             layoutManager = LinearLayoutManager(this@ViewActivity, RecyclerView.HORIZONTAL, false)
             adapter = logAdapter

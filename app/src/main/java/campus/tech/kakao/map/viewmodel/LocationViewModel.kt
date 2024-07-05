@@ -7,10 +7,7 @@ import androidx.lifecycle.ViewModel
 import campus.tech.kakao.map.model.Location
 import campus.tech.kakao.map.model.Repository
 
-class LocationViewModel(private val repository: Repository): ViewModel(){
-    private val _locations = MutableLiveData<List<Location>>()
-    val locations: LiveData<List<Location>>
-        get() = _locations
+class LocationViewModel(private val repository: Repository){
 
     val searchText = MutableLiveData<String>()
 
@@ -21,29 +18,16 @@ class LocationViewModel(private val repository: Repository): ViewModel(){
     fun select(name: String): List<Location>{
          return repository.selectData(name)
     }
-
-    fun insert(location: Location){
-        repository.insertData(location)
-        fetch()
+    fun saveLog(logList: List<Location>){
+        repository.saveLog(logList)
     }
 
-    fun update(location: Location){
-        repository.updateData(location)
-        fetch()
+    fun getLog(): MutableList<Location>{
+        return repository.getLog().toMutableList()
     }
 
-    fun delete(name:String){
-        repository.deleteData(name)
-        fetch()
-    }
-
-    fun dropTable(){
-        repository.dropTable()
-        fetch()
-    }
-
-    fun fetch(){
-        _locations.setValue(repository.getAll())
+    fun dropLogTable(){
+        repository.dropLogTable()
     }
 
     companion object {

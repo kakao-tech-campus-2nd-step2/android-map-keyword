@@ -16,4 +16,13 @@ object LocationContract{
             ");"
 
     const val DROP_QUERY = "DROP TABLE IF EXISTS ${TABLE_NAME}"
+
+    const val TABLE_LOG_NAME = "DB_Log"
+    const val COLUMN_LOG_NAME = "log_name"
+
+    const val CREATE_LOG_QUERY = "CREATE TABLE IF NOT EXISTS $TABLE_LOG_NAME (" +
+            "$COLUMN_LOG_NAME TEXT NOT NULL" +
+            ");"
+
+    const val DROP_LOG_QUERY = "DROP TABLE IF EXISTS $TABLE_LOG_NAME"
 }

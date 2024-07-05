@@ -8,8 +8,8 @@ import campus.tech.kakao.map.databinding.ListItemBinding
 import campus.tech.kakao.map.databinding.LogItemBinding
 import campus.tech.kakao.map.model.Location
 
-class LogAdapter: RecyclerView.Adapter<LogAdapter.LogViewHolder>() {
-    var logList: MutableList<Location> = mutableListOf()
+class LogAdapter(val logList: MutableList<Location> = mutableListOf())
+    : RecyclerView.Adapter<LogAdapter.LogViewHolder>() {
     inner class LogViewHolder(private val binding: LogItemBinding)
         : RecyclerView.ViewHolder(binding.root){
         fun bind(location: Location){
