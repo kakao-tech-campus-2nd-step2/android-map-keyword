@@ -1,26 +1,22 @@
 package campus.tech.kakao.map.view
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
 import campus.tech.kakao.map.R
+import campus.tech.kakao.map.adapter.PlaceViewAdapter
+import campus.tech.kakao.map.adapter.SavedPlaceViewAdapter
 import campus.tech.kakao.map.db.PlaceDBHelper
 import campus.tech.kakao.map.model.Place
 import campus.tech.kakao.map.model.SavedPlace
@@ -33,47 +29,31 @@ import campus.tech.kakao.map.viewmodel.ViewModelFactory
 class MainActivity : AppCompatActivity(), OnClickPlaceListener, OnClickSavedPlaceListener {
     lateinit var noResultText: TextView
     lateinit var inputSearchField: EditText
-    lateinit var viewModel : MainActivityViewModel
-    lateinit var savedPlaceRecyclerView : RecyclerView
-    lateinit var searchRecyclerView : RecyclerView
+    lateinit var viewModel: MainActivityViewModel
+    lateinit var savedPlaceRecyclerView: RecyclerView
+    lateinit var searchRecyclerView: RecyclerView
+    lateinit var dbHelper: PlaceDBHelper
+    lateinit var placeRepository: PlaceRepository
+    lateinit var savedPlaceRepository: SavedPlaceRepository
+    lateinit var searchDeleteButton: ImageView
+    lateinit var savedPlaceRecyclerViewAdapter: SavedPlaceViewAdapter
+    lateinit var searchRecyclerViewAdapter: PlaceViewAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        noResultText = findViewById<TextView>(R.id.no_search_result)
-        searchRecyclerView = findViewById<RecyclerView>(R.id.search_result_recyclerView)
-        inputSearchField = findViewById<EditText>(R.id.input_search_field)
-        savedPlaceRecyclerView = findViewById<RecyclerView>(R.id.saved_search_recyclerView)
-        val dbHelper = PlaceDBHelper(this)
-        val placeRepository = PlaceRepository(dbHelper)
-        val savedPlaceRepository = SavedPlaceRepository(dbHelper)
-        viewModel =
-            ViewModelProvider(
-                this,
-                ViewModelFactory(placeRepository, savedPlaceRepository)
-            )[MainActivityViewModel::class.java]
-        val searchDeleteButton = findViewById<ImageView>(R.id.button_X)
-        searchDeleteButton.setOnClickListener {
-            inputSearchField.setText("")
-            inputSearchField.clearFocus()
-        }
-        val searchRecyclerViewAdapter = PlaceViewAdapter(viewModel.place, LayoutInflater.from(this), this)
-        val savedPlaceRecyclerViewAdapter = SavedPlaceViewAdapter(viewModel.savedPlace, LayoutInflater.from(this), this)
-        searchRecyclerView.layoutManager = LinearLayoutManager(this)
-        searchRecyclerView.adapter = searchRecyclerViewAdapter
-        savedPlaceRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-        savedPlaceRecyclerView.adapter = savedPlaceRecyclerViewAdapter
-
+        initVar()
+        initListeners()
+        initRecyclerViews()
 
         Log.d("testt", viewModel.place.toString())
+
         viewModel.place.observe(this, Observer {
             Log.d("readData", "검색창 결과 변경 감지")
             val place = viewModel.place
-            Log.d("testt", "place")
-            place?.let {
-                searchRecyclerViewAdapter.notifyDataSetChanged()
-                noResultText.visibility = View.INVISIBLE
-            }
+            searchRecyclerViewAdapter.notifyDataSetChanged()
             if (place.value?.isEmpty() == true) noResultText.visibility = View.VISIBLE
+            else noResultText.visibility = View.INVISIBLE
         })
 
         viewModel.savedPlace.observe(this, Observer {
@@ -81,8 +61,49 @@ class MainActivity : AppCompatActivity(), OnClickPlaceListener, OnClickSavedPlac
             val savedPlace = viewModel.savedPlace
             savedPlaceRecyclerViewAdapter.notifyDataSetChanged()
             if (savedPlace.value?.isEmpty() == true) savedPlaceRecyclerView.visibility = View.GONE
+            else savedPlaceRecyclerView.visibility = View.VISIBLE
         })
+    }
 
+    override fun deleteSavedPlace(savedPlace: SavedPlace, position: Int) {
+        Log.d("testt", "삭제 콜백함수 처리")
+        viewModel.deleteSavedPlace(savedPlace)
+    }
+
+    override fun savePlace(place: Place) {
+        Log.d("testt", "콜백함수 처리")
+        viewModel.savePlace(place)
+    }
+
+    fun initVar() {
+        noResultText = findViewById<TextView>(R.id.no_search_result)
+        searchRecyclerView = findViewById<RecyclerView>(R.id.search_result_recyclerView)
+        inputSearchField = findViewById<EditText>(R.id.input_search_field)
+        savedPlaceRecyclerView = findViewById<RecyclerView>(R.id.saved_search_recyclerView)
+        dbHelper = PlaceDBHelper(this)
+        placeRepository = PlaceRepository(dbHelper)
+        savedPlaceRepository = SavedPlaceRepository(dbHelper)
+        searchDeleteButton = findViewById<ImageView>(R.id.button_X)
+        viewModel =
+            ViewModelProvider(
+                this,
+                ViewModelFactory(placeRepository, savedPlaceRepository)
+            )[MainActivityViewModel::class.java]
+    }
+
+    fun initListeners() {
+        initDeleteButtonListener()
+        initInputFieldListener()
+    }
+
+    fun initDeleteButtonListener(){
+        searchDeleteButton.setOnClickListener {
+            inputSearchField.setText("")
+            inputSearchField.clearFocus()
+        }
+    }
+
+    fun initInputFieldListener(){
         inputSearchField.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -92,99 +113,33 @@ class MainActivity : AppCompatActivity(), OnClickPlaceListener, OnClickSavedPlac
 
             override fun afterTextChanged(searchText: Editable?) {
                 val text = searchText.toString()
+                // 검색어를 입력할 때마다 place의 값이 바뀌어 notify가 계속 호출되는 문제?
                 viewModel.getPlaceWithCategory(text)
             }
         })
-
-
     }
 
-    override fun deleteSavedPlace(savedPlace: SavedPlace) {
-        Log.d("testt", "삭제 콜백함수 처리")
-        viewModel.deleteSavedPlace(savedPlace)
+    fun initRecyclerViews() {
+        initSearchRecyclerView()
+        initSavedPlaceRecyclerView()
     }
 
-    override fun savePlace(place: Place) {
-        Log.d("testt", "콜백함수 처리")
-        viewModel.savePlace(place)
-    }
-}
-
-interface OnClickPlaceListener {
-    fun savePlace(place: Place)
-}
-
-interface OnClickSavedPlaceListener {
-    fun deleteSavedPlace(savedPlace: SavedPlace)
-}
-
-class PlaceViewAdapter(
-    val placeList: LiveData<MutableList<Place>>,
-    val inflater: LayoutInflater,
-    val listener: OnClickPlaceListener
-) : RecyclerView.Adapter<PlaceViewAdapter.PlaceViewHolder>() {
-
-    inner class PlaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val name = itemView.findViewById<TextView>(R.id.place_name)
-        val location = itemView.findViewById<TextView>(R.id.place_location)
-        val category = itemView.findViewById<TextView>(R.id.place_category)
-
-        init {
-            itemView.setOnClickListener {
-                val position = absoluteAdapterPosition
-                Log.d("testt", "콜백함수 호출")
-                placeList.value?.get(position)?.let { listener.savePlace(it) }
-            }
-        }
+    fun initSearchRecyclerView() {
+        searchRecyclerViewAdapter = PlaceViewAdapter(viewModel.place, LayoutInflater.from(this), this)
+        searchRecyclerView.layoutManager = LinearLayoutManager(this)
+        searchRecyclerView.adapter = searchRecyclerViewAdapter
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceViewHolder {
-        val view = inflater.inflate(R.layout.place_item, parent, false)
-        Log.d("testt", "검색 결과 뷰 생성")
-        return PlaceViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: PlaceViewHolder, position: Int) {
-        holder.name.text = placeList.value?.get(position)?.name ?: ""
-        holder.location.text = placeList.value?.get(position)?.location ?: ""
-        holder.category.text = placeList.value?.get(position)?.category ?: ""
-    }
-
-    override fun getItemCount(): Int {
-        return placeList.value?.size ?: 0
+    fun initSavedPlaceRecyclerView() {
+        savedPlaceRecyclerViewAdapter =
+            SavedPlaceViewAdapter(viewModel.savedPlace, LayoutInflater.from(this), this)
+        savedPlaceRecyclerView.layoutManager =
+            LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        savedPlaceRecyclerView.adapter = savedPlaceRecyclerViewAdapter
     }
 }
 
-class SavedPlaceViewAdapter(
-    val savedPlaceList: LiveData<MutableList<SavedPlace>>,
-    val inflater: LayoutInflater,
-    val listener : OnClickSavedPlaceListener
-): RecyclerView.Adapter<SavedPlaceViewAdapter.SavedPlaceViewHolder>(){
 
-    inner class SavedPlaceViewHolder(itemView : View) :RecyclerView.ViewHolder(itemView){
-        val name = itemView.findViewById<TextView>(R.id.saved_place_name)
-        val deleteButton = itemView.findViewById<ImageView>(R.id.button_saved_delete)
-        init {
-            deleteButton.setOnClickListener{
-                val position = absoluteAdapterPosition
-                Log.d("testt", "삭제 콜백함수 호출")
-                savedPlaceList.value?.get(position)?.let { listener.deleteSavedPlace(it) }
-            }
-        }
 
-    }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SavedPlaceViewHolder {
-        val view = inflater.inflate(R.layout.saved_place_item, parent, false)
-        Log.d("testt", "저장된 장소를 띄우는 뷰 홀더 생성")
-        return SavedPlaceViewHolder(view)
-    }
 
-    override fun onBindViewHolder(holder: SavedPlaceViewHolder, position: Int) {
-        holder.name.text = savedPlaceList.value?.get(position)?.name ?: ""
-    }
-
-    override fun getItemCount(): Int {
-        return savedPlaceList.value?.size ?: 0
-    }
-}
