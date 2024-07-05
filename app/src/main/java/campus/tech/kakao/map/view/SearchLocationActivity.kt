@@ -44,7 +44,14 @@ class SearchLocationActivity : AppCompatActivity() {
 
 		viewModel.history.observe(this) {
 			it?.let { historyData ->
-				binding.searchHistoryRecyclerView.adapter = HistoryAdapter(historyData, this, viewModel)
+				val adapter = binding.searchHistoryRecyclerView.adapter as? HistoryAdapter
+
+				if (adapter == null) {
+					binding.searchHistoryRecyclerView.adapter = HistoryAdapter(historyData, this, viewModel)
+				} else {
+					adapter.updateDataList(historyData)
+				}
+
 				binding.searchHistoryRecyclerView.isVisible = historyData.isNotEmpty()
 			}
 		}
