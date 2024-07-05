@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val searchEditText = binding.editSearch
+        val clearButton = binding.clearButton
         val searchResultsRecyclerView = binding.recyclerView
         val savedKeywordsRecyclerView = binding.savedKeywordsRecyclerView
         val noResultsTextView = binding.noResultsTextView
@@ -40,6 +41,12 @@ class MainActivity : AppCompatActivity() {
         viewModel.searchResults.observe(this) { results ->
             searchResultsAdapter.updateData(results)
             noResultsTextView.visibility = if (results.isEmpty()) View.VISIBLE else View.GONE
+        }
+
+        clearButton.setOnClickListener {
+            searchEditText.text.clear()
+            searchResultsAdapter.updateData(emptyList())
+            noResultsTextView.visibility = View.VISIBLE
         }
 
         searchEditText.addTextChangedListener(object : TextWatcher {
