@@ -44,4 +44,21 @@ class Repository(context: Context) {
         }
         cursor.close()
     }
+
+    fun search(query: String): List<Keyword> {
+        val cursor = db.rawQuery("SELECT * FROM ${DatabaseHelper.TABLE_NAME} WHERE ${DatabaseHelper.COLUMN_NAME} LIKE ?", arrayOf("%$query%"))
+        val keywords = mutableListOf<Keyword>()
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ID))
+                val name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_NAME))
+                val address = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ADDRESS))
+                keywords.add(Keyword(id, name, address))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return keywords
+    }
+
+
 }
