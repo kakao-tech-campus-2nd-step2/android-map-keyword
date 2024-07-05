@@ -5,16 +5,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class SavedLocationViewModel : ViewModel() {
-    private val _locationHistory = MutableLiveData<MutableList<String>>()
-    val locationHistory: LiveData<MutableList<String>> get() = _locationHistory
+    private val _savedLocation = MutableLiveData<MutableList<SavedLocation>>()
+    val savedLocation: LiveData<MutableList<SavedLocation>> get() = _savedLocation
 
-    fun addSearchQuery(query: String) {
-        val currentList = _locationHistory.value ?: mutableListOf()
+    fun addSavedLocation(query: SavedLocation) {
+        val currentList = _savedLocation.value ?: mutableListOf()
         currentList.add(query)
-        _locationHistory.value = currentList
+        _savedLocation.value = currentList
     }
 
-    fun setLocationHistory(history: MutableList<String>) {
-        _locationHistory.value = history
+    fun setSavedLocation(savedLocationList: MutableList<SavedLocation>) {
+        _savedLocation.value = savedLocationList
+    }
+
+    fun deleteSavedLocation(savedLocation: SavedLocation) {
+        val currentList = _savedLocation.value
+        currentList?.remove(savedLocation)
+        _savedLocation.value = currentList
     }
 }

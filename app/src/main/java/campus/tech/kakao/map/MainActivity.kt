@@ -14,8 +14,13 @@ import androidx.recyclerview.widget.RecyclerView
 class MainActivity : AppCompatActivity() {
     private lateinit var locationViewModel: LocationViewModel
     private lateinit var locationAdapter: LocationAdapter
+
     private lateinit var savedLocationViewModel: SavedLocationViewModel
-    private lateinit var searchResultRecyclerView: RecyclerView
+    private lateinit var savedLocationAdapter: SavedLocationAdapter
+
+    private lateinit var locationRecyclerView: RecyclerView
+    private lateinit var savedLocationRecyclerView: RecyclerView
+
     private lateinit var locationDbAccessor: LocationDbAccessor
 
     private lateinit var xButton: ImageView
@@ -34,8 +39,12 @@ class MainActivity : AppCompatActivity() {
         xButton = findViewById(R.id.xButton)
         searchEditText = findViewById(R.id.searchEditText)
 
-        searchResultRecyclerView = findViewById(R.id.searchResultRecyclerView)
-        setupRecyclerView()
+        locationRecyclerView = findViewById(R.id.locationRecyclerView)
+        setupLocationRecyclerView()
+
+        savedLocationRecyclerView = findViewById(R.id.savedLocationRecyclerView)
+        setupSavedLocationRecyclerView()
+
 
         setupSearchEditText()
         setupXButton()
@@ -44,18 +53,33 @@ class MainActivity : AppCompatActivity() {
         val locationList: MutableList<Location> = readLocationData()
         locationViewModel.setLocations(locationList)
         observeFilteredLocations()
-
         locationAdapter.submitList(locationList)
+
+        val savedLocationList: MutableList<SavedLocation> = readSavedLocationData()
+        savedLocationViewModel.setSavedLocation(savedLocationList)
+        observeSavedLocation()
+        savedLocationAdapter.submitList(savedLocationList)
+
     }
 
-    private fun setupRecyclerView() {
+    private fun setupLocationRecyclerView() {
         locationAdapter = LocationAdapter { location ->
-            savedLocationViewModel.addSearchQuery(location.title)
+            savedLocationViewModel.addSavedLocation(SavedLocation(location.title))
             addSavedLocationData(location.title)
         }
-        searchResultRecyclerView.layoutManager = LinearLayoutManager(this)
-        searchResultRecyclerView.adapter = locationAdapter
+        locationRecyclerView.layoutManager = LinearLayoutManager(this)
+        locationRecyclerView.adapter = locationAdapter
     }
+
+    private fun setupSavedLocationRecyclerView() {
+        savedLocationAdapter = SavedLocationAdapter { savedLocation ->
+            savedLocationViewModel.deleteSavedLocation(SavedLocation(savedLocation.title))
+            deleteSavedLocationData(savedLocation.title)
+        }
+        savedLocationRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        savedLocationRecyclerView.adapter = savedLocationAdapter
+    }
+
 
     private fun setupSearchEditText() {
         searchEditText.addTextChangedListener(object : TextWatcher {
@@ -82,7 +106,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeSavedLocation() {
-        savedLocationViewModel.locationHistory.observe(this, { history ->
+        savedLocationViewModel.savedLocation.observe(this, { history ->
             // 검색어 저장 목록 어답터 변경하기!
         })
     }
@@ -104,5 +128,14 @@ class MainActivity : AppCompatActivity() {
         val result: MutableList<Location> = locationDbAccessor.getLocationAll()
         Log.d("jieun", "$result")
         return result
+    }
+
+    private fun readSavedLocationData(): MutableList<SavedLocation> {
+        val result: MutableList<SavedLocation> = locationDbAccessor.getSavedLocationAll()
+        Log.d("jieun", "$result")
+        return result
+    }
+    private fun deleteSavedLocationData(title: String) {
+        locationDbAccessor.deleteSavedLocation(title)
     }
 }

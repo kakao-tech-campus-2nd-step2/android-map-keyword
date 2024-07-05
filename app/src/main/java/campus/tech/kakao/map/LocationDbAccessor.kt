@@ -92,4 +92,13 @@ class LocationDbAccessor(private val dbHelper : LocationDbHelper) {
         cursor.close()
         return results
     }
+
+    fun deleteSavedLocation(title: String) {
+        val db = dbHelper.writableDatabase
+
+        val selection = "title = ?"
+        val selectionArgs = arrayOf(title)
+
+        db.delete("SavedLocation", selection, selectionArgs)
+    }
 }
