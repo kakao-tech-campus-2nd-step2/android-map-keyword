@@ -4,8 +4,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.R
+
+class KeywordDiffUtil(private val oldList: List<String>, private val newList: List<String>): DiffUtil.Callback(){
+    override fun getOldListSize(): Int = oldList.size
+
+    override fun getNewListSize(): Int = newList.size
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+        oldList[oldItemPosition] == newList[newItemPosition]
+
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+        oldList[oldItemPosition] == newList[newItemPosition]
+
+}
 
 class SearchKeywordAdapter(
     private val inflater: LayoutInflater,
@@ -45,7 +60,9 @@ class SearchKeywordAdapter(
     override fun getItemCount(): Int = items.size
 
     fun updateKeywords(keywords: List<String>) {
+        val diffUtil = KeywordDiffUtil(items, keywords)
+        val diffResult = DiffUtil.calculateDiff(diffUtil)
         items = keywords
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 }

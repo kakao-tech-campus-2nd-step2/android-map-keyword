@@ -4,9 +4,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.models.SearchResult
+
+class SearchResultDiffUtil(
+    private val oldList: List<SearchResult>,
+    private val newList: List<SearchResult>
+) : DiffUtil.Callback() {
+    override fun getOldListSize(): Int = oldList.size
+
+    override fun getNewListSize(): Int = newList.size
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val oldItem = oldList[oldItemPosition]
+        val newItem = newList[newItemPosition]
+        return (oldItem.type == newItem.type && oldItem.address == newItem.address && oldItem.name == newItem.name)
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val oldItem = oldList[oldItemPosition]
+        val newItem = newList[newItemPosition]
+        return (oldItem.type == newItem.type && oldItem.address == newItem.address && oldItem.name == newItem.name)
+    }
+
+}
 
 class SearchResultAdapter(
     private val inflater: LayoutInflater,
@@ -28,8 +51,10 @@ class SearchResultAdapter(
     var results: List<SearchResult> = listOf()
 
     fun updateResult(results: List<SearchResult>) {
+        val diffUtil = SearchResultDiffUtil(this.results, results)
+        val diffResult = DiffUtil.calculateDiff(diffUtil)
         this.results = results
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
