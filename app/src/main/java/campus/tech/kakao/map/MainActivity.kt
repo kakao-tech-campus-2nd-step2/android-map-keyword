@@ -40,6 +40,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerViews() {
+        //검색결과 어댑터 초기화
+        searchAdapter = SearchAdapter { item ->
+            //이미 선택되었는지 확인 - 이미 선택되었으면 경고 문자
+            if (viewModel.selectedItems.value?.contains(item) == true) {
+                Toast.makeText(this, getString(R.string.item_already_selected), Toast.LENGTH_SHORT).show()
+            } else {
+                //아니면 선택 가능하도록
+                viewModel.selectItem(item)
+            }
+        }
+
         //검색 결과 데이터 목록 RecyclerView 설정
         binding.searchResultsRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
