@@ -5,21 +5,39 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: SearchAdapter
+    private lateinit var db: SearchDbHelper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val db = SearchDbHelper(context = this)
+        db = SearchDbHelper(context = this)
+
+        recyclerView = findViewById(R.id.recyclerView)
+        adapter = SearchAdapter()
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = adapter
+
+        saveDb()
+        loadDb()
+
+    }
+
+    private fun saveDb() {
         val wDb = db.writableDatabase
 
         wDb.delete(SearchData.TABLE_NAME, null, null)
 
         val values = ContentValues()
 
-        for (count in 1 until 101) {
+        for (count in 1 until 11) {
             values.put(SearchData.TABLE_COLUMN_NAME, "카페$count")
             values.put(SearchData.TABLE_COLUMN_ADDRESS, "서울 성동구 성수동 $count")
             values.put(SearchData.TABLE_COLUMN_CATEGORY, "카페")
@@ -33,6 +51,39 @@ class MainActivity : AppCompatActivity() {
             values.clear()
         }
     }
+
+    private fun loadDb() {
+        val rDb = db.readableDatabase
+
+        val cursor = rDb.query(
+            SearchData.TABLE_NAME,
+            arrayOf(
+                SearchData.TABLE_COLUMN_NAME,
+                SearchData.TABLE_COLUMN_ADDRESS,
+                SearchData.TABLE_COLUMN_CATEGORY
+            ),
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+
+        val searchDataList = mutableListOf<SearchData>()
+        with(cursor) {
+            while (moveToNext()) {
+                val name = getString(getColumnIndexOrThrow(SearchData.TABLE_COLUMN_NAME))
+                val address = getString(getColumnIndexOrThrow(SearchData.TABLE_COLUMN_ADDRESS))
+                val category = getString(getColumnIndexOrThrow(SearchData.TABLE_COLUMN_CATEGORY))
+                searchDataList.add(SearchData(name, address, category))
+            }
+        }
+        cursor.close()
+
+        adapter.searchDataList = searchDataList
+        adapter.notifyDataSetChanged()
+    }
 }
+
 
 

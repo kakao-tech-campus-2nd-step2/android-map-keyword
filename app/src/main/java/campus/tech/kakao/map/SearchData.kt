@@ -1,6 +1,10 @@
 package campus.tech.kakao.map
 
-class SearchData {
+data class SearchData (
+    val name: String,
+    val address: String,
+    val category: String
+){
     companion object {
         const val TABLE_NAME = "searchTable"
         const val TABLE_COLUMN_NAME = "name"
