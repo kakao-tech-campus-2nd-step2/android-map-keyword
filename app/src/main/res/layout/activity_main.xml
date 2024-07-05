@@ -25,6 +25,7 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <ImageButton
+            android:id="@+id/btnClear"
             app:layout_constraintEnd_toEndOf="@id/edtSearch"
             app:layout_constraintTop_toTopOf="@id/edtSearch"
             app:layout_constraintBottom_toBottomOf="@id/edtSearch"
@@ -33,7 +34,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:src="@drawable/icon_cancel"/>
+            android:src="@drawable/icon_cancel"
+            android:onClick="@{() -> viewModel.clearSearch()}"/>
 
         <TextView
             android:id="@+id/tvHelpMessage"

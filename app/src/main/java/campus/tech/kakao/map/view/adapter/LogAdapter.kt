@@ -15,7 +15,7 @@ class LogAdapter: RecyclerView.Adapter<LogAdapter.LogViewHolder>() {
         fun bind(location: Location){
             binding.location = location
             binding.btnLogDel.setOnClickListener {
-                (bindingAdapter as LogAdapter).removeLog(bindingAdapterPosition)
+                removeLog(bindingAdapterPosition)
             }
         }
     }

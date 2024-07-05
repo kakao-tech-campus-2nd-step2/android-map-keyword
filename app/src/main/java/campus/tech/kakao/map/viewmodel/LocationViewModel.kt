@@ -14,6 +14,10 @@ class LocationViewModel(private val repository: Repository): ViewModel(){
 
     val searchText = MutableLiveData<String>()
 
+    fun clearSearch() {
+        searchText.value = ""
+    }
+
     fun select(name: String): List<Location>{
          return repository.selectData(name)
     }
