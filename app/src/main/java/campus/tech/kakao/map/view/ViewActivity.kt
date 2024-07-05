@@ -1,5 +1,6 @@
 package campus.tech.kakao.map.view
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -7,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.R
@@ -52,28 +54,54 @@ class ViewActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        val repository = Repository(this)
-        val factory = LocationViewModelFactory(repository)
+        val factory = createViewModelFactory()
         viewModel = ViewModelProvider(this,factory).get(LocationViewModel::class.java)
         binding.viewModel = viewModel
     }
 
+    private fun createViewModelFactory(): LocationViewModelFactory{
+        val repository = createRepository()
+        return LocationViewModelFactory(repository)
+    }
+
+    private fun createRepository() = Repository(this)
+
     private fun setupRecyclerViews() {
+        setupLocationRecyclerView()
+        setupLogRecyclerView()
+    }
+
+    private fun setupLocationRecyclerView(){
         initLocationAdapter()
-        initLogAdapter()
+        configureLocationRecyclerView()
     }
 
     private fun initLocationAdapter() {
         locationAdapter = LocationAdapter { location -> logAdapter.addLog(location) }
-        binding.recyclerLocation.apply {
+    }
+
+    private fun configureLocationRecyclerView(){
+        val locationRecyclerView = binding.recyclerLocation
+
+        locationRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@ViewActivity)
             adapter = locationAdapter
         }
     }
 
+    private fun setupLogRecyclerView(){
+        initLogAdapter()
+        configureLogRecyclerView()
+    }
+
     private fun initLogAdapter() {
         logAdapter = LogAdapter(viewModel.getLog())
-        binding.recyclerLog.apply {
+    }
+
+    private fun configureLogRecyclerView(){
+        val logRecyclerView = binding.recyclerLog
+
+        logRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@ViewActivity, RecyclerView.HORIZONTAL, false)
             adapter = logAdapter
         }
@@ -81,9 +109,19 @@ class ViewActivity : AppCompatActivity() {
 
     private fun observeViewModel() {
         viewModel.searchText.observe(this, Observer { searchText ->
-            locationAdapter.setLocations(viewModel.select(searchText))
-            if (locationAdapter.locationList.isNotEmpty()) binding.tvHelpMessage.visibility = View.GONE
+            updateLocationList(searchText)
+            updateHelpMessageVisibility()
         })
     }
 
+    private fun updateLocationList(searchText: String){
+        val foundLocations =viewModel.findData(searchText)
+
+        locationAdapter.setAdapterList(foundLocations)
+    }
+
+    private fun updateHelpMessageVisibility(){
+        if (locationAdapter.locationList.isNotEmpty())
+            binding.tvHelpMessage.visibility = View.GONE
+    }
 }

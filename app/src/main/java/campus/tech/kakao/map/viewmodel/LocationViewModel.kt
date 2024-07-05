@@ -15,7 +15,7 @@ class LocationViewModel(private val repository: Repository): ViewModel(){
         searchText.value = ""
     }
 
-    fun select(name: String): List<Location>{
+    fun findData(name: String): List<Location>{
          return repository.selectData(name)
     }
     fun saveLog(logList: List<Location>){

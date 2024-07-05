@@ -10,7 +10,8 @@ import campus.tech.kakao.map.model.Location
 class LocationAdapter(
     private var onItemClicked: (Location) -> Unit
 ): RecyclerView.Adapter<LocationAdapter.LocationViewHolder>() {
-    var locationList: List<Location> = listOf()
+
+    var locationList :  List<Location> = listOf()
     inner class LocationViewHolder(private val binding: ListItemBinding )
         :RecyclerView.ViewHolder(binding.root){
             fun bind(location: Location){
@@ -32,7 +33,7 @@ class LocationAdapter(
 
     override fun getItemCount(): Int = locationList.size
 
-    fun setLocations(locations: List<Location>){
+    fun setAdapterList(locations: List<Location>){
         locationList = locations
         notifyDataSetChanged()
     }
