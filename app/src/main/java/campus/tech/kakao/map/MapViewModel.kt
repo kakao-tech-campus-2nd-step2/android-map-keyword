@@ -34,7 +34,6 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
 
     //검색쿼리 기반 항목 검색
     private fun searchItems(query: String) {
-        //viewModelScope에서 코루틴
         viewModelScope.launch {
             //repository에서 결과 가져옴
             val results = repository.searchItems(query)
