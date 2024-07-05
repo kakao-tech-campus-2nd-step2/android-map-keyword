@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
+import android.util.Log
 
 data class SelectItem(
     val id: Int,
@@ -79,5 +80,19 @@ class SelectItemDBHelper(context: Context) : SQLiteOpenHelper(context, "selectIt
         cursor.close()
 
         return selectItemList
+    }
+
+    fun checkItemInDB(id : Int) : Boolean {
+        val cursor = rDb.rawQuery(
+            "Select * from ${SelectItemDB.TABLE_NAME} where ${SelectItemDB.TABLE_COLUMN_MAP_ITEM_ID} = ?",
+            arrayOf(id.toString())
+        )
+        if(cursor.getCount() > 0) {
+            cursor.close()
+            return true
+        } else {
+            cursor.close()
+            return false
+        }
     }
 }

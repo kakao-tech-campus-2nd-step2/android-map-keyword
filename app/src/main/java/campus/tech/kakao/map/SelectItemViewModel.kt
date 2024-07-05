@@ -21,6 +21,10 @@ class SelectItemViewModel(context: Context) : ViewModel() {
     }
 
     fun insertSelectItem(name: String, address: String, category: String, id: Int) {
+        val isExist = selectItemDB.checkItemInDB(id)
+        if(isExist) {
+            selectItemDB.deleteSelectItem(id)
+        }
         selectItemDB.insertSelectItem(name, address, category, id)
         selectItemList = selectItemDB.makeAllSelectItemList()
     }
