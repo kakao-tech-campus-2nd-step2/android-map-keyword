@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
 class PlaceDbHelper(context: Context):SQLiteOpenHelper(
-	context, "place.db", null, 1) {
+	context, "place.db", null, 2) {
 	override fun onCreate(db: SQLiteDatabase?) {
 		db?.execSQL("CREATE TABLE ${PlaceContract.TABLE_NAME} " +
 				"(${PlaceContract.COLUMN_NAME_NAME} TEXT, " +
@@ -29,6 +29,22 @@ class PlaceDbHelper(context: Context):SQLiteOpenHelper(
 			db.insert(PlaceContract.TABLE_NAME, null, values)
 			db.close()
 		}
+	}
+
+	fun existData(): Boolean{
+		val db = readableDatabase
+		val cursor = db.query(
+			PlaceContract.TABLE_NAME,
+			arrayOf(PlaceContract.COLUMN_NAME_NAME),
+			null,
+			null,
+			null,
+			null,
+			null
+		)
+		val result = cursor.moveToFirst()
+		cursor.close()
+		return if (result) true else false
 	}
 
 	fun existPlace(place: Place, db: SQLiteDatabase): Boolean{
