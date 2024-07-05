@@ -6,6 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.R
@@ -15,6 +16,7 @@ import campus.tech.kakao.map.model.Repository
 import campus.tech.kakao.map.view.adapter.LocationAdapter
 import campus.tech.kakao.map.view.adapter.LogAdapter
 import campus.tech.kakao.map.viewmodel.LocationViewModel
+import campus.tech.kakao.map.viewmodel.LocationViewModelFactory
 
 class ViewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -50,7 +52,9 @@ class ViewActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        viewModel = LocationViewModel.getInstance(Repository(this))
+        val repository = Repository(this)
+        val factory = LocationViewModelFactory(repository)
+        viewModel = ViewModelProvider(this,factory).get(LocationViewModel::class.java)
         binding.viewModel = viewModel
     }
 

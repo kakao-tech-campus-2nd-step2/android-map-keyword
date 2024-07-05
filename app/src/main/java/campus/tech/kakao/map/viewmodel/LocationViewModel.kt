@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import campus.tech.kakao.map.model.Location
 import campus.tech.kakao.map.model.Repository
 
-class LocationViewModel(private val repository: Repository){
+class LocationViewModel(private val repository: Repository): ViewModel(){
 
     val searchText = MutableLiveData<String>()
 
@@ -30,13 +30,4 @@ class LocationViewModel(private val repository: Repository){
         repository.dropLogTable()
     }
 
-    companion object {
-        @Volatile
-        private var INSTANCE: LocationViewModel? = null
-        fun getInstance(repository: Repository): LocationViewModel {
-            return INSTANCE ?: synchronized(this) {
-                INSTANCE ?: LocationViewModel(repository).also { INSTANCE = it }
-            }
-        }
-    }
 }
