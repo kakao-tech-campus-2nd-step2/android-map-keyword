@@ -18,7 +18,16 @@ class SearchAdapter(private val onItemClicked: (String) -> Unit) : RecyclerView.
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.resultTextView.text = results[position]
+        //holder.binding.resultTextView.text = results[position]
+        val result = results[position].split(", ")
+        val name = result[0].split(": ")[1]
+        val address = result[1].split(": ")[1]
+        val category = result[2].split(": ")[1]
+
+        holder.binding.resultTextView.text = name
+        holder.binding.resultAddressTextView.text = address
+        holder.binding.resultCategoryTextView.text = category
+
         holder.binding.root.setOnClickListener {
             onItemClicked(results[position])
         }
