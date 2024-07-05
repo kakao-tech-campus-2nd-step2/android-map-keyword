@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
             searchAdapter.updateResults(results)
             binding.searchRecyclerView.visibility = if (results.isEmpty()) View.GONE else View.VISIBLE
             binding.noResult.visibility = if (results.isEmpty())View.VISIBLE else View.GONE
+            binding.savedSearchRecyclerView.visibility = if (results.isEmpty()) View.GONE else View.VISIBLE
         })
 
         viewModel.savedSearches.observe(this, Observer { searches ->
@@ -75,6 +76,7 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     binding.searchRecyclerView.visibility = View.GONE
                     binding.noResult.visibility = View.VISIBLE
+                    binding.savedSearchRecyclerView.visibility = View.GONE
                 }
             }
             override fun afterTextChanged(s: Editable?) {}
