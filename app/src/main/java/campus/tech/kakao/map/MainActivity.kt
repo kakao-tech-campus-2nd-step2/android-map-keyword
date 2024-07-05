@@ -70,6 +70,12 @@ class MainActivity : AppCompatActivity() {
             //binding.savedSearchRecyclerView.visibility = View.VISIBLE
         }
 
+        binding.inputSearch.setOnFocusChangeListener { _, hasFocus ->
+            if(hasFocus && binding.inputSearch.text.isEmpty()) {
+                binding.savedSearchRecyclerView.visibility = View.VISIBLE
+            }
+        }
+
         binding.inputSearch.addTextChangedListener ( object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -81,7 +87,7 @@ class MainActivity : AppCompatActivity() {
                     searchAdapter.updateResults(emptyList())
                     binding.searchRecyclerView.visibility = View.GONE
                     binding.noResult.visibility = View.VISIBLE
-                    binding.savedSearchRecyclerView.visibility = View.GONE
+                    binding.savedSearchRecyclerView.visibility = View.VISIBLE
                 }
             }
             override fun afterTextChanged(s: Editable?) {}
