@@ -1,6 +1,5 @@
 package campus.tech.kakao.map
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,17 +7,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.ViewModelFactoryDsl
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import campus.tech.kakao.map.databinding.ActivityMainBinding
-import campus.tech.kakao.map.databinding.SearchHistoryItemBinding
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels {
@@ -29,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var historyAdapter: HistoryAdapter
     private lateinit var container: LinearLayout
     private var placeList: List<Place> = emptyList()
+    private lateinit var searchHistoryList: ArrayList<SearchHistory>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,16 +31,7 @@ class MainActivity : AppCompatActivity() {
 
         val mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
-
         mainBinding.placeResult.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-
-        // 검색 기록
-//        val itemBinding = SearchHistoryItemBinding.inflate(layoutInflater, mainBinding.searchHistory, false)
-//        itemBinding.history.text = ""
-//        val layoutInflater = this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-//        val customLayout = layoutInflater.inflate(R.layout.search_history_item, null)
-//        var textView: TextView = customLayout.findViewById<TextView>(R.id.history)
-//        mainBinding.searchHistory.addView(customLayout)
 
         if (placeList.isNullOrEmpty()) {
             mainBinding.emptyMainText.visibility = View.VISIBLE
@@ -60,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         // 검색 결과 토대로 UI 업데이트
 
         viewModel.placeList.observe(this@MainActivity, Observer {
-            Log.d("여기인가", "호출!")
+            Log.d("여기인가ㅌ", "호출!")
             (mainBinding.placeResult.adapter as? PlaceAdapter)?.setData(it)
             if (it.isNullOrEmpty()) {
                 mainBinding.emptyMainText.visibility = View.VISIBLE
@@ -83,7 +68,6 @@ class MainActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {
                 val searchText = searchEditText.text.toString()
-                Log.d("여기인가",""+ searchText)
                 viewModel.getSearchResult(searchText)
             }
         }
@@ -94,6 +78,27 @@ class MainActivity : AppCompatActivity() {
             searchEditText.setText("")
         }
 
+        // PlaceAdapter OnclickListener
+        searchHistoryList = MyApplication.prefs.getArrayList(Constants.SEARCH_HISTORY_KEY)
+        if (searchHistoryList.isEmpty()) {
+            searchHistoryList = ArrayList()
+        }
 
+        historyAdapter = HistoryAdapter(searchHistoryList, LayoutInflater.from(this@MainActivity))
+        mainBinding.searchHistory.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
+            adapter = historyAdapter
+        }
+
+        placeAdapter.itemClickListener = object : PlaceAdapter.OnItemClickListener {
+            override fun onItemClick(position: Int) {
+                Log.d("여기인가", "왜 안 돼 미친!")
+                val item = placeAdapter.getItem(position)
+                val searchHistory = SearchHistory(item.name)
+
+                MyApplication.prefs.savePreference(Constants.SEARCH_HISTORY_KEY, searchHistory ,searchHistoryList)
+                historyAdapter.setData(searchHistoryList)
+            }
+        }
     }
 }

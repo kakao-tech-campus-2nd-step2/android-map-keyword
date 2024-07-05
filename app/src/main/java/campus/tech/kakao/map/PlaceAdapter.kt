@@ -31,12 +31,16 @@ class PlaceAdapter(var items: List<Place>, val inflater: LayoutInflater): Recycl
     }
 
     override fun getItemCount(): Int {
-        return items.size ?: 0
+        return items.size
     }
 
     fun setData(searchResults: List<Place>) {
         items = searchResults
         notifyDataSetChanged()
+    }
+
+    fun getItem(position: Int): Place {
+        return items[position]
     }
 
     inner class PlaceViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

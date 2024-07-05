@@ -48,15 +48,14 @@
         app:layout_constraintTop_toBottomOf="@id/searchHistory"
         tools:listitem="@layout/place_item"
         />
-    
-    <ScrollView
-        android:id="@id/searchHistory"
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchHistory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/search"
-        app:layout_constraintStart_toStartOf="parent"
-    >
+        app:layout_constraintTop_toBottomOf="@+id/search"
+        app:layout_constraintBottom_toTopOf="@+id/placeResult"
+        tools:listitem="@layout/search_history_item"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -31,7 +31,5 @@ class MainViewModel(private val placeRepository: PlaceRepository) : ViewModel() 
             val results = placeRepository.getSearchResults(searchText)
             _placeList.postValue(results)
         }
-
-
     }
 }
