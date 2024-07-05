@@ -15,4 +15,13 @@ object PlaceContract {
                 "${PlaceEntry.COLUMN_PLACE_CATEGORY} varchar(30))"
         const val DROP_QUERY = "DROP TABLE IF EXISTS $TABLE_NAME"
     }
+
+    object SavePlaceEntry : BaseColumns {
+        const val TABLE_NAME = "savePlace"
+        const val COLUMN_PLACE_NAME = "savePlaceName"
+        const val CREATE_QUERY = "CREATE TABLE IF NOT EXISTS $TABLE_NAME (" +
+                "${BaseColumns._ID} INTEGER PRIMARY KEY," +
+                "${SavePlaceEntry.COLUMN_PLACE_NAME} varchar(30))"
+        const val DROP_QUERY = "DROP TABLE IF EXISTS $TABLE_NAME"
+    }
 }

@@ -32,11 +32,16 @@
             android:src="@drawable/cancel_btn" />
     </RelativeLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/savedPlaceView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <LinearLayout
+        android:id="@+id/noSearch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:id="@+id/noSearch">
+        android:gravity="center">
 
         <TextView
             android:layout_width="wrap_content"
@@ -46,11 +51,12 @@
             android:textSize="20sp" />
     </LinearLayout>
 
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchPlaceView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
-
 
 </androidx.appcompat.widget.LinearLayoutCompat>
