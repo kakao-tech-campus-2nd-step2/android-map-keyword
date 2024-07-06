@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                 searchResult.adapter = PlaceAdapter(it, model)
             }
         })
-
+        model.loadWord()
         model.wordList.observe(this, Observer {
             if (it.isNullOrEmpty()){
                 searchWordResult.visibility = View.GONE

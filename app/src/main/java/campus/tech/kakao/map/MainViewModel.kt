@@ -38,4 +38,8 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 	fun deleteWord(word: SearchWord){
 		wordDbHelper.deleteWord(word)
 	}
+
+	fun loadWord(){
+		wordDbHelper.updateSearchWords()
+	}
 }
