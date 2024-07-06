@@ -1,17 +1,16 @@
 package campus.tech.kakao.map
 
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 
-class RecyclerViewAdapter(
-	val placeList: MutableList<Place>
-): RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+class PlaceAdapter(
+	val placeList: MutableList<Place>,
+	val viewModel: MainViewModel
+): RecyclerView.Adapter<PlaceAdapter.ViewHolder>() {
 	inner class ViewHolder(
 		itemView: View
 	): RecyclerView.ViewHolder(itemView) {
@@ -22,7 +21,7 @@ class RecyclerViewAdapter(
 			itemView.setOnClickListener {
 				val position:Int = bindingAdapterPosition
 				val place:Place = placeList[position]
-				Log.d("testt", "Clicked on ${place.name}")
+				viewModel.addWord(place)
 			}
 		}
 	}
