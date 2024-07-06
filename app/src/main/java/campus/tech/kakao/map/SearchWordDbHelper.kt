@@ -79,6 +79,7 @@ class SearchWordDbHelper(context: Context): SQLiteOpenHelper(
 		val selection = searchSameSelection
 		val selectionArgs = arrayOf(word.name, word.address, word.type)
 		db.delete(SearchWordContract.TABLE_NAME, selection, selectionArgs)
+		updateSearchWords()
 	}
 
 	fun updateSearchWords(){
