@@ -28,4 +28,25 @@ class SearchDbHelper(context: Context) : SQLiteOpenHelper(context, "searchDb", n
         db?.execSQL("DROP TABLE IF EXISTS ${SearchData.SAVED_SEARCH_TABLE_NAME}")
         onCreate(db)
     }
+
+    fun getAllSavedWords(): List<String> {
+        val db = readableDatabase
+        val cursor = db.query(
+            SearchData.SAVED_SEARCH_TABLE_NAME,
+            arrayOf(SearchData.SAVED_SEARCH_COLUMN_NAME),
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+        val savedWords = mutableListOf<String>()
+        with(cursor) {
+            while (moveToNext()) {
+                savedWords.add(getString(getColumnIndexOrThrow(SearchData.SAVED_SEARCH_COLUMN_NAME)))
+            }
+        }
+        cursor.close()
+        return savedWords
+    }
 }

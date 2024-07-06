@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                 val wDb = db.writableDatabase
                 val values = ContentValues()
 
-                    values.put(SearchData.SAVED_SEARCH_COLUMN_NAME, "${searchData.name}")
+                    values.put(SearchData.SAVED_SEARCH_COLUMN_NAME, searchData.name)
                     wDb.insert(SearchData.SAVED_SEARCH_TABLE_NAME, null, values)
                     values.clear()
             }
@@ -61,13 +61,15 @@ class MainActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
-/*
+
+        savedSearchAdapter = SavedSearchAdapter()
         savedSearchWordRecyclerView.layoutManager = LinearLayoutManager(this)
         savedSearchWordRecyclerView.adapter = savedSearchAdapter
-*/
+
         deleteWord()
         saveDb()
         loadDb()
+        loadSavedWords()
 
         searchWord.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -167,6 +169,12 @@ class MainActivity : AppCompatActivity() {
             recyclerView.visibility = android.view.View.VISIBLE
             searchNothing.visibility = android.view.View.GONE
         }
+    }
+
+    private fun loadSavedWords() {
+        savedSearchList = db.getAllSavedWords().toMutableList()
+        savedSearchAdapter.savedSearchList = savedSearchList
+        savedSearchAdapter.notifyDataSetChanged()
     }
 
 }
