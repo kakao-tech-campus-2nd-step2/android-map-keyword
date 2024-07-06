@@ -50,9 +50,9 @@ class PlaceDbHelper(context: Context):SQLiteOpenHelper(
 	}
 
 	fun existPlace(place: Place, db: SQLiteDatabase): Boolean{
-		val selection = "${PlaceContract.COLUMN_NAME_NAME} like ? AND " +
-				"${PlaceContract.COLUMN_NAME_ADDRESS} like ? AND " +
-				"${PlaceContract.COLUMN_NAME_TYPE} like ?"
+		val selection = "${PlaceContract.COLUMN_NAME_NAME} = ? AND " +
+				"${PlaceContract.COLUMN_NAME_ADDRESS} = ? AND " +
+				"${PlaceContract.COLUMN_NAME_TYPE} = ?"
 		val cursor = db.query(
 			PlaceContract.TABLE_NAME,
 			arrayOf(PlaceContract.COLUMN_NAME_NAME),
