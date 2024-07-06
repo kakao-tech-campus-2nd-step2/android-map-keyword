@@ -4,9 +4,11 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import androidx.lifecycle.MutableLiveData
 
 class PlaceDbHelper(context: Context):SQLiteOpenHelper(
 	context, "place.db", null, 2) {
+	val _place = MutableLiveData<MutableList<Place>>()
 	override fun onCreate(db: SQLiteDatabase?) {
 		db?.execSQL("CREATE TABLE ${PlaceContract.TABLE_NAME} " +
 				"(${PlaceContract.COLUMN_NAME_NAME} TEXT, " +
@@ -66,8 +68,8 @@ class PlaceDbHelper(context: Context):SQLiteOpenHelper(
 		return if (result) true else false
 	}
 
-	fun searchPlaceName(name: String): MutableList<Place>{
-		val results = mutableListOf<Place>()
+	fun searchPlaceName(name: String){
+		val resultList = mutableListOf<Place>()
 		var searchResult = "%${name}%"
 		val cursor = readableDatabase.query(
 			PlaceContract.TABLE_NAME,
@@ -90,9 +92,9 @@ class PlaceDbHelper(context: Context):SQLiteOpenHelper(
 			)
 			val type = cursor.getString(
 				cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_NAME_TYPE))
-			results.add(Place(name, address, type))
+			resultList.add(Place(name, address, type))
 		}
 		cursor.close()
-		return results
+		_place.value = resultList
 	}
 }

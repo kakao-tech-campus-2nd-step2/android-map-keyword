@@ -2,12 +2,14 @@ package campus.tech.kakao.map
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class MainViewModel(application: Application): AndroidViewModel(application) {
-	private var placeList = MutableLiveData<List<Place>>()
 	private val dbHelper = PlaceDbHelper(application)
+	val placeList: LiveData<MutableList<Place>> get() =  dbHelper._place
+
 
 	fun insertInitData(){
 		if (!dbHelper.existData()){
@@ -17,5 +19,9 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 			}
 		}
 
+	}
+
+	fun search(query: String) {
+		dbHelper.searchPlaceName(query)
 	}
 }
