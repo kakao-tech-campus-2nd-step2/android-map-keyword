@@ -42,7 +42,7 @@ class LocationAdapter(
         locationList = locations
     }
 
-    fun notifyListUpdate(newList: List<Location>){
+    private fun notifyListUpdate(newList: List<Location>){
         ListUtil.notifyListchanged(this, locationList, newList)
     }
 }
