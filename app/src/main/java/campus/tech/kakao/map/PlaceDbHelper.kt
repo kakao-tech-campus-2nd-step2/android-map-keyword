@@ -46,7 +46,7 @@ class PlaceDbHelper(context: Context):SQLiteOpenHelper(
 		)
 		val result = cursor.moveToFirst()
 		cursor.close()
-		return if (result) true else false
+		return result
 	}
 
 	fun existPlace(place: Place, db: SQLiteDatabase): Boolean{
