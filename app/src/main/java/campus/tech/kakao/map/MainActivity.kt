@@ -25,8 +25,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var searchNothing: TextView
 
     private lateinit var savedSearchWordRecyclerView: RecyclerView
+    private lateinit var savedSearchAdapter: SavedSearchAdapter
 
     private var searchDataList = mutableListOf<SearchData>()
+    private var savedSearchList = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +46,10 @@ class MainActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
-
+/*
+        savedSearchWordRecyclerView.layoutManager = LinearLayoutManager(this)
+        savedSearchWordRecyclerView.adapter = savedSearchAdapter
+*/
         deleteWord()
         saveDb()
         loadDb()
@@ -63,7 +68,6 @@ class MainActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {}
         })
-
     }
 
     private fun saveDb() {
@@ -73,7 +77,7 @@ class MainActivity : AppCompatActivity() {
 
         val values = ContentValues()
 
-        for (count in 1 until 11) {
+        for (count in 1 until 21) {
             values.put(SearchData.TABLE_COLUMN_NAME, "카페$count")
             values.put(SearchData.TABLE_COLUMN_ADDRESS, "서울 성동구 성수동 $count")
             values.put(SearchData.TABLE_COLUMN_CATEGORY, "카페")

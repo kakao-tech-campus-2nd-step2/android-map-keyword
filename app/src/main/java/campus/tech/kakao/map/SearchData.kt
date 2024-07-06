@@ -10,5 +10,8 @@ data class SearchData (
         const val TABLE_COLUMN_NAME = "name"
         const val TABLE_COLUMN_ADDRESS = "address"
         const val TABLE_COLUMN_CATEGORY = "category"
+
+        const val SAVED_SEARCH_TABLE_NAME = "savedsearchTable"
+        const val SAVED_SEARCH_COLUMN_NAME = "savename"
     }
 }

@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 class SearchAdapter() : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
 
     var searchDataList: List<SearchData> = emptyList()
-
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val searchName: TextView = view.findViewById(R.id.searchName)
         private val searchAddress: TextView = view.findViewById(R.id.searchAddress)
@@ -19,7 +18,6 @@ class SearchAdapter() : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
             searchName.text = searchData.name
             searchAddress.text = searchData.address
             searchCategory.text = searchData.category
-
         }
 
     }
@@ -36,5 +34,4 @@ class SearchAdapter() : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: SearchAdapter.ViewHolder, position: Int) {
         holder.bind(searchDataList[position])
     }
-
 }

@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -13,10 +14,18 @@ class SearchDbHelper(context: Context) : SQLiteOpenHelper(context, "searchDb", n
                     "   ${SearchData.TABLE_COLUMN_CATEGORY} varchar(255)" +
                     ");"
         )
+
+        db?.execSQL(
+            "CREATE TABLE ${SearchData.SAVED_SEARCH_TABLE_NAME} (" +
+                    "   ${SearchData.SAVED_SEARCH_COLUMN_NAME} varchar(255)" +
+                    ");"
+        )
+
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db?.execSQL("DROP TABLE IF EXISTS ${SearchData.TABLE_NAME}")
+        db?.execSQL("DROP TABLE IF EXISTS ${SearchData.SAVED_SEARCH_TABLE_NAME}")
         onCreate(db)
     }
 }

@@ -22,7 +22,7 @@ class SavedSearchAdapter() : RecyclerView.Adapter<SavedSearchAdapter.ViewHolder>
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_saveword, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_save_word, parent, false)
         return ViewHolder(view)
     }
 
