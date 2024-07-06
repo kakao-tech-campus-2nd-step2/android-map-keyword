@@ -49,6 +49,13 @@ class MainActivity : AppCompatActivity() {
             override fun onClick(v: View, position: Int) {
                 val searchData = adapter.searchDataList[position]
                 Toast.makeText(this@MainActivity, "Clicked: ${searchData.name}", Toast.LENGTH_SHORT).show()
+
+                val wDb = db.writableDatabase
+                val values = ContentValues()
+
+                    values.put(SearchData.SAVED_SEARCH_COLUMN_NAME, "${searchData.name}")
+                    wDb.insert(SearchData.SAVED_SEARCH_TABLE_NAME, null, values)
+                    values.clear()
             }
         })
 
