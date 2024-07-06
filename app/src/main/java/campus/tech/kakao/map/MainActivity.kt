@@ -67,6 +67,9 @@ class MainActivity : AppCompatActivity() {
         clear = findViewById(R.id.search_clear)
         noResult = findViewById(R.id.no_search_result)
         searchResult = findViewById(R.id.search_result_recycler_view)
+        clear.setOnClickListener {
+            search.setText("")
+        }
     }
 
 }
