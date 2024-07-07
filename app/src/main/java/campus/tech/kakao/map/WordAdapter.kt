@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class WordAdapter(
 	val wordList: List<SearchWord>,
-	val viewModel: MainViewModel
+	val onItemClicked: (SearchWord) -> Unit
 ): RecyclerView.Adapter<WordAdapter.ViewHolder>() {
 	inner class ViewHolder(
 		itemView: View
@@ -18,9 +18,9 @@ class WordAdapter(
 		val delete: ImageView = itemView.findViewById(R.id.x)
 		init {
 			delete.setOnClickListener {
-				val position:Int = bindingAdapterPosition
+				val position = bindingAdapterPosition
 				val word:SearchWord = wordList[position]
-				viewModel.deleteWord(word)
+				onItemClicked(word)
 			}
 		}
 	}

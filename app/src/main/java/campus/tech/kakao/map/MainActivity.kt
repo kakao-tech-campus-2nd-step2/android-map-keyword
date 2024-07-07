@@ -46,7 +46,9 @@ class MainActivity : AppCompatActivity() {
             }else{
                 noResult.visibility = View.GONE
                 searchResult.visibility = View.VISIBLE
-                searchResult.adapter = PlaceAdapter(it, model)
+                searchResult.adapter = PlaceAdapter(it){ Place ->
+                    model.addWord(Place)
+                }
             }
         })
         model.loadWord()
@@ -56,7 +58,11 @@ class MainActivity : AppCompatActivity() {
             }
             else{
                 searchWordResult.visibility = View.VISIBLE
-                searchWordResult.adapter = WordAdapter(it, model)
+                searchWordResult.adapter = WordAdapter(it) { SearchWord ->
+                    model.deleteWord(
+                        SearchWord
+                    )
+                }
             }
         })
 
@@ -72,5 +78,6 @@ class MainActivity : AppCompatActivity() {
             search.setText("")
         }
     }
+
 
 }

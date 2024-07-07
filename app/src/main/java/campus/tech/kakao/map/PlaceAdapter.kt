@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class PlaceAdapter(
 	val placeList: List<Place>,
-	val viewModel: MainViewModel
+	val onItemClicked: (Place) -> Unit
 ): RecyclerView.Adapter<PlaceAdapter.ViewHolder>() {
 	inner class ViewHolder(
 		itemView: View
@@ -20,7 +20,7 @@ class PlaceAdapter(
 			itemView.setOnClickListener {
 				val position:Int = bindingAdapterPosition
 				val place:Place = placeList[position]
-				viewModel.addWord(place)
+				onItemClicked(place)
 			}
 		}
 	}
