@@ -55,13 +55,11 @@
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    newText?.let {
-                        if (it.isEmpty()) {
-                            showNoResultMessage()
-                            adapter.updateData(emptyList())
-                        } else {
-                            searchPlaces(it)
-                        }
+                    if (newText.isNullOrEmpty()) {
+                        showNoResultMessage()
+                        adapter.updateData(emptyList())
+                    } else {
+                        searchPlaces(newText)
                     }
                     return true
                 }
