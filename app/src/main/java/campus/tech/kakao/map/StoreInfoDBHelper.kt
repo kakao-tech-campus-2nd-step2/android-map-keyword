@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 
 private const val SQL_STORE_INFO_CREATE_ENTRIES =
+=======
+private const val SQL_CREATE_ENTRIES =
     "CREATE TABLE ${StoreInfoEntry.TABLE_NAME} (" +
             "${BaseColumns._ID} INTEGER PRIMARY KEY," +
             "${StoreInfoEntry.STORE_NAME} TEXT," +
