@@ -10,9 +10,10 @@ class LocationDbHelper(context: Context) :
 	override fun onCreate(db: SQLiteDatabase?) {
 		db?.let {
 			val query = "CREATE TABLE ${LocationContract.TABLE_NAME} (" +
-					"${LocationContract.COLUMN_NAME} VARCHAR(50)," +
-					"${LocationContract.COLUMN_ADDRESS} VARCHAR(50)," +
-					"${LocationContract.COLUMN_CATEGORY} VARCHAR(20))"
+					"${LocationContract.ID} INTEGER PRIMARY KEY AUTOINCREMENT," +
+					"${LocationContract.COLUMN_NAME} TEXT," +
+					"${LocationContract.COLUMN_ADDRESS} TEXT," +
+					"${LocationContract.COLUMN_CATEGORY} TEXT)"
 			it.execSQL(query)
 
 			createLocationData(it)
