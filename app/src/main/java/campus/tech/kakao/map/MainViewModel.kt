@@ -6,10 +6,10 @@ import androidx.lifecycle.LiveData
 
 class MainViewModel(application: Application): AndroidViewModel(application) {
 	private val placeDbHelper = PlaceDbHelper(application)
-	val placeList: LiveData<List<Place>> get() =  placeDbHelper._place
+	val placeList: LiveData<List<Place>> get() =  placeDbHelper.getPlace()
 
 	private val wordDbHelper = SearchWordDbHelper(application)
-	val wordList: LiveData<List<SearchWord>> get() =  wordDbHelper._searchWords
+	val wordList: LiveData<List<SearchWord>> get() =  wordDbHelper.getSearchWords()
 
 	//초기에 데이터 삽입을 위해 1번 사용
 	fun insertInitData(){

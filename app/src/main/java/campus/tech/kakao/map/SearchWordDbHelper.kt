@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 
 class SearchWordDbHelper(context: Context): SQLiteOpenHelper(
 	context, SearchWordContract.DB_NAME, null, 1) {
-	val _searchWords = MutableLiveData<List<SearchWord>>()
+	private val _searchWords = MutableLiveData<List<SearchWord>>()
 	val searchSameSelection = "${SearchWordContract.COLUMN_NAME_NAME} = ? AND " +
 			"${SearchWordContract.COLUMN_NAME_ADDRESS} = ? AND " +
 			"${SearchWordContract.COLUMN_NAME_TYPE} = ?"
@@ -24,6 +24,10 @@ class SearchWordDbHelper(context: Context): SQLiteOpenHelper(
 	override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
 		db?.execSQL("DROP TABLE IF EXISTS ${SearchWordContract.TABLE_NAME}")
 		onCreate(db)
+	}
+
+	fun getSearchWords(): MutableLiveData<List<SearchWord>> {
+		return _searchWords
 	}
 
 	fun addWord(word: SearchWord) {
