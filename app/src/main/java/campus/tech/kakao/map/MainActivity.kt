@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,27 +29,18 @@ class MainActivity : AppCompatActivity() {
         UISetting()
         searchResult.layoutManager = LinearLayoutManager(this)
         searchWordResult.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        search.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
+        
+        search.doOnTextChanged { text, start, before, count ->
+            val query = text.toString()
+            if (query.isNullOrEmpty()){
+                noResult.visibility = View.VISIBLE
+                searchResult.visibility = View.GONE
+            }else{
+                noResult.visibility = View.GONE
+                searchResult.visibility = View.VISIBLE
+                model.search(query)
             }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val query = s.toString()
-                if (query.isNullOrEmpty()){
-                    noResult.visibility = View.VISIBLE
-                    searchResult.visibility = View.GONE
-                }else{
-                    noResult.visibility = View.GONE
-                    searchResult.visibility = View.VISIBLE
-                    model.search(query)
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-            }
-
-        })
+        }
         model = ViewModelProvider(this).get(MainViewModel::class.java)
         model.placeList.observe(this, Observer {
             if (it.isNullOrEmpty()){
