@@ -56,12 +56,10 @@ class MainActivity : AppCompatActivity() {
         model.wordList.observe(this, Observer {
             if (it.isNullOrEmpty()){
                 searchWordResult.visibility = View.GONE
-                Log.d("testt", "null")
             }
             else{
                 searchWordResult.visibility = View.VISIBLE
                 searchWordResult.adapter = WordAdapter(it, model)
-                Log.d("testt", it[0].name)
             }
         })
 
