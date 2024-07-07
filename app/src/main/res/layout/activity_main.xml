@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:hint="@string/searchWindowHint"
-        app:layout_constraintBottom_toTopOf="@id/savedSearchWord"
+        app:layout_constraintBottom_toTopOf="@id/savedSearchWordsList"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -22,40 +22,46 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:text="X"
-        app:layout_constraintBottom_toTopOf="@id/savedSearchWord"
+        app:layout_constraintBottom_toTopOf="@id/savedSearchWordsList"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/savedSearchWord"
+        android:id="@+id/savedSearchWordsList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:scrollbarFadeDuration="0"
         android:scrollbars="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@id/searchResults"
+        app:layout_constraintBottom_toTopOf="@id/searchResult"
         app:layout_constraintTop_toBottomOf="@id/searchWindow" />
 
-    <TextView
-        android:id="@+id/searchResultEmpty"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/searchResult"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:text="@string/searchResultEmpty"
-        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/savedSearchWord"
+        app:layout_constraintTop_toBottomOf="@id/savedSearchWordsList"
         app:layout_constraintHeight_default="spread"
-        />
+        >
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/searchResults"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:scrollbarFadeDuration="0"
-        android:scrollbars="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHeight_default="spread"
-        app:layout_constraintTop_toBottomOf="@id/savedSearchWord" />
+        <TextView
+            android:id="@+id/searchResultEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/searchResultEmpty"
+            android:gravity="center"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/searchResultsList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarFadeDuration="0"
+            android:scrollbars="vertical"
+            android:visibility="gone" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
