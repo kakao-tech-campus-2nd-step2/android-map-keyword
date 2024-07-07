@@ -31,6 +31,8 @@ class RecentDataRepository(context: Context){
     }
 
     fun deleteSearchData(data:String){
-        wDb.delete(RecentDataContract.TABLE_NAME,RecentDataContract.TABLE_COLUMN_NAME, arrayOf(data))
+        wDb.delete(RecentDataContract.TABLE_NAME,
+            RecentDataContract.TABLE_COLUMN_NAME,
+            arrayOf(data))
     }
 }
