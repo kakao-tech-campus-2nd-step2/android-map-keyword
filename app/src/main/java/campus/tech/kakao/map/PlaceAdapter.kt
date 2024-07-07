@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class PlaceAdapter(
-	val placeList: MutableList<Place>,
+	val placeList: List<Place>,
 	val viewModel: MainViewModel
 ): RecyclerView.Adapter<PlaceAdapter.ViewHolder>() {
 	inner class ViewHolder(

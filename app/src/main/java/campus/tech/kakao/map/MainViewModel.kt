@@ -9,10 +9,10 @@ import androidx.lifecycle.ViewModel
 
 class MainViewModel(application: Application): AndroidViewModel(application) {
 	private val placeDbHelper = PlaceDbHelper(application)
-	val placeList: LiveData<MutableList<Place>> get() =  placeDbHelper._place
+	val placeList: LiveData<List<Place>> get() =  placeDbHelper._place
 
 	private val wordDbHelper = SearchWordDbHelper(application)
-	val wordList: LiveData<MutableList<SearchWord>> get() =  wordDbHelper._searchWords
+	val wordList: LiveData<List<SearchWord>> get() =  wordDbHelper._searchWords
 
 	fun insertInitData(){
 		if (!placeDbHelper.existData()){

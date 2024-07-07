@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class WordAdapter(
-	val wordList: MutableList<SearchWord>,
+	val wordList: List<SearchWord>,
 	val viewModel: MainViewModel
 ): RecyclerView.Adapter<WordAdapter.ViewHolder>() {
 	inner class ViewHolder(

@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 
 class PlaceDbHelper(context: Context):SQLiteOpenHelper(
 	context, PlaceContract.DB_NAME, null, 2) {
-	val _place = MutableLiveData<MutableList<Place>>()
+	val _place = MutableLiveData<List<Place>>()
 	override fun onCreate(db: SQLiteDatabase?) {
 		db?.execSQL("CREATE TABLE ${PlaceContract.TABLE_NAME} " +
 				"(${PlaceContract.COLUMN_NAME_NAME} TEXT, " +

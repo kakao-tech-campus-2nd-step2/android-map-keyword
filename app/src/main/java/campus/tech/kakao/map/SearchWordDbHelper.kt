@@ -9,7 +9,7 @@ import androidx.lifecycle.MutableLiveData
 
 class SearchWordDbHelper(context: Context): SQLiteOpenHelper(
 	context, SearchWordContract.DB_NAME, null, 1) {
-	val _searchWords = MutableLiveData<MutableList<SearchWord>>()
+	val _searchWords = MutableLiveData<List<SearchWord>>()
 	val searchSameSelection = "${SearchWordContract.COLUMN_NAME_NAME} = ? AND " +
 			"${SearchWordContract.COLUMN_NAME_ADDRESS} = ? AND " +
 			"${SearchWordContract.COLUMN_NAME_TYPE} = ?"
