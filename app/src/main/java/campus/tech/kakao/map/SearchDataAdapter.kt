@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class SearchDataAdapter(private val items:List<SearchData>, private val recentViewModel: RecentViewModel):RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SearchDataAdapter(private var items:List<SearchData>, private val recentViewModel: RecentViewModel):RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     class SearchDataViewHolder(view: View):RecyclerView.ViewHolder(view){
         val name: TextView = view.findViewById(R.id.search_data_name)
@@ -31,5 +31,10 @@ class SearchDataAdapter(private val items:List<SearchData>, private val recentVi
         holder.itemView.setOnClickListener{
             recentViewModel.addRecentData(item.name)
         }
+    }
+
+    fun updateData(newItems: List<SearchData>) {
+        items = newItems
+        notifyDataSetChanged()
     }
 }

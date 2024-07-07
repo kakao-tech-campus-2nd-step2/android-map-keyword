@@ -55,6 +55,10 @@ class DataSearchActivity : AppCompatActivity() {
         resetButtonListener()
 
         searchDataListView.layoutManager = LinearLayoutManager(this)
+        //어뎁터 초기화
+        resultDataAdapter = SearchDataAdapter(emptyList(), recentViewModel)
+        searchDataListView.adapter = resultDataAdapter
+
 
         setTextWatcher()
         editText.addTextChangedListener(textWatcher)
@@ -70,12 +74,10 @@ class DataSearchActivity : AppCompatActivity() {
                 resultData = searchViewModel.loadSearchData(searchInput)
                 if (searchInput.isNotEmpty() && resultData.isNotEmpty()) {
                     noResultNotice.visibility = View.GONE
-                    resultDataAdapter = SearchDataAdapter(resultData, recentViewModel)
-                    searchDataListView.adapter = resultDataAdapter
+                    resultDataAdapter.updateData(resultData)
                 } else {
                     noResultNotice.visibility = View.VISIBLE
-                    resultDataAdapter = SearchDataAdapter(emptyList(), recentViewModel)
-                    searchDataListView.adapter = resultDataAdapter
+                    resultDataAdapter.updateData(emptyList())
                 }
             }
 
