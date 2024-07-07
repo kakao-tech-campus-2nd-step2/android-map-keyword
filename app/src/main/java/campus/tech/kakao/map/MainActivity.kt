@@ -2,6 +2,8 @@ package campus.tech.kakao.map
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -12,61 +14,95 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.databinding.ActivityMainBinding
+import android.util.Log
 
 class MainActivity : AppCompatActivity() {
 
-    /* ViewBinding을 사용하기 때문에 주석 처리
-    private lateinit var inputSearch: EditText
-    private lateinit var buttonX: Button
-    private lateinit var noResult: TextView
-    private lateinit var searchListView: ListView
-    */
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
-    //private lateinit var dbHelper: DbHelper
+
+    private lateinit var searchAdapter: SearchAdapter
+    private lateinit var savedSearchAdapter: SavedSearchAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        /* ViewBinding을 사용하기 때문에 주석 처리
-        setContentView(R.layout.activity_main)
-
-        inputSearch = findViewById(R.id.inputSearch)
-        buttonX = findViewById(R.id.buttonX)
-        noResult = findViewById(R.id.noResult)
-        searchListView = findViewById(R.id.searchListView)
-        */
+        Log.d("MainActivity", "onCreate called")
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        Log.d("MainActivity", "View binding initialized")
 
-        //dbHelper = DbHelper(this)
+        setupRecyclerViews()
 
-        //DB가 비어있을 때만 기본 데이터 추가
-        /*
-        if (dbHelper.isDBEmpty(dbHelper)) {
-            insertInitialData(dbHelper)
-        } */
         viewModel.insertInitialData()
 
         viewModel.searchResults.observe(this, Observer { results ->
-            binding.searchRecyclerView.adapter = SearchAdapter(results)
+            Log.d("MainActivity", "Search results updated: $results")
+            //binding.searchRecyclerView.adapter = SearchAdapter(results)
+            searchAdapter.updateResults(results)
             binding.searchRecyclerView.visibility = if (results.isEmpty()) View.GONE else View.VISIBLE
+            binding.noResult.visibility = if (results.isEmpty())View.VISIBLE else View.GONE
+            binding.savedSearchRecyclerView.visibility = if (results.isEmpty()) View.GONE else View.VISIBLE
         })
 
+        viewModel.savedSearches.observe(this, Observer { searches ->
+            Log.d("MainActivity", "Saved searches updated: $searches")
+            savedSearchAdapter.updateSearches(searches)
+        })
 
-        /* ViewBinding을 사용하기 때문에 주석 처리
-        buttonX.setOnClickListener {
-            inputSearch.text.clear()
-        }*/
-
+        //X 버튼 클릭 시 입력창 초기화
         binding.buttonX.setOnClickListener {
+            Log.d("MainActivity", "Clear search input")
             binding.inputSearch.text.clear()
+            searchAdapter.updateResults(emptyList())
+            binding.searchRecyclerView.visibility = View.GONE
+            binding.noResult.visibility = View.VISIBLE
+            //binding.savedSearchRecyclerView.visibility = View.VISIBLE
         }
 
-        //RecyclerView 설정
+        binding.inputSearch.setOnFocusChangeListener { _, hasFocus ->
+            if(hasFocus && binding.inputSearch.text.isEmpty()) {
+                binding.savedSearchRecyclerView.visibility = View.VISIBLE
+            }
+        }
+
+        binding.inputSearch.addTextChangedListener ( object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val query = s.toString()
+                Log.d("MainActivity", "Search query: $query")
+                if(query.isNotEmpty()) {
+                    viewModel.searchDatabase(query)
+                } else {
+                    searchAdapter.updateResults(emptyList())
+                    binding.searchRecyclerView.visibility = View.GONE
+                    binding.noResult.visibility = View.VISIBLE
+                    binding.savedSearchRecyclerView.visibility = View.VISIBLE
+                }
+            }
+            override fun afterTextChanged(s: Editable?) {}
+            })
+
+    }
+
+    fun setupRecyclerViews() {
+        searchAdapter = SearchAdapter { result ->
+            viewModel.addSearch(result.name)
+        }
+
+        savedSearchAdapter = SavedSearchAdapter { place ->
+            viewModel.removeSearch(place)
+        }
+
         binding.searchRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.searchRecyclerView.adapter = searchAdapter
+
+        binding.savedSearchRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        binding.savedSearchRecyclerView.adapter = savedSearchAdapter
+
+        Log.d("MainActivity", "RecyclerViews set up")
     }
 
 }

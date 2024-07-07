@@ -4,6 +4,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
+
 
 class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -13,15 +15,23 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
+        Log.d("DbHelper", "Database onCreate called")
         createTable(db)
     }
 
+    override fun onOpen(db: SQLiteDatabase?) {
+        super.onOpen(db)
+        Log.d("DbHelper", "Database onOpen called")
+    }
+
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
+        Log.d("DbHelper", "Database onUpgrade called")
         db?.execSQL("DROP TABLE IF EXISTS ${PlaceContract.TABLE_NAME}")
         createTable(db)
     }
 
     private fun createTable(db: SQLiteDatabase?) {
+        Log.d("DbHelper", "Creating table")
         db?.execSQL(
             "CREATE TABLE ${PlaceContract.TABLE_NAME} (" +
                     "${PlaceContract.COLUMN_NAME} VARCHAR(30) NOT NULL," +
@@ -33,6 +43,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
 
     fun insertData(name: String, address: String, category: String) {
         writableDatabase.use { db ->
+            Log.d("DbHelper", "Inserting data: $name, $address, $category")
             if(!isDataExists(name, address, category, db)) {
                 val values = ContentValues().apply {
                     put(PlaceContract.COLUMN_NAME, name)
@@ -40,6 +51,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
                     put(PlaceContract.COLUMN_CATEGORY, category)
                 }
                 db.insert(PlaceContract.TABLE_NAME, null, values)
+                Log.d("DbHelper", "Inserted data: $name, $address, $category")
             }
         }
     }
@@ -67,8 +79,8 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         }
     }
 
-    fun searchDatabase(query: String): List<String> {
-        val results = mutableListOf<String>()
+    fun searchDatabase(query: String): List<SearchResult> {
+        val results = mutableListOf<SearchResult>()
 
         readableDatabase.use { db ->
             db.rawQuery(
@@ -85,10 +97,12 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
                         cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_ADDRESS))
                     val category =
                         cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_CATEGORY))
-                    results.add("Name: $name, Address: $address, Category: $category")
+                    results.add(SearchResult(name, address, category))
+                    Log.d("DbHelper", "Found data: $name, $address, $category")
                 }
             }
         }
+        Log.d("DbHelper", "Search results: $results")
         return results
     }
 }
