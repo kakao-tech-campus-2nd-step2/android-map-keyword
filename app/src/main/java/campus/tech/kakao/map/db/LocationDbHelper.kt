@@ -16,33 +16,29 @@ class LocationDbHelper(context: Context) :
 					"${LocationContract.COLUMN_CATEGORY} TEXT)"
 			it.execSQL(query)
 
-			createLocationData(it)
+			// 임의의 카페 데이터 15개 생성
+			for (i in 1..15) {
+				val values = ContentValues()
+				values.put(LocationContract.COLUMN_NAME, "카페$i")
+				values.put(LocationContract.COLUMN_ADDRESS, "서울 성동구 성수동 $i")
+				values.put(LocationContract.COLUMN_CATEGORY, "카페")
+				db.insert(LocationContract.TABLE_NAME, null, values)
+			}
+
+			// 임의의 약국 데이터 15개 생성
+			for (i in 1..15) {
+				val values = ContentValues()
+				values.put(LocationContract.COLUMN_NAME, "약국$i")
+				values.put(LocationContract.COLUMN_ADDRESS, "서울 강남구 대치동 $i")
+				values.put(LocationContract.COLUMN_CATEGORY, "약국")
+				db.insert(LocationContract.TABLE_NAME, null, values)
+			}
 		}
 	}
 
 	override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
 		db?.execSQL("DROP TABLE IF EXISTS ${LocationContract.TABLE_NAME}")
 		onCreate(db)
-	}
-
-	private fun createLocationData(db: SQLiteDatabase) {
-		// 임의의 카페 데이터 15개 생성
-		for (i in 1..15) {
-			val values = ContentValues()
-			values.put(LocationContract.COLUMN_NAME, "카페$i")
-			values.put(LocationContract.COLUMN_ADDRESS, "서울 성동구 성수동 $i")
-			values.put(LocationContract.COLUMN_CATEGORY, "카페")
-			db.insert(LocationContract.TABLE_NAME, null, values)
-		}
-
-		// 임의의 약국 데이터 15개 생성
-		for (i in 1..15) {
-			val values = ContentValues()
-			values.put(LocationContract.COLUMN_NAME, "약국$i")
-			values.put(LocationContract.COLUMN_ADDRESS, "서울 강남구 대치동 $i")
-			values.put(LocationContract.COLUMN_CATEGORY, "약국")
-			db.insert(LocationContract.TABLE_NAME, null, values)
-		}
 	}
 
 	companion object {
