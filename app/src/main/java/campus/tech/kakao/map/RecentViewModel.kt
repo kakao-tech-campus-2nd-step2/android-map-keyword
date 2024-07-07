@@ -2,6 +2,7 @@ package campus.tech.kakao.map
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 class RecentViewModel(application: Application) : AndroidViewModel(application) {
@@ -23,7 +24,7 @@ class RecentViewModel(application: Application) : AndroidViewModel(application) 
         return repository.getSearchDataList()
     }
 
-    fun getRecentDataLiveData(): MutableLiveData<List<String>>{
+    fun getRecentDataLiveData(): LiveData<List<String>> {
         return _recentDataList
     }
 }
