@@ -15,13 +15,14 @@
         android:autofillHints="search word"
         android:hint="@string/search_hint"
         android:inputType="text"
-        app:layout_constraintBottom_toTopOf="@id/recentSearchScrollView"
+        app:layout_constraintBottom_toTopOf="@id/recentSearchListView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.9" />
 
     <ImageButton
+        android:id="@+id/deleteInput"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:background="@color/transparent"
@@ -32,36 +33,38 @@
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/searchBar"
-        app:layout_constraintWidth_percent="0.08" />
+        app:layout_constraintWidth_percent="0.1" />
 
-    <ScrollView
-        android:id="@+id/recentSearchScrollView"
+
+    <ListView
+        android:id="@+id/recentSearchListView"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        app:layout_constraintBottom_toTopOf="@id/searchResult"
+        app:layout_constraintBottom_toTopOf="@id/searchResulListView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/searchBar"
-        app:layout_constraintWidth_percent="0.9" />
+        app:layout_constraintWidth_percent="0.9"/>
 
-    <ScrollView
-        android:id="@+id/searchResult"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchResulListView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.85"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recentSearchScrollView"
-        app:layout_constraintWidth_percent="1" />
+        app:layout_constraintTop_toBottomOf="@id/recentSearchListView"
+        app:layout_constraintWidth_percent="1"
+        android:overScrollMode="never"/>
 
     <TextView
+        android:id="@+id/noResult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/no_search_result"
-        app:layout_constraintBottom_toBottomOf="@id/searchResult"
+        app:layout_constraintBottom_toBottomOf="@id/searchResulListView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/searchResult" />
+        app:layout_constraintTop_toTopOf="@id/searchResulListView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
