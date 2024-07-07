@@ -19,8 +19,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val dbHelper = DbHelper(application)
     private val sharedPreferences = application.getSharedPreferences("search_prefs", Context.MODE_PRIVATE)
 
-    private val _searchResults = MutableLiveData<List<String>>()
-    val searchResults: LiveData<List<String>> get() = _searchResults
+    private val _searchResults = MutableLiveData<List<SearchResult>>()
+    val searchResults: LiveData<List<SearchResult>> get() = _searchResults
 
     private val _savedSearches = MutableLiveData<List<String>>()
     val savedSearches: LiveData<List<String>> get() = _savedSearches
@@ -46,7 +46,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun searchDatabase(query: String) {
         viewModelScope.launch {
             val results = withContext(Dispatchers.IO) {
-                dbHelper.searchDatabase(query)
+                dbHelper.searchDatabase(query).map{
+                    val parts = it.split(", ")
+                    SearchResult(
+                        name = parts[0].split(": ")[1],
+                        address = parts[1].split(": ")[1],
+                        category = parts[2].split(": ")[1]
+                    )
+                }
             }
             Log.d("MainViewModel", "Search results: $results")
             _searchResults.postValue(results)

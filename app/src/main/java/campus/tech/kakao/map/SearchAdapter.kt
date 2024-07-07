@@ -7,9 +7,9 @@ import android.view.View
 import campus.tech.kakao.map.databinding.ItemResultBinding
 import android.util.Log
 
-class SearchAdapter(private val onItemClicked: (String) -> Unit) : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
+class SearchAdapter(private val onItemClicked: (SearchResult) -> Unit) : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
 
-    private val results = mutableListOf<String>()
+    private val results = mutableListOf<SearchResult>()
 
     class ViewHolder(val binding: ItemResultBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -19,20 +19,13 @@ class SearchAdapter(private val onItemClicked: (String) -> Unit) : RecyclerView.
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        //holder.binding.resultTextView.text = results[position]
-        val result = results[position].split(", ")
+        val result = results[position]
         Log.d("SearchAdapter", "Binding result at position $position: $result")
-        if(result.size >= 3) {
-            val name = result[0].split(": ")[1]
-            val address = result[1].split(": ")[1]
-            val category = result[2].split(": ")[1]
 
-            holder.binding.resultTextView.text = name
-            holder.binding.resultAddressTextView.text = address
-            holder.binding.resultCategoryTextView.text = category
-        } else {
+            holder.binding.resultTextView.text = result.name
+            holder.binding.resultAddressTextView.text = result.address
+            holder.binding.resultCategoryTextView.text = result.category
             Log.e("SearchAdapter", "Unexpected result format: $result")
-        }
 
         holder.binding.root.setOnClickListener {
             onItemClicked(results[position])
@@ -41,7 +34,7 @@ class SearchAdapter(private val onItemClicked: (String) -> Unit) : RecyclerView.
 
     override fun getItemCount() = results.size
 
-    fun updateResults(newResults: List<String>) {
+    fun updateResults(newResults: List<SearchResult>) {
         Log.d("SearchAdapter", "Updating results: $newResults")
         results.clear()
         results.addAll(newResults)
