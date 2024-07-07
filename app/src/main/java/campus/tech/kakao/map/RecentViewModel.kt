@@ -20,11 +20,12 @@ class RecentViewModel(application: Application) : AndroidViewModel(application) 
             _recentDataList.value = repository.getSearchDataList()
         } }
 
-    fun loadRecentData(): List<String> {
-        return repository.getSearchDataList()
-    }
-
     fun getRecentDataLiveData(): LiveData<List<String>> {
         return _recentDataList
+    }
+
+    fun deleteRecentData(data: String){
+        repository.deleteSearchData(data)
+        _recentDataList.value = repository.getSearchDataList()
     }
 }

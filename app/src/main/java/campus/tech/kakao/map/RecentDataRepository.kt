@@ -1,6 +1,5 @@
 package campus.tech.kakao.map
 
-import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -31,8 +30,10 @@ class RecentDataRepository(context: Context){
     }
 
     fun deleteSearchData(data:String){
-        wDb.delete(RecentDataContract.TABLE_NAME,
-            RecentDataContract.TABLE_COLUMN_NAME,
-            arrayOf(data))
+        wDb.delete(
+            RecentDataContract.TABLE_NAME,
+            "${RecentDataContract.TABLE_COLUMN_NAME} = ?",
+            arrayOf(data)
+        )
     }
 }

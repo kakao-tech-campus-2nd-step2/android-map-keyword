@@ -37,27 +37,28 @@ class DataSearchActivity : AppCompatActivity() {
         //검색에 사용될 DB 생성
         searchViewModel.makeSearchData()
 
+        //ViewModel 생성
         recentViewModel = ViewModelProvider(this)[RecentViewModel::class.java]
 
+        //View 초기화
         searchDataListView= findViewById(R.id.searchResulListView)
         editText = findViewById(R.id.searchBar)
         noResultNotice = findViewById(R.id.noResult)
         deleteBtn = findViewById(R.id.deleteInput)
         recentSearchListView = findViewById(R.id.recentSearchListView)
 
-        recentViewModel.getRecentDataLiveData().observe(this, Observer{
-            recentData -> recentSearchListView.adapter = RecentSearchAdapter(recentData)
-        })
-
-        resetButtonListener()
-
+        //검색 결과 목록 세로 스크롤 설정
         searchDataListView.layoutManager = LinearLayoutManager(this)
         //어뎁터 초기화
         resultDataAdapter = SearchDataAdapter(emptyList(), recentViewModel)
         searchDataListView.adapter = resultDataAdapter
 
-
+        resetButtonListener()
         setTextWatcher()
+
+        recentViewModel.getRecentDataLiveData().observe(this, Observer{
+                recentData -> recentSearchListView.adapter = RecentSearchAdapter(recentData,recentViewModel)
+        })
     }
 
     private fun setTextWatcher(){

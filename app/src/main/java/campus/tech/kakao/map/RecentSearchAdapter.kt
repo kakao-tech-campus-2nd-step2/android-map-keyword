@@ -4,9 +4,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.ImageButton
 import android.widget.TextView
 
-class RecentSearchAdapter(private val recentDataList: List<String>) : BaseAdapter() {
+class RecentSearchAdapter(
+    private val recentDataList: List<String>,
+    private val viewModel: RecentViewModel
+) : BaseAdapter() {
+
+    class RecentViewHolder(view:View){
+        val name : TextView = view.findViewById(R.id.recent_search)
+        val deleteBtn : ImageButton = view.findViewById(R.id.delete_recent)
+    }
     override fun getCount(): Int = recentDataList.size
 
     override fun getItem(position: Int): Any = recentDataList[position]
@@ -19,10 +28,11 @@ class RecentSearchAdapter(private val recentDataList: List<String>) : BaseAdapte
         val recentDataViewHolder =
             view.tag as? RecentViewHolder ?: RecentViewHolder(view).also { view.tag = it }
         recentDataViewHolder.name.text = getItem(position) as String
-        return view
-    }
 
-    class RecentViewHolder(view:View){
-        val name : TextView = view.findViewById(R.id.recent_search)
+        recentDataViewHolder.deleteBtn.setOnClickListener {
+            viewModel.deleteRecentData(recentDataList[position])
+        }
+
+        return view
     }
 }
