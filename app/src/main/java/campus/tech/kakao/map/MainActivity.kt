@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        UISetting()
+        setupUI()
         searchResult.layoutManager = LinearLayoutManager(this)
         searchWordResult.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         
@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun UISetting(){
+    fun setupUI(){
         search = findViewById(R.id.search)
         clear = findViewById(R.id.search_clear)
         noResult = findViewById(R.id.no_search_result)
