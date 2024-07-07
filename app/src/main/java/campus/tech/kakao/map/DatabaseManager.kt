@@ -46,6 +46,43 @@ class DatabaseManager(context: Context) {
         return result
     }
 
+    fun insertSavedPlace(id : Int, name: String) {
+        val values = ContentValues().apply {
+            put("id", id)
+            put("name", name)
+        }
+        db.insert("SavedSearch", null, values)
+    }
+
+    fun getSavedSearches(): List<SavedSearch> { //savedSeach에서 검색해서 가져오기
+        val result = mutableListOf<SavedSearch>()
+        val cursor: Cursor = db.query(
+            "SavedSearch",
+            arrayOf("id", "name"),   //반환할 열의 배열
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+
+        with(cursor) {
+            while (moveToNext()) {
+                val savedSearch = SavedSearch(
+                    getInt(getColumnIndexOrThrow("id")),
+                    getString(getColumnIndexOrThrow("name")),
+                )
+                result.add(savedSearch)
+            }
+        }
+        cursor.close()
+        return result
+    }
+
+    fun deleteSavedPlace(id: Int) {
+        db.delete("SavedSearch", "id = ?", arrayOf(id.toString()))
+    }
+
     fun dropTable(){
         dbHelper.dropTable(db)
     }
