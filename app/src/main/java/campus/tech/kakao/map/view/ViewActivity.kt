@@ -33,12 +33,10 @@ class ViewActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        clearAndSaveLog()
+        saveLog()
     }
-
-    private fun clearAndSaveLog(){
-        viewModel.dropLogTable()
-        viewModel.saveLog(logAdapter.logList)
+    private fun saveLog(){
+        viewModel.saveLog()
     }
 
     private fun init(){
@@ -77,7 +75,7 @@ class ViewActivity : AppCompatActivity() {
     }
 
     private fun initLocationAdapter() {
-        locationAdapter = LocationAdapter { location -> logAdapter.addLog(location) }
+        locationAdapter = LocationAdapter { location -> viewModel.addLog(location) }
     }
 
     private fun configureLocationRecyclerView(){
@@ -95,7 +93,7 @@ class ViewActivity : AppCompatActivity() {
     }
 
     private fun initLogAdapter() {
-        logAdapter = LogAdapter(viewModel.getLog())
+        logAdapter = LogAdapter{position -> viewModel.removeLog(position)}
     }
 
     private fun configureLogRecyclerView(){
@@ -112,16 +110,20 @@ class ViewActivity : AppCompatActivity() {
             updateLocationList(searchText)
             updateHelpMessageVisibility()
         })
+
+        viewModel.logList.observe(this, Observer { logList ->
+            logAdapter.submitList(logList)
+        })
     }
 
     private fun updateLocationList(searchText: String){
         val foundLocations =viewModel.findData(searchText)
 
-        locationAdapter.updateAdapterList(foundLocations)
+        locationAdapter.submitList(foundLocations)
     }
 
     private fun updateHelpMessageVisibility(){
-        if (locationAdapter.locationList.isNotEmpty())
-            binding.tvHelpMessage.visibility = View.GONE
+        binding.tvHelpMessage.visibility =
+            if (locationAdapter.itemCount > 0) View.GONE else View.VISIBLE
     }
 }

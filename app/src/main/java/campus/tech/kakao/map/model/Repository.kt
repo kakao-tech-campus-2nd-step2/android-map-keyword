@@ -64,14 +64,8 @@ class Repository(context: Context):
         return locations
     }
 
-    fun dropLogTable(){
-        writableDatabase.execSQL(
-            LocationContract.DROP_LOG_QUERY
-        )
-        writableDatabase.execSQL(LocationContract.CREATE_LOG_QUERY)
-    }
-
     fun saveLog(locationLog: List<Location>) {
+        writableDatabase.execSQL(LocationContract.DROP_LOG_QUERY)
         writableDatabase.execSQL(LocationContract.CREATE_LOG_QUERY)
 
         locationLog.forEach {
