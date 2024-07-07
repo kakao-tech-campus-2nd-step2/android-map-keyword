@@ -79,8 +79,8 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         }
     }
 
-    fun searchDatabase(query: String): List<String> {
-        val results = mutableListOf<String>()
+    fun searchDatabase(query: String): List<SearchResult> {
+        val results = mutableListOf<SearchResult>()
 
         readableDatabase.use { db ->
             db.rawQuery(
@@ -97,7 +97,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
                         cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_ADDRESS))
                     val category =
                         cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.COLUMN_CATEGORY))
-                    results.add("Name: $name, Address: $address, Category: $category")
+                    results.add(SearchResult(name, address, category))
                     Log.d("DbHelper", "Found data: $name, $address, $category")
                 }
             }

@@ -17,6 +17,7 @@ import android.util.Log
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val dbHelper = DbHelper(application)
+    private val repository = PlaceRepository(dbHelper)
     private val sharedPreferences = application.getSharedPreferences("search_prefs", Context.MODE_PRIVATE)
 
     private val _searchResults = MutableLiveData<List<SearchResult>>()
@@ -31,31 +32,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     
     fun insertInitialData() {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                if(dbHelper.isDBEmpty()) {
-                    for (i in 1..10) {
-                        dbHelper.insertData("카페 $i", "서울 성동구 성수동 $i", "카페")
-                        dbHelper.insertData("약국 $i", "서울 강남구 대치동 $i", "약국")
-                    }
-                    Log.d("MainViewModel", "Initial data inserted")
-                }
-            }
+            repository.insertInitialData()
         }
     }
 
     fun searchDatabase(query: String) {
         viewModelScope.launch {
-            val results = withContext(Dispatchers.IO) {
-                dbHelper.searchDatabase(query).map{
-                    val parts = it.split(", ")
-                    SearchResult(
-                        name = parts[0].split(": ")[1],
-                        address = parts[1].split(": ")[1],
-                        category = parts[2].split(": ")[1]
-                    )
-                }
-            }
-            Log.d("MainViewModel", "Search results: $results")
+            val results = repository.searchDatabase(query)
             _searchResults.postValue(results)
         }
     }
