@@ -1,11 +1,8 @@
 package campus.tech.kakao.map
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 
 class MainViewModel(application: Application): AndroidViewModel(application) {
 	private val placeDbHelper = PlaceDbHelper(application)
@@ -14,6 +11,7 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 	private val wordDbHelper = SearchWordDbHelper(application)
 	val wordList: LiveData<List<SearchWord>> get() =  wordDbHelper._searchWords
 
+	//초기에 데이터 삽입을 위해 1번 사용
 	fun insertInitData(){
 		if (!placeDbHelper.existData()){
 			for(i in 1..10){
@@ -29,10 +27,10 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 	}
 
 	fun addWord(place: Place){
-		wordDbHelper.addWord(WordfromPlace(place))
+		wordDbHelper.addWord(wordfromPlace(place))
 	}
 
-	fun WordfromPlace(place: Place):SearchWord{
+	private fun wordfromPlace(place: Place):SearchWord{
 		return SearchWord(place.name, place.address, place.type)
 	}
 	fun deleteWord(word: SearchWord){

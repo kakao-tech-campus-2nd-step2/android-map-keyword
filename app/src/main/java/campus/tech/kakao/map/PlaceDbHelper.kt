@@ -70,7 +70,7 @@ class PlaceDbHelper(context: Context):SQLiteOpenHelper(
 
 	fun searchPlaceName(name: String){
 		val resultList = mutableListOf<Place>()
-		var searchResult = "%${name}%"
+		val searchResult = "%${name}%"
 		val cursor = readableDatabase.query(
 			PlaceContract.TABLE_NAME,
 			arrayOf(PlaceContract.COLUMN_NAME_NAME,

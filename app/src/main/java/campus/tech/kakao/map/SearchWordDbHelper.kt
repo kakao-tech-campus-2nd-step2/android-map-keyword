@@ -4,7 +4,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 
 class SearchWordDbHelper(context: Context): SQLiteOpenHelper(
@@ -84,7 +83,7 @@ class SearchWordDbHelper(context: Context): SQLiteOpenHelper(
 
 	fun updateSearchWords(){
 		val db = readableDatabase
-		var resultList = mutableListOf<SearchWord>()
+		val resultList = mutableListOf<SearchWord>()
 		val cursor = db.query(
 			SearchWordContract.TABLE_NAME,
 			arrayOf(SearchWordContract.COLUMN_NAME_NAME, SearchWordContract.COLUMN_NAME_ADDRESS, SearchWordContract.COLUMN_NAME_TYPE),
