@@ -12,6 +12,7 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,7 +35,11 @@ class DataSearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_data_search)
 
-        searchViewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))[SearchViewModel::class.java]
+        //ViewModel 생성
+        searchViewModel = ViewModelProvider(this)[SearchViewModel::class.java]
+        //검색에 사용될 DB 생성
+        searchViewModel.makeSearchData()
+
         recentViewModel = ViewModelProvider(this)[RecentViewModel::class.java]
 
         searchDataListView= findViewById(R.id.searchResulListView)
@@ -47,20 +52,12 @@ class DataSearchActivity : AppCompatActivity() {
             recentData -> recentSearchListView.adapter = RecentSearchAdapter(recentData)
         })
 
-        addSearchData()
         clickDeleteBtn()
 
         searchDataListView.layoutManager = LinearLayoutManager(this)
 
         setTextWatcher()
         editText.addTextChangedListener(textWatcher)
-    }
-
-    private fun addSearchData(){
-        for (i in 1..10){
-            searchViewModel.addSearchData(SearchData("카페 $i","카페","서울 성동구 성수동 $i"))
-            searchViewModel.addSearchData(SearchData("약국 $i","약국","서울 강남구 대치동 $i"))
-        }
     }
 
     private fun setTextWatcher(){
