@@ -48,13 +48,15 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         savedSearchAdapter = SavedSearchAdapter()
+
         savedSearchWordRecyclerView.setLayoutManager(
             LinearLayoutManager(
                 this,
                 LinearLayoutManager.HORIZONTAL,
-                true
+                false
             )
         )
+
         savedSearchWordRecyclerView.adapter = savedSearchAdapter
 
         itemClickSaveWord()
