@@ -4,17 +4,14 @@ import android.content.ContentValues
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import campus.tech.kakao.map.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -51,7 +48,13 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         savedSearchAdapter = SavedSearchAdapter()
-        savedSearchWordRecyclerView.layoutManager = LinearLayoutManager(this)
+        savedSearchWordRecyclerView.setLayoutManager(
+            LinearLayoutManager(
+                this,
+                LinearLayoutManager.HORIZONTAL,
+                true
+            )
+        )
         savedSearchWordRecyclerView.adapter = savedSearchAdapter
 
         itemClickSaveWord()
@@ -68,7 +71,8 @@ class MainActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val searchTerm = s.toString()
                 if (searchTerm.isEmpty()) {
-                    recyclerView.visibility = android.view.View.GONE
+                    recyclerView.visibility = View.GONE
+                    savedSearchWordRecyclerView.visibility = View.GONE
                 } else {
                     filterByCategory(searchTerm)
                 }
