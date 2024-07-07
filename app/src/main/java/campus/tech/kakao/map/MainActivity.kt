@@ -22,7 +22,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
-    //private lateinit var dbHelper: DbHelper
 
     private lateinit var searchAdapter: SearchAdapter
     private lateinit var savedSearchAdapter: SavedSearchAdapter
@@ -86,8 +85,6 @@ class MainActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
             })
 
-        //RecyclerView 설정
-        //binding.searchRecyclerView.layoutManager = LinearLayoutManager(this)
     }
 
     fun setupRecyclerViews() {
