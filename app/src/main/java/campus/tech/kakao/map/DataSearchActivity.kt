@@ -52,7 +52,7 @@ class DataSearchActivity : AppCompatActivity() {
             recentData -> recentSearchListView.adapter = RecentSearchAdapter(recentData)
         })
 
-        clickDeleteBtn()
+        resetButtonListener()
 
         searchDataListView.layoutManager = LinearLayoutManager(this)
 
@@ -83,7 +83,7 @@ class DataSearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun clickDeleteBtn(){
+    private fun resetButtonListener(){
         deleteBtn.setOnClickListener{
             editText.text.clear()
         }
