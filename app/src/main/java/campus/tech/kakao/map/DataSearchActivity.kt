@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
@@ -12,7 +11,6 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +19,6 @@ class DataSearchActivity : AppCompatActivity() {
     private lateinit var searchViewModel: SearchViewModel
     private lateinit var recentViewModel: RecentViewModel
     private lateinit var editText: EditText
-    private lateinit var textWatcher :TextWatcher
     private lateinit var resultDataAdapter:SearchDataAdapter
     private lateinit var resultData: List<SearchData>
     private lateinit var searchDataListView: RecyclerView
@@ -61,16 +58,14 @@ class DataSearchActivity : AppCompatActivity() {
 
 
         setTextWatcher()
-        editText.addTextChangedListener(textWatcher)
     }
 
     private fun setTextWatcher(){
-        textWatcher = object:TextWatcher{
+       editText.addTextChangedListener(object: TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val searchInput = editText.text.trim().toString()
-                Log.d("yb0x00","현재 값 : $searchInput")
                 resultData = searchViewModel.loadSearchData(searchInput)
                 if (searchInput.isNotEmpty() && resultData.isNotEmpty()) {
                     noResultNotice.visibility = View.GONE
@@ -83,7 +78,7 @@ class DataSearchActivity : AppCompatActivity() {
 
             override fun afterTextChanged(s: Editable?) {
             }
-        }
+        })
     }
 
     private fun resetButtonListener(){
