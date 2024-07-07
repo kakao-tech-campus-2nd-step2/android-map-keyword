@@ -68,12 +68,13 @@ class DataSearchActivity : AppCompatActivity() {
                 val searchInput = editText.text.trim().toString()
                 Log.d("yb0x00","현재 값 : $searchInput")
                 resultData = searchViewModel.loadSearchData(searchInput)
-                if (searchInput.isNotEmpty() && resultData.isNotEmpty()){
+                if (searchInput.isNotEmpty() && resultData.isNotEmpty()) {
                     noResultNotice.visibility = View.GONE
-                    resultDataAdapter = SearchDataAdapter(resultData,recentViewModel)
+                    resultDataAdapter = SearchDataAdapter(resultData, recentViewModel)
                     searchDataListView.adapter = resultDataAdapter
-                }else{noResultNotice.visibility = View.VISIBLE
-                    resultDataAdapter = SearchDataAdapter(emptyList(),recentViewModel)
+                } else {
+                    noResultNotice.visibility = View.VISIBLE
+                    resultDataAdapter = SearchDataAdapter(emptyList(), recentViewModel)
                     searchDataListView.adapter = resultDataAdapter
                 }
             }
