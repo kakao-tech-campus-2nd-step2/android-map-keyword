@@ -14,24 +14,15 @@ class RecentSearchAdapter(private val recentDataList: List<String>) : BaseAdapte
     override fun getItemId(position: Int): Long = position.toLong()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view: View
-        val recentDataViewHolder : RecentViewHolder
-        if (convertView == null){
-            view = LayoutInflater.from(parent?.context).inflate(R.layout.recent_search_item,parent,false)
-            recentDataViewHolder = RecentViewHolder(view)
-            view.tag = recentDataViewHolder
-        } else{
-            view = convertView
-            recentDataViewHolder = convertView.tag as RecentViewHolder
-        }
-        val item = recentDataList[position]
-        recentDataViewHolder.name.text = item
-
+        val view = convertView ?: LayoutInflater.from(parent?.context)
+            .inflate(R.layout.recent_search_item, parent, false)
+        val recentDataViewHolder =
+            view.tag as? RecentViewHolder ?: RecentViewHolder(view).also { view.tag = it }
+        recentDataViewHolder.name.text = getItem(position) as String
         return view
     }
 
     class RecentViewHolder(view:View){
         val name : TextView = view.findViewById(R.id.recent_search)
     }
-
 }
