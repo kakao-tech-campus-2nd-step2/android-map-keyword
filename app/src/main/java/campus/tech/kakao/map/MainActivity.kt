@@ -37,13 +37,6 @@ class MainActivity : AppCompatActivity() {
 
         setupRecyclerViews()
 
-        //dbHelper = DbHelper(this)
-
-        //DB가 비어있을 때만 기본 데이터 추가
-        /*
-        if (dbHelper.isDBEmpty(dbHelper)) {
-            insertInitialData(dbHelper)
-        } */
         viewModel.insertInitialData()
 
         viewModel.searchResults.observe(this, Observer { results ->

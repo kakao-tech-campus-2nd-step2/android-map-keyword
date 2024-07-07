@@ -28,7 +28,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     init {
         loadSavedSearches()
     }
-
+    
     fun insertInitialData() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
