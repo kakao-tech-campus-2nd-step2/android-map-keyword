@@ -5,9 +5,10 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import androidx.lifecycle.MutableLiveData
+import campus.tech.kakao.map.SearchWordContract.DB_VERSION
 
 class SearchWordDbHelper(context: Context): SQLiteOpenHelper(
-	context, SearchWordContract.DB_NAME, null, 1) {
+	context, SearchWordContract.DB_NAME, null, DB_VERSION) {
 	private val _searchWords = MutableLiveData<List<SearchWord>>()
 	val searchSameSelection = "${SearchWordContract.COLUMN_NAME_NAME} = ? AND " +
 			"${SearchWordContract.COLUMN_NAME_ADDRESS} = ? AND " +

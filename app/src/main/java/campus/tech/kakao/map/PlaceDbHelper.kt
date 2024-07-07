@@ -5,9 +5,10 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import androidx.lifecycle.MutableLiveData
+import campus.tech.kakao.map.PlaceContract.DB_VERSION
 
 class PlaceDbHelper(context: Context):SQLiteOpenHelper(
-	context, PlaceContract.DB_NAME, null, 2) {
+	context, PlaceContract.DB_NAME, null, DB_VERSION) {
 	private val _place = MutableLiveData<List<Place>>()
 	override fun onCreate(db: SQLiteDatabase?) {
 		db?.execSQL("CREATE TABLE ${PlaceContract.TABLE_NAME} " +
