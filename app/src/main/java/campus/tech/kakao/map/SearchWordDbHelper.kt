@@ -14,6 +14,10 @@ class SearchWordDbHelper(context: Context): SQLiteOpenHelper(
 			"${SearchWordContract.COLUMN_NAME_ADDRESS} = ? AND " +
 			"${SearchWordContract.COLUMN_NAME_TYPE} = ?"
 	override fun onCreate(db: SQLiteDatabase?) {
+		createTable(db)
+	}
+
+	private fun createTable(db: SQLiteDatabase?) {
 		db?.execSQL(
 			"CREATE TABLE ${SearchWordContract.TABLE_NAME} " +
 					"(${SearchWordContract.COLUMN_NAME_NAME} TEXT, " +
@@ -24,7 +28,7 @@ class SearchWordDbHelper(context: Context): SQLiteOpenHelper(
 
 	override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
 		db?.execSQL("DROP TABLE IF EXISTS ${SearchWordContract.TABLE_NAME}")
-		onCreate(db)
+		createTable(db)
 	}
 
 	fun getSearchWords(): MutableLiveData<List<SearchWord>> {

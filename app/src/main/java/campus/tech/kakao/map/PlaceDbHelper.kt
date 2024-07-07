@@ -11,6 +11,9 @@ class PlaceDbHelper(context: Context):SQLiteOpenHelper(
 	context, PlaceContract.DB_NAME, null, DB_VERSION) {
 	private val _place = MutableLiveData<List<Place>>()
 	override fun onCreate(db: SQLiteDatabase?) {
+		createTable(db)
+	}
+	private fun createTable(db: SQLiteDatabase?) {
 		db?.execSQL("CREATE TABLE ${PlaceContract.TABLE_NAME} " +
 				"(${PlaceContract.COLUMN_NAME_NAME} TEXT, " +
 				"${PlaceContract.COLUMN_NAME_ADDRESS} TEXT, " +
@@ -19,7 +22,7 @@ class PlaceDbHelper(context: Context):SQLiteOpenHelper(
 
 	override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
 		db?.execSQL("DROP TABLE IF EXISTS ${PlaceContract.TABLE_NAME}")
-		onCreate(db)
+		createTable(db)
 	}
 
 	fun getPlace(): MutableLiveData<List<Place>> {
