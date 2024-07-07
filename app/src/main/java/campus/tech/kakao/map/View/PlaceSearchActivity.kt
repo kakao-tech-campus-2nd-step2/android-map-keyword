@@ -12,6 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.Model.Datasource.Local.Dao.FavoriteDaoImpl
+import campus.tech.kakao.map.Model.Datasource.Local.Dao.PlaceDaoImpl
 import campus.tech.kakao.map.Model.Datasource.Local.SqliteDB
 import campus.tech.kakao.map.Model.Place
 import campus.tech.kakao.map.R
@@ -30,13 +32,17 @@ class PlaceSearchActivity : AppCompatActivity() {
     private lateinit var etSearchPlace: EditText
     private lateinit var deleteSearch: ImageView
     private lateinit var favorite: RecyclerView
+    private lateinit var sqliteDB : SqliteDB
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_place_search)
 
-        val sqliteDB = SqliteDB(this, PlaceContract.DATABASE_NAME, null, 1)
-        val repository = PlaceRepository(sqliteDB)
+        sqliteDB = SqliteDB(this, PlaceContract.DATABASE_NAME, null, 1)
+        val placeDaoImpl = PlaceDaoImpl(sqliteDB.writableDatabase)
+        val favoriteDao = FavoriteDaoImpl(sqliteDB.writableDatabase)
+        val repository = PlaceRepository(placeDaoImpl,favoriteDao)
+
         viewModel =
             ViewModelProvider(this, ViewModelFactory(repository))[SearchViewModel::class.java]
 
@@ -50,6 +56,11 @@ class PlaceSearchActivity : AppCompatActivity() {
         settingFavoriteRecyclerView()
         setDeleteSearchListener()
         setEditTextListener()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        sqliteDB.close()
     }
 
     private fun settingSearchRecyclerView() {

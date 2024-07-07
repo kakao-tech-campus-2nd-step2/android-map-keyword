@@ -1,6 +1,9 @@
 package campus.tech.kakao.map.Util
 
+import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 import android.provider.BaseColumns
+import campus.tech.kakao.map.Model.Place
 
 object PlaceContract {
     const val DATABASE_NAME = "Place.db"
@@ -36,5 +39,44 @@ object PlaceContract {
                 "$TABLE_NAME " +
                 "WHERE " +
                 "$COLUMN_NAME = "
+    }
+
+    fun getPlaceByCursor(cursor: Cursor): Place {
+        cursor.moveToFirst()
+        return Place(
+            cursor.getString(
+                cursor.getColumnIndexOrThrow(PlaceEntry.COLUMN_NAME)
+            ),
+            cursor.getString(
+                cursor.getColumnIndexOrThrow(PlaceEntry.COLUMN_ADDRESS)
+            ),
+            CategoryUtil.intToCategory(
+                cursor.getInt(
+                    cursor.getColumnIndexOrThrow(PlaceEntry.COLUMN_CATEGORY)
+                )
+            )
+        )
+    }
+
+    fun getPlaceListByCursor(cursor: Cursor): List<Place> {
+        var result = mutableListOf<Place>()
+
+        while (cursor.moveToNext()) {
+            val place = Place(
+                cursor.getString(
+                    cursor.getColumnIndexOrThrow(PlaceContract.PlaceEntry.COLUMN_NAME)
+                ),
+                cursor.getString(
+                    cursor.getColumnIndexOrThrow(PlaceContract.PlaceEntry.COLUMN_ADDRESS)
+                ),
+                CategoryUtil.intToCategory(
+                    cursor.getInt(
+                        cursor.getColumnIndexOrThrow(PlaceContract.PlaceEntry.COLUMN_CATEGORY)
+                    )
+                )
+            )
+            result.add(place)
+        }
+        return result
     }
 }
