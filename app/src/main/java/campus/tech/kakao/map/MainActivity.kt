@@ -1,9 +1,6 @@
 package campus.tech.kakao.map
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -32,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         
         search.doOnTextChanged { text, start, before, count ->
             val query = text.toString()
-            if (query.isNullOrEmpty()){
+            if (query.isEmpty()){
                 noResult.visibility = View.VISIBLE
                 searchResult.visibility = View.GONE
             }else{
@@ -41,7 +38,7 @@ class MainActivity : AppCompatActivity() {
                 model.search(query)
             }
         }
-        model = ViewModelProvider(this).get(MainViewModel::class.java)
+        model = ViewModelProvider(this)[MainViewModel::class.java]
         model.placeList.observe(this, Observer {
             if (it.isNullOrEmpty()){
                 noResult.visibility = View.VISIBLE
