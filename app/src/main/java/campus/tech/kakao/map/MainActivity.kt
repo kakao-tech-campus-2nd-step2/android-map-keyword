@@ -45,19 +45,7 @@ class MainActivity : AppCompatActivity() {
         savedSearchWordRecyclerView = findViewById(R.id.savedSearchWordRecyclerView)
 
         adapter = SearchAdapter()
-        adapter.setItemClickListener(object : SearchAdapter.OnItemClickListener {
-            override fun onClick(v: View, position: Int) {
-                val searchData = adapter.searchDataList[position]
-                Toast.makeText(this@MainActivity, "Clicked: ${searchData.name}", Toast.LENGTH_SHORT).show()
 
-                val wDb = db.writableDatabase
-                val values = ContentValues()
-
-                    values.put(SearchData.SAVED_SEARCH_COLUMN_NAME, searchData.name)
-                    wDb.insert(SearchData.SAVED_SEARCH_TABLE_NAME, null, values)
-                    values.clear()
-            }
-        })
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
@@ -65,6 +53,9 @@ class MainActivity : AppCompatActivity() {
         savedSearchAdapter = SavedSearchAdapter()
         savedSearchWordRecyclerView.layoutManager = LinearLayoutManager(this)
         savedSearchWordRecyclerView.adapter = savedSearchAdapter
+
+        itemClickSaveWord()
+        deleteItem()
 
         deleteWord()
         saveDb()
@@ -140,12 +131,14 @@ class MainActivity : AppCompatActivity() {
 
         if (searchWord.text.isEmpty()) {
             adapter.searchDataList = emptyList()
-            recyclerView.visibility = android.view.View.GONE
-            searchNothing.visibility = android.view.View.VISIBLE
+            recyclerView.visibility = View.GONE
+            searchNothing.visibility = View.VISIBLE
+            savedSearchWordRecyclerView.visibility = View.GONE
         } else {
             adapter.searchDataList = searchDataList
-            recyclerView.visibility = android.view.View.VISIBLE
-            searchNothing.visibility = android.view.View.GONE
+            recyclerView.visibility = View.VISIBLE
+            searchNothing.visibility = View.GONE
+            savedSearchWordRecyclerView.visibility = View.VISIBLE
         }
         adapter.notifyDataSetChanged()
     }
@@ -163,11 +156,13 @@ class MainActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
 
         if (filteredList.isEmpty()) {
-            recyclerView.visibility = android.view.View.GONE
-            searchNothing.visibility = android.view.View.VISIBLE
+            recyclerView.visibility = View.GONE
+            searchNothing.visibility = View.VISIBLE
+            savedSearchWordRecyclerView.visibility = View.GONE
         } else {
-            recyclerView.visibility = android.view.View.VISIBLE
-            searchNothing.visibility = android.view.View.GONE
+            recyclerView.visibility = View.VISIBLE
+            searchNothing.visibility = View.GONE
+            savedSearchWordRecyclerView.visibility = View.VISIBLE
         }
     }
 
@@ -175,6 +170,48 @@ class MainActivity : AppCompatActivity() {
         savedSearchList = db.getAllSavedWords().toMutableList()
         savedSearchAdapter.savedSearchList = savedSearchList
         savedSearchAdapter.notifyDataSetChanged()
+    }
+
+    private fun itemClickSaveWord() {
+        adapter.setItemClickListener(object : SearchAdapter.OnItemClickListener {
+            override fun onClick(v: View, position: Int) {
+                val searchData = adapter.searchDataList[position]
+                Toast.makeText(this@MainActivity, "Clicked: ${searchData.name}", Toast.LENGTH_SHORT)
+                    .show()
+
+                val wDb = db.writableDatabase
+                val values = ContentValues()
+
+                values.put(SearchData.SAVED_SEARCH_COLUMN_NAME, searchData.name)
+                wDb.insert(SearchData.SAVED_SEARCH_TABLE_NAME, null, values)
+                values.clear()
+                savedSearchList = db.getAllSavedWords().toMutableList()
+                savedSearchAdapter.savedSearchList = savedSearchList
+                savedSearchAdapter.notifyDataSetChanged()
+            }
+        })
+    }
+
+    private fun deleteItem() {
+        savedSearchAdapter.setOnDeleteClickListener(object :
+            SavedSearchAdapter.OnDeleteClickListener {
+            override fun onDeleteClick(position: Int) {
+                val deletedWord = savedSearchAdapter.savedSearchList[position]
+                Toast.makeText(this@MainActivity, "Deleted: $deletedWord", Toast.LENGTH_SHORT)
+                    .show()
+
+                val wDb = db.writableDatabase
+                wDb.delete(
+                    SearchData.SAVED_SEARCH_TABLE_NAME,
+                    "${SearchData.SAVED_SEARCH_COLUMN_NAME} = ?",
+                    arrayOf(deletedWord)
+                )
+
+                savedSearchAdapter.savedSearchList.removeAt(position)
+                savedSearchAdapter.notifyItemRemoved(position)
+
+            }
+        })
     }
 
 }

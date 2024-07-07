@@ -9,7 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 
 class SavedSearchAdapter() : RecyclerView.Adapter<SavedSearchAdapter.ViewHolder>() {
 
-    var savedSearchList: List<String> = emptyList()
+    private lateinit var itemClickListener: OnDeleteClickListener
+    var savedSearchList: MutableList<String> = mutableListOf()
+
+    interface OnDeleteClickListener {
+        fun onDeleteClick(position: Int)
+    }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val savedWord: TextView = view.findViewById(R.id.savedWord)
@@ -17,12 +22,19 @@ class SavedSearchAdapter() : RecyclerView.Adapter<SavedSearchAdapter.ViewHolder>
 
         fun bind(savedWord: String) {
             this.savedWord.text = savedWord
+            deleteSavedWord.setOnClickListener {
+                val position = bindingAdapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    itemClickListener.onDeleteClick(position)
+                }
+            }
         }
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_save_word, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_save_word, parent, false)
         return ViewHolder(view)
     }
 
@@ -34,4 +46,7 @@ class SavedSearchAdapter() : RecyclerView.Adapter<SavedSearchAdapter.ViewHolder>
         holder.bind(savedSearchList[position])
     }
 
+    fun setOnDeleteClickListener(listener: OnDeleteClickListener) {
+        this.itemClickListener = listener
+    }
 }
