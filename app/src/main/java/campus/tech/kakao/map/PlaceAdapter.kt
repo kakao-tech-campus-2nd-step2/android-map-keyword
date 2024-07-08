@@ -4,12 +4,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 class PlaceAdapter(
-	val placeList: List<Place>,
 	val onItemClicked: (Place) -> Unit
-): RecyclerView.Adapter<PlaceAdapter.ViewHolder>() {
+): ListAdapter<Place, PlaceAdapter.ViewHolder>(
+	object : DiffUtil.ItemCallback<Place>(){
+		override fun areItemsTheSame(oldItem: Place, newItem: Place): Boolean {
+			return (oldItem.name == newItem.name)
+					&& (oldItem.address == newItem.address)
+					&& (oldItem.type == newItem.type)
+		}
+
+		override fun areContentsTheSame(oldItem: Place, newItem: Place): Boolean {
+			return oldItem == newItem
+		}
+
+	}
+) {
+	private var placeClicked = { position:Int ->
+		val place:Place = getItem(position)
+		onItemClicked(place)
+	}
 	inner class ViewHolder(
 		itemView: View
 	): RecyclerView.ViewHolder(itemView) {
@@ -18,9 +36,7 @@ class PlaceAdapter(
 		val type:TextView = itemView.findViewById(R.id.type)
 		init {
 			itemView.setOnClickListener {
-				val position:Int = bindingAdapterPosition
-				val place:Place = placeList[position]
-				onItemClicked(place)
+				placeClicked(bindingAdapterPosition)
 			}
 		}
 	}
@@ -29,14 +45,11 @@ class PlaceAdapter(
 		return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.place_item, parent, false))
 	}
 
-	override fun getItemCount(): Int {
-		return placeList.size
-	}
-
 	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-		holder.name.text = placeList[position].name
-		holder.address.text = placeList[position].address
-		holder.type.text = placeList[position].type
+		val place:Place = getItem(position)
+		holder.name.text = place.name
+		holder.address.text = place.address
+		holder.type.text = place.type
 	}
 }
 

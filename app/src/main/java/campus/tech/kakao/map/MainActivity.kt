@@ -19,6 +19,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var noResult: TextView
     private lateinit var searchResult: RecyclerView
     private lateinit var searchWordResult: RecyclerView
+    private lateinit var placeAdapter: PlaceAdapter
+    private lateinit var wordAdapter: WordAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,9 +48,11 @@ class MainActivity : AppCompatActivity() {
             }else{
                 noResult.visibility = View.GONE
                 searchResult.visibility = View.VISIBLE
-                searchResult.adapter = PlaceAdapter(it){ Place ->
+                placeAdapter = PlaceAdapter(){ Place ->
                     model.addWord(Place)
                 }
+                placeAdapter.submitList(it)
+                searchResult.adapter = placeAdapter
             }
         })
         model.loadWord()
@@ -58,11 +62,13 @@ class MainActivity : AppCompatActivity() {
             }
             else{
                 searchWordResult.visibility = View.VISIBLE
-                searchWordResult.adapter = WordAdapter(it) { SearchWord ->
+                wordAdapter = WordAdapter() { SearchWord ->
                     model.deleteWord(
                         SearchWord
                     )
                 }
+                wordAdapter.submitList(it)
+                searchWordResult.adapter = wordAdapter
             }
         })
 

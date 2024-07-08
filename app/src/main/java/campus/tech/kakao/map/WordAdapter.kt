@@ -5,12 +5,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 class WordAdapter(
-	val wordList: List<SearchWord>,
 	val onItemClicked: (SearchWord) -> Unit
-): RecyclerView.Adapter<WordAdapter.ViewHolder>() {
+): ListAdapter<SearchWord, WordAdapter.ViewHolder>(
+	object : DiffUtil.ItemCallback<SearchWord>(){
+		override fun areItemsTheSame(oldItem: SearchWord, newItem: SearchWord): Boolean {
+			return (oldItem.name == newItem.name)
+					&& (oldItem.address == newItem.address)
+					&& (oldItem.type == newItem.type)
+		}
+
+		override fun areContentsTheSame(oldItem: SearchWord, newItem: SearchWord): Boolean {
+			return oldItem == newItem
+		}
+
+	}
+) {
 	inner class ViewHolder(
 		itemView: View
 	): RecyclerView.ViewHolder(itemView) {
@@ -18,9 +32,7 @@ class WordAdapter(
 		val delete: ImageView = itemView.findViewById(R.id.x)
 		init {
 			delete.setOnClickListener {
-				val position = bindingAdapterPosition
-				val word:SearchWord = wordList[position]
-				onItemClicked(word)
+				deletedWords(bindingAdapterPosition)
 			}
 		}
 	}
@@ -29,11 +41,13 @@ class WordAdapter(
 		return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.word_item, parent, false))
 	}
 
-	override fun getItemCount(): Int {
-		return wordList.size
+	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+		val word = getItem(position)
+		holder.searchWord.text = word.name
 	}
 
-	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-		holder.searchWord.text = wordList[position].name
+	private val deletedWords = { position:Int ->
+		val word = getItem(position)
+		onItemClicked(word)
 	}
 }
