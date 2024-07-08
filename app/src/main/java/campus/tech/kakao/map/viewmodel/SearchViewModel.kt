@@ -33,4 +33,8 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     fun showSavePlace() {
         _savePlaces.value = searchRepo.showSavePlace()
     }
+
+    fun deleteSavedPlace(savedPlaceName: String) {
+        searchRepo.deleteSavedPlace(savedPlaceName)
+    }
 }

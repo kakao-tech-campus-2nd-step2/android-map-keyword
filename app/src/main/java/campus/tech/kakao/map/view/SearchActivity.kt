@@ -51,7 +51,10 @@ class SearchActivity : AppCompatActivity() {
         saveRecyclerView.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         viewModel.savePlaces.observe(this) { savePlaces ->
-            savePlaceAdapter = SavePlaceAdapter(savePlaces)
+            savePlaceAdapter = SavePlaceAdapter(savePlaces) {
+                viewModel.deleteSavedPlace(it.savePlace)
+                viewModel.showSavePlace()
+            }
             saveRecyclerView.adapter = savePlaceAdapter
         }
 

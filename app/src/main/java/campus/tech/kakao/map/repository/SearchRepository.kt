@@ -147,4 +147,26 @@ class SearchRepository(context: Context) {
         return savePlaces
     }
 
+    fun deleteSavedPlace(savedPlaceName: String) {
+        val db: SQLiteDatabase = dbHelper.writableDatabase
+
+        val cursor = db.query(
+            PlaceContract.SavePlaceEntry.TABLE_NAME,
+            arrayOf(PlaceContract.SavePlaceEntry.COLUMN_PLACE_NAME),
+            "${PlaceContract.SavePlaceEntry.COLUMN_PLACE_NAME} = ?",
+            arrayOf(savedPlaceName),
+            null,
+            null,
+            null
+        )
+
+        if (cursor.moveToFirst()) {
+            db.delete(
+                PlaceContract.SavePlaceEntry.TABLE_NAME,
+                "${PlaceContract.SavePlaceEntry.COLUMN_PLACE_NAME} = ?",
+                arrayOf(savedPlaceName)
+            )
+        }
+        cursor.close()
+    }
 }
