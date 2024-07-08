@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +10,11 @@ import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 
-class PlaceAdapter(var items: List<Place>, val inflater: LayoutInflater): RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder>() {
+class PlaceAdapter(var items: List<Place>, val inflater: LayoutInflater, var itemClickListener: OnItemClickListener): RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder>() {
 
     interface OnItemClickListener {
         fun onItemClick(position: Int) {}
     }
-    var itemClickListener: OnItemClickListener? = null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -54,7 +54,7 @@ class PlaceAdapter(var items: List<Place>, val inflater: LayoutInflater): Recycl
             category = itemView.findViewById<TextView>(R.id.category)
 
             itemView.setOnClickListener {
-                itemClickListener?.onItemClick(absoluteAdapterPosition)
+                itemClickListener.onItemClick(absoluteAdapterPosition)
             }
         }
     }

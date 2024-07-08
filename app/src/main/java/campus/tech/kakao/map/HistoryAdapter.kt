@@ -8,14 +8,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.databinding.SearchHistoryItemBinding
 
-class HistoryAdapter(var items: List<SearchHistory>, val inflater: LayoutInflater) : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
+class HistoryAdapter(var items: List<SearchHistory>, val inflater: LayoutInflater, var itemClickListener: OnItemClickListener) : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
 
     interface OnItemClickListener {
         fun onItemClick(position: Int)
         fun onXMarkClick(position: Int)
     }
-
-    var itemClickListener: OnItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
         val binding = SearchHistoryItemBinding.inflate(inflater, parent, false)
@@ -36,18 +34,17 @@ class HistoryAdapter(var items: List<SearchHistory>, val inflater: LayoutInflate
     }
 
     inner class HistoryViewHolder(private val binding: SearchHistoryItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(searchHistory: SearchHistory) {
-            binding.history.text = searchHistory.searchHistory
-        }
-
         init {
             itemView.setOnClickListener {
-                itemClickListener?.onItemClick(absoluteAdapterPosition)
+                itemClickListener.onItemClick(absoluteAdapterPosition)
             }
 
             binding.xmark.setOnClickListener {
-                itemClickListener?.onXMarkClick(absoluteAdapterPosition)
+                itemClickListener.onXMarkClick(absoluteAdapterPosition)
             }
+        }
+        fun bind(searchHistory: SearchHistory) {
+            binding.history.text = searchHistory.searchHistory
         }
     }
 }

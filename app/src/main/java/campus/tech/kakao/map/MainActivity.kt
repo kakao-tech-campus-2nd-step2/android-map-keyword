@@ -17,21 +17,46 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val placeAdapter: PlaceAdapter by lazy {
-        PlaceAdapter(placeList, LayoutInflater.from(this@MainActivity))
+        PlaceAdapter(placeList,
+            LayoutInflater.from(this@MainActivity),
+            object :
+               PlaceAdapter.OnItemClickListener {
+                override fun onItemClick(position: Int) {
+                    val item = placeAdapter.getItem(position)
+                    val searchHistory = SearchHistory(item.name)
+                    viewModel.saveSearchHistory(searchHistory)
+                }
+            }
+            )
     }
+
     private val historyAdapter: HistoryAdapter by lazy {
         HistoryAdapter(
             viewModel.searchHistoryList.value ?: emptyList(),
-            LayoutInflater.from(this@MainActivity)
+            LayoutInflater.from(this@MainActivity),
+            object : HistoryAdapter.OnItemClickListener {
+                override fun onItemClick(position: Int) {
+                    val item = viewModel.searchHistoryList.value?.get(position)
+                    if (item != null) {
+                        mainBinding.search.setText(item.searchHistory)
+                    }
+                }
+
+                override fun onXMarkClick(position: Int) {
+                    viewModel.deleteSearchHistory(position)
+                }
+            }
         )
     }
+
+    private lateinit var mainBinding: ActivityMainBinding
+
 
     private var placeList: List<Place> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val mainBinding = ActivityMainBinding.inflate(layoutInflater)
+        mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
 
         if (placeList.isNullOrEmpty()) {
@@ -58,27 +83,6 @@ class MainActivity : AppCompatActivity() {
         mainBinding.searchHistory.apply {
             layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
             adapter = historyAdapter
-        }
-
-        placeAdapter.itemClickListener = object : PlaceAdapter.OnItemClickListener {
-            override fun onItemClick(position: Int) {
-                val item = placeAdapter.getItem(position)
-                val searchHistory = SearchHistory(item.name)
-                viewModel.saveSearchHistory(searchHistory)
-            }
-        }
-
-        historyAdapter.itemClickListener = object : HistoryAdapter.OnItemClickListener {
-            override fun onItemClick(position: Int) {
-                val item = viewModel.searchHistoryList.value?.get(position)
-                if (item != null) {
-                    mainBinding.search.setText(item.searchHistory)
-                }
-            }
-
-            override fun onXMarkClick(position: Int) {
-                viewModel.deleteSearchHistory(position)
-            }
         }
     }
 
