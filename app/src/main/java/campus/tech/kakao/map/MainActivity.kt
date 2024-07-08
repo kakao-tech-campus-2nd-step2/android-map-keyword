@@ -1,6 +1,5 @@
 package campus.tech.kakao.map
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.databinding.ActivityMainBinding
 import campus.tech.kakao.map.databinding.ItemPlaceBinding
@@ -78,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         repeat(20) { idx ->
             placeViewModel.insertPlace(
                 Place(
-                    name = category + (idx + 1),
+                    name = "$category ${idx + 1}",
                     address = "$address ${idx + 1}",
                     category = category,
                 ),
@@ -101,11 +102,7 @@ class MainActivity : AppCompatActivity() {
     private fun setSearchEditText() {
         binding.searchEditText.addTextChangedListener { editable ->
             val searchText = editable.toString().trim()
-            if (searchText.isNotEmpty()) {
-                placeViewModel.searchPlacesByCategory(searchText)
-            } else {
-                placeViewModel.searchPlacesByCategory("")
-            }
+            placeViewModel.searchPlacesByCategory(searchText)
         }
     }
 
@@ -146,48 +143,42 @@ class MainActivity : AppCompatActivity() {
     }
 
     class ResultRecyclerViewAdapter(private val clickListener: OnPlaceItemClickListener) :
-        RecyclerView.Adapter<ResultRecyclerViewAdapter.PlaceViewHolder>() {
-        private var searchResultList: List<Place> = emptyList()
-
-        /**
-         * RecyclerView에 표시할 장소 리스트를 설정하는 함수.
-         *
-         * @param places 장소 리스트
-         */
-        @SuppressLint("NotifyDataSetChanged")
-        fun setPlaces(places: List<Place>) {
-            searchResultList = places
-            notifyDataSetChanged()
-        }
-
+        ListAdapter<Place, ResultRecyclerViewAdapter.PlaceViewHolder>(PlaceDiffCallback()) {
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int,
         ): PlaceViewHolder {
-            val binding =
-                ItemPlaceBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            val binding = ItemPlaceBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return PlaceViewHolder(binding)
-        }
-
-        override fun getItemCount(): Int {
-            return searchResultList.size
         }
 
         override fun onBindViewHolder(
             holder: PlaceViewHolder,
             position: Int,
         ) {
-            val place = searchResultList[position]
-            holder.bind(place)
+            val place = getItem(position)
+
+            holder.binding.place = place
             holder.itemView.setOnClickListener {
                 clickListener.onPlaceItemClicked(place)
             }
         }
 
-        class PlaceViewHolder(private val binding: ItemPlaceBinding) :
-            RecyclerView.ViewHolder(binding.root) {
-            fun bind(place: Place) {
-                binding.place = place
+        class PlaceViewHolder(val binding: ItemPlaceBinding) : RecyclerView.ViewHolder(binding.root)
+
+        private class PlaceDiffCallback : DiffUtil.ItemCallback<Place>() {
+            override fun areItemsTheSame(
+                oldItem: Place,
+                newItem: Place,
+            ): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(
+                oldItem: Place,
+                newItem: Place,
+            ): Boolean {
+                return oldItem == newItem
             }
         }
     }
@@ -215,56 +206,43 @@ class MainActivity : AppCompatActivity() {
     }
 
     class SavedSearchWordRecyclerViewAdapter(private val clickListener: OnSavedSearchWordClearImageViewClickListener) :
-        RecyclerView.Adapter<SavedSearchWordRecyclerViewAdapter.SavedSearchWordViewHolder>() {
-        private var savedSearchWordList: List<SavedSearchWord> = emptyList()
-
-        /**
-         * RecyclerView에 표시할 저장된 검색어 리스트를 설정하는 함수.
-         *
-         * @param savedSearchWords 저장된 검색어 리스트
-         */
-        @SuppressLint("NotifyDataSetChanged")
-        fun setSavedSearchWords(savedSearchWords: List<SavedSearchWord>) {
-            savedSearchWordList = savedSearchWords
-            notifyDataSetChanged()
-        }
-
+        ListAdapter<SavedSearchWord, SavedSearchWordRecyclerViewAdapter.SavedSearchWordViewHolder>(SavedSearchWordDiffCallback()) {
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int,
         ): SavedSearchWordViewHolder {
-            val binding =
-                ItemSavedSearchWordBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false,
-                )
-            return SavedSearchWordViewHolder(binding, clickListener)
-        }
-
-        override fun getItemCount(): Int {
-            return savedSearchWordList.size
+            val binding = ItemSavedSearchWordBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return SavedSearchWordViewHolder(binding)
         }
 
         override fun onBindViewHolder(
             holder: SavedSearchWordViewHolder,
             position: Int,
         ) {
-            val savedSearchWord = savedSearchWordList[position]
-            holder.bind(savedSearchWord)
+            val savedSearchWord = getItem(position)
+            holder.binding.savedSearchWord = savedSearchWord
+            holder.itemView.setOnClickListener {
+                clickListener.onSavedSearchWordClearImageViewClicked(savedSearchWord)
+            }
         }
 
         class SavedSearchWordViewHolder(
-            private val binding: ItemSavedSearchWordBinding,
-            private val clickListener: OnSavedSearchWordClearImageViewClickListener,
-        ) :
-            RecyclerView.ViewHolder(binding.root) {
-            fun bind(savedSearchWord: SavedSearchWord) {
-                binding.savedSearchWord = savedSearchWord
+            val binding: ItemSavedSearchWordBinding,
+        ) : RecyclerView.ViewHolder(binding.root)
 
-                binding.savedSearchWordClearImageView.setOnClickListener {
-                    clickListener.onSavedSearchWordClearImageViewClicked(savedSearchWord)
-                }
+        private class SavedSearchWordDiffCallback : DiffUtil.ItemCallback<SavedSearchWord>() {
+            override fun areItemsTheSame(
+                oldItem: SavedSearchWord,
+                newItem: SavedSearchWord,
+            ): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(
+                oldItem: SavedSearchWord,
+                newItem: SavedSearchWord,
+            ): Boolean {
+                return oldItem == newItem
             }
         }
     }
@@ -284,11 +262,7 @@ class MainActivity : AppCompatActivity() {
         placeViewModel.searchResults.observe(
             this,
         ) { places ->
-            if (places.isNotEmpty()) {
-                (binding.searchResultRecyclerView.adapter as ResultRecyclerViewAdapter).setPlaces(
-                    places,
-                )
-            }
+            (binding.searchResultRecyclerView.adapter as? ResultRecyclerViewAdapter)?.submitList(places)
         }
     }
 
@@ -299,11 +273,7 @@ class MainActivity : AppCompatActivity() {
         savedSearchWordViewModel.savedSearchWords.observe(
             this,
         ) { savedSearchWords ->
-            if (savedSearchWords.isNotEmpty()) {
-                (binding.savedSearchWordRecyclerView.adapter as SavedSearchWordRecyclerViewAdapter).setSavedSearchWords(
-                    savedSearchWords,
-                )
-            }
+            (binding.savedSearchWordRecyclerView.adapter as? SavedSearchWordRecyclerViewAdapter)?.submitList(savedSearchWords)
         }
     }
 }
