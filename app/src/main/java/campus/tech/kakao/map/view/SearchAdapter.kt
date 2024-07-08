@@ -1,6 +1,5 @@
 package campus.tech.kakao.map.view
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,14 +9,27 @@ import campus.tech.kakao.map.R
 import campus.tech.kakao.map.model.Place
 
 class SearchAdapter(
-    private val places: List<Place>
+    private val places: List<Place>,
+    private val onItemClickListener: (Place) -> Unit
 ) :
     RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
-    class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val nameTextView: TextView = itemView.findViewById(R.id.placeName)
-        val addressTextView: TextView = itemView.findViewById(R.id.placeAddress)
-        val categoryTextView: TextView = itemView.findViewById(R.id.placeCategory)
+    class SearchViewHolder(
+        itemView: View,
+        private val onItemClickListener: (Place) -> Unit
+    ) : RecyclerView.ViewHolder(itemView) {
+        private val nameTextView: TextView = itemView.findViewById(R.id.placeName)
+        private val addressTextView: TextView = itemView.findViewById(R.id.placeAddress)
+        private val categoryTextView: TextView = itemView.findViewById(R.id.placeCategory)
+
+        fun bind(place: Place) {
+            nameTextView.text = place.name
+            addressTextView.text = place.address
+            categoryTextView.text = place.category
+            itemView.setOnClickListener {
+                onItemClickListener(place)
+            }
+        }
     }
 
     override fun onCreateViewHolder(
@@ -25,14 +37,12 @@ class SearchAdapter(
         viewType: Int
     ): SearchViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.place_item, parent, false)
-        return SearchViewHolder(view)
+        return SearchViewHolder(view, onItemClickListener)
     }
 
-    override fun onBindViewHolder(holder: SearchAdapter.SearchViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
         val place = places[position]
-        holder.nameTextView.text = place.name
-        holder.addressTextView.text = place.address
-        holder.categoryTextView.text = place.category
+        holder.bind(place)
     }
 
     override fun getItemCount(): Int {

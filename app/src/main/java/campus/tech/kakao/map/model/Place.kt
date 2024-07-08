@@ -5,6 +5,4 @@ data class Place(
     val address: String,
     val category: String
 )
-data class SavePlace (
-    val savePlace: String
-)
+

@@ -7,13 +7,15 @@
         android:id="@+id/saveCancelBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/cancel_btn" />
+        android:src="@drawable/cancel_btn"
+        android:contentDescription="@string/deleteSavePlace" />
+
     <TextView
+        android:id="@+id/savePlace"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:text="@string/saveplace"
-        android:textSize="20sp"
-        android:id="@+id/savePlace"/>
+        android:textSize="20sp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

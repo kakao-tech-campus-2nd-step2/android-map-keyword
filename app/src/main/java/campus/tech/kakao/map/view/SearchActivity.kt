@@ -40,7 +40,9 @@ class SearchActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         viewModel.places.observe(this) { places ->
-            searchAdapter = SearchAdapter(places)
+            searchAdapter = SearchAdapter(places) {
+                viewModel.savePlaces(it.name)
+            }
             recyclerView.adapter = searchAdapter
             updateViewVisibility(places.isNotEmpty())
         }

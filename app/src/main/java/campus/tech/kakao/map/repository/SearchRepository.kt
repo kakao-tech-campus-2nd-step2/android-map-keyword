@@ -85,4 +85,32 @@ class SearchRepository(context: Context) {
         return places
     }
 
+
+    fun savePlaces(placeName: String) {
+        val db: SQLiteDatabase = dbHelper.writableDatabase
+        val values = ContentValues()
+        values.put(PlaceContract.SavePlaceEntry.COLUMN_PLACE_NAME, placeName)
+
+        val cursor = db.query(
+            PlaceContract.SavePlaceEntry.TABLE_NAME,
+            arrayOf(PlaceContract.SavePlaceEntry.COLUMN_PLACE_NAME),
+            "${PlaceContract.SavePlaceEntry.COLUMN_PLACE_NAME} = ?",
+            arrayOf(placeName),
+            null,
+            null,
+            null
+        )
+
+        if (cursor.moveToFirst()) {
+            db.delete(
+                PlaceContract.SavePlaceEntry.TABLE_NAME,
+                "${PlaceContract.SavePlaceEntry.COLUMN_PLACE_NAME} = ?",
+                arrayOf(placeName)
+            )
+        }
+        cursor.close()
+
+        db.insert(PlaceContract.SavePlaceEntry.TABLE_NAME, null, values)
+    }
+
 }
