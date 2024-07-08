@@ -7,7 +7,6 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -22,7 +21,7 @@ class DataSearchActivity : AppCompatActivity() {
     private lateinit var resultDataAdapter:SearchDataAdapter
     private lateinit var resultData: List<SearchData>
     private lateinit var searchDataListView: RecyclerView
-    private lateinit var recentSearchListView: ListView
+    private lateinit var recentSearchListView: RecyclerView
     private lateinit var noResultNotice: TextView
     private lateinit var deleteBtn: ImageButton
 
@@ -49,6 +48,7 @@ class DataSearchActivity : AppCompatActivity() {
 
         //검색 결과 목록 세로 스크롤 설정
         searchDataListView.layoutManager = LinearLayoutManager(this)
+        recentSearchListView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         //어뎁터 초기화
         resultDataAdapter = SearchDataAdapter(emptyList(), recentViewModel)
         searchDataListView.adapter = resultDataAdapter
