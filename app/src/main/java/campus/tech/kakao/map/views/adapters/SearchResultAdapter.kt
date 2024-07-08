@@ -32,7 +32,6 @@ class SearchResultDiffUtil(
 }
 
 class SearchResultAdapter(
-    private val inflater: LayoutInflater,
     val onItemClicked: ((item: SearchResult, index: Int) -> Unit)
 ) :
     RecyclerView.Adapter<SearchResultAdapter.SearchResultViewHolder>() {
@@ -60,7 +59,7 @@ class SearchResultAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
-        val view = inflater.inflate(R.layout.item_search_result, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_search_result, parent, false)
         val holder = SearchResultViewHolder(view)
         view.setOnClickListener {
             onItemClicked(

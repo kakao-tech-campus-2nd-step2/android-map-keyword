@@ -36,7 +36,7 @@ class SearchResultFragment : Fragment() {
     private fun initiateRecyclerView(view: View) {
         searchResultRecyclerView = view.findViewById(R.id.list_search_result)
         searchResultRecyclerView.adapter =
-            SearchResultAdapter(LayoutInflater.from(activity)) { item: SearchResult, _: Int ->
+            SearchResultAdapter { item: SearchResult, _: Int ->
                 viewModel.clickSearchResultItem(item)
             }
         searchResultRecyclerView.layoutManager =
