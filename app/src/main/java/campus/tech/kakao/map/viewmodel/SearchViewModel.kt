@@ -18,7 +18,7 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
         searchRepo.insertPlaceDummyData(name, address, category)
     }
 
-    fun searchPlaces(placeName: String) {
-        _places.value = searchRepo.getSearchPlaces(placeName)
+    fun searchPlaces(placeCategory: String) {
+        _places.value = searchRepo.getSearchPlaces(placeCategory)
     }
 }

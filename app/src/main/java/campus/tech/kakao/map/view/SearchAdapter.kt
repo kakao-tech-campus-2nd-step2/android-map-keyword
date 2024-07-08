@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.model.Place
 
-class SearchAdapter(private val places: List<Place>) :
+class SearchAdapter(
+    private val places: List<Place>
+) :
     RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
     class SearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

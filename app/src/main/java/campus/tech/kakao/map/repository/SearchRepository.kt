@@ -45,13 +45,13 @@ class SearchRepository(context: Context) {
         }
     }
 
-    fun getSearchPlaces(placeName: String): MutableList<Place> {
+    fun getSearchPlaces(placeCategory: String): MutableList<Place> {
         val db: SQLiteDatabase = dbHelper.readableDatabase
         val places = mutableListOf<Place>()
         var cursor: Cursor? = null
         try {
-            val selection = "${PlaceContract.PlaceEntry.COLUMN_PLACE_NAME} LIKE ?"
-            val selectionArgs = arrayOf("$placeName%")
+            val selection = "${PlaceContract.PlaceEntry.COLUMN_PLACE_CATEGORY} LIKE ?"
+            val selectionArgs = arrayOf("$placeCategory%")
 
             cursor = db.query(
                 PlaceContract.PlaceEntry.TABLE_NAME,
