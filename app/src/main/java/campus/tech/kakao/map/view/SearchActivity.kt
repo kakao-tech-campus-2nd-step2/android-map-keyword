@@ -21,6 +21,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var noSearchLayout: LinearLayout
     private lateinit var searchAdapter: SearchAdapter
+    private lateinit var saveRecyclerView: RecyclerView
+    private lateinit var savePlaceAdapter: SavePlaceAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,25 +32,39 @@ class SearchActivity : AppCompatActivity() {
             this,
             ViewModelProvider.AndroidViewModelFactory.getInstance(application)
         )[SearchViewModel::class.java]
-        editText = findViewById<EditText>(R.id.searchText)
-        cancelBtn = findViewById<ImageView>(R.id.cancelBtn)
-        recyclerView = findViewById(R.id.searchPlaceView)
-        noSearchLayout = findViewById(R.id.noSearch)
 
+        findViews()
         setCancelBtnClickListener()
         editTextWatcher()
+        viewModel.showSavePlace()
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         viewModel.places.observe(this) { places ->
             searchAdapter = SearchAdapter(places) {
                 viewModel.savePlaces(it.name)
+                viewModel.showSavePlace()
             }
             recyclerView.adapter = searchAdapter
             updateViewVisibility(places.isNotEmpty())
         }
 
+        saveRecyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        viewModel.savePlaces.observe(this) { savePlaces ->
+            savePlaceAdapter = SavePlaceAdapter(savePlaces)
+            saveRecyclerView.adapter = savePlaceAdapter
+        }
+
         viewModel.insertDummyData("카페", "대전 유성구 궁동", "카페")
         viewModel.insertDummyData("약국", "대전 유성구 봉명동", "약국")
+    }
+
+    private fun findViews() {
+        editText = findViewById<EditText>(R.id.searchText)
+        cancelBtn = findViewById<ImageView>(R.id.cancelBtn)
+        recyclerView = findViewById(R.id.searchPlaceView)
+        noSearchLayout = findViewById(R.id.noSearch)
+        saveRecyclerView = findViewById(R.id.savePlaceView)
     }
 
     private fun editTextWatcher() {
@@ -56,7 +72,7 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(s.isNullOrEmpty()) {
+                if (s.isNullOrEmpty()) {
                     updateViewVisibility(false)
                 } else {
                     viewModel.searchPlaces(s.toString())
@@ -83,4 +99,7 @@ class SearchActivity : AppCompatActivity() {
             noSearchLayout.visibility = View.VISIBLE
         }
     }
+
+
+
 }

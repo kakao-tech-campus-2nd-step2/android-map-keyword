@@ -7,4 +7,5 @@
     <string name="placeAddress">장소</string>
     <string name="placeCategory">카테고리</string>
     <string name="saveplace">장소</string>
+    <string name="deleteSavePlace">검색기록삭제</string>
 </resources>

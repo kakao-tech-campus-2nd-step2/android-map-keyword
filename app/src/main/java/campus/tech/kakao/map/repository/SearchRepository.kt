@@ -8,6 +8,7 @@ import android.util.Log
 import campus.tech.kakao.map.model.Place
 import campus.tech.kakao.map.model.PlaceContract
 import campus.tech.kakao.map.model.PlaceDBHelper
+import campus.tech.kakao.map.model.SavePlace
 
 class SearchRepository(context: Context) {
     private val dbHelper = PlaceDBHelper(context)
@@ -111,6 +112,39 @@ class SearchRepository(context: Context) {
         cursor.close()
 
         db.insert(PlaceContract.SavePlaceEntry.TABLE_NAME, null, values)
+    }
+
+    fun showSavePlace(): MutableList<SavePlace> {
+        val db: SQLiteDatabase = dbHelper.readableDatabase
+        val savePlaces = mutableListOf<SavePlace>()
+        var cursor: Cursor? = null
+        try {
+            cursor = db.query(
+                PlaceContract.SavePlaceEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            )
+
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    val name =
+                        cursor.getString(cursor.getColumnIndexOrThrow(PlaceContract.SavePlaceEntry.COLUMN_PLACE_NAME))
+
+                    savePlaces.add(SavePlace(name))
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("ddangcong80", "Error", e)
+        } finally {
+            cursor?.close()
+            db.close()
+        }
+
+        return savePlaces
     }
 
 }
