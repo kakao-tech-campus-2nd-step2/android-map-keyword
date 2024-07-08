@@ -11,12 +11,14 @@ class MainViewModel(private val placeRepository: PlaceRepository) : ViewModel() 
 
     private var _placeList = MutableLiveData<List<Place>>()
     private val _searchHistoryList = MutableLiveData<List<SearchHistory>>()
-
-    val searchHistoryList: LiveData<List<SearchHistory>>
-        get() = _searchHistoryList
+    
     init {
         _searchHistoryList.value = searchRepository.getSearchHistory()
     }
+
+    val searchHistoryList: LiveData<List<SearchHistory>>
+        get() = _searchHistoryList
+
     val placeList: LiveData<List<Place>>
         get() = _placeList
 
