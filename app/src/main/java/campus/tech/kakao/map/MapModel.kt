@@ -7,10 +7,6 @@ import android.database.Cursor
 class MapModel(mContext: Context) {
     private val helper: MapDbHelper = MapDbHelper(mContext)
 
-    init {
-        helper.readableDatabase
-    }
-
     fun insertLocation(location: Location) {
         val writableDb = helper.writableDatabase
         val content = ContentValues()
