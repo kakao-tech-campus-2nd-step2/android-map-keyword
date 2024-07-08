@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setRecyclerView() {
-        locationAdapter = LocationAdapter(locationList, LayoutInflater.from(this)) { locationData ->
+        locationAdapter = LocationAdapter(locationList) { locationData ->
             onItemClick(locationData)
         }
         recyclerView.adapter = locationAdapter

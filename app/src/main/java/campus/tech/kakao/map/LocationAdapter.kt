@@ -7,12 +7,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class LocationAdapter(
-    var locationList: ArrayList<LocationData>,
-    var inflater: LayoutInflater,
+    val locationList: List<LocationData>,
     private val onItemClick: (LocationData) -> Unit // 콜백 함수
     ): RecyclerView.Adapter<LocationAdapter.ViewHolder>() {
 
-    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val name_text_view: TextView
         val location_text_view: TextView
         val category_text_view: TextView
@@ -25,6 +24,7 @@ class LocationAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.item_view, parent, false)
         return ViewHolder(view)
     }
