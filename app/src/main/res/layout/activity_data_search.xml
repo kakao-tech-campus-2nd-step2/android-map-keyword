@@ -36,7 +36,7 @@
         app:layout_constraintWidth_percent="0.1" />
 
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recentSearchListView"
         android:layout_width="0dp"
         android:layout_height="50dp"
