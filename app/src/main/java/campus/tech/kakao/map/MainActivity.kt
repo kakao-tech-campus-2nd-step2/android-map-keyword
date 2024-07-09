@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        adapter.setOnItemClickListener(object :Adapter.OnItemClickListener {
+        adapter.setOnItemClickListener(object : Adapter.OnItemClickListener {
             override fun onItemClick(name: String) {
                 if (isProfileInSearchSave(name)) {
                     removeSavedItem(name)
@@ -62,11 +62,12 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        btnClose.setOnClickListener{
+        btnClose.setOnClickListener {
             etSearch.text.clear()
         }
         loadSavedItems()
     }
+
     override fun onPause() {
         super.onPause()
         saveSavedItems()
@@ -87,7 +88,7 @@ class MainActivity : AppCompatActivity() {
         editor.apply()
     }
 
-    fun loadSavedItems(){
+    fun loadSavedItems() {
         val sharedPreferences = getSharedPreferences("SavedItems", MODE_PRIVATE)
         val savedNamesString = sharedPreferences.getString("savedNames", "[]")
         val savedNames = JSONArray(savedNamesString)
@@ -96,7 +97,6 @@ class MainActivity : AppCompatActivity() {
             addSavedItem(name)
         }
     }
-
 
     fun searchProfiles(query: String) {
         if (query.isEmpty()) {
@@ -112,6 +112,7 @@ class MainActivity : AppCompatActivity() {
             adapter.updateProfiles(profileList)
         }
     }
+
     fun addSavedItem(name: String) {
         val savedView = LayoutInflater.from(this)
             .inflate(R.layout.search_save, llSave, false) as ConstraintLayout
@@ -128,6 +129,7 @@ class MainActivity : AppCompatActivity() {
         hScrollView.visibility = View.VISIBLE
         scrollToEndOfSearchSave()
     }
+
     fun removeSavedItem(name: String) {
         for (i in 0 until llSave.childCount) {
             val savedView = llSave.getChildAt(i) as? ConstraintLayout
@@ -138,6 +140,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
     fun isProfileInSearchSave(name: String): Boolean {
         for (i in 0 until llSave.childCount) {
             val savedView = llSave.getChildAt(i) as? ConstraintLayout
