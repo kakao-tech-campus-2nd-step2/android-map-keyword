@@ -1,6 +1,17 @@
+
+
+//KAKAO_API_KEY = "d5e705ccc935d1ff62432eccedd3e02a"
+//KAKAO_REST_API_KEY = "aa23edc0dd8f4cc31ed3c9245040e78d"
+//val key = getString(R.string.kakao_api_key)
+//BuildConfig.KAKAO_REST_API_KEY
+//// API 추가
+//fun getApiKey(key: String): String = gradleLocalProperties(rootDir, providers).getProperty(key)
+
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -15,6 +26,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+
+//        // API 추가
+//        resValue("string", "kakao_api_key", getApiKey("KAKAO_API_KEY"))
+//        buildConfigField("String", "KAKAO_REST_API_KEY", getApiKey("KAKAO_REST_API_KEY"))
     }
 
     buildTypes {
@@ -39,7 +55,21 @@ android {
     }
 }
 
+
 dependencies {
+    // viewModels
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1")
+    implementation ("androidx.fragment:fragment-ktx:1.5.7")
+    implementation ("androidx.activity:activity-ktx:1.7.1")
+
+    // Room components
+    implementation("androidx.room:room-runtime:2.4.3")
+    kapt("androidx.room:room-compiler:2.4.3")
+    implementation ("androidx.room:room-ktx:2.4.3")
+
+    // Retrofit 의존성 추가
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
