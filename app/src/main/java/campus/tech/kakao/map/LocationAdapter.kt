@@ -7,19 +7,22 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class LocationAdapter(
-    val locationList: List<LocationData>,
-    private val onItemClick: (LocationData) -> Unit // 콜백 함수
-    ): RecyclerView.Adapter<LocationAdapter.ViewHolder>() {
+    private val locationList: List<LocationData>,
+    private val onItemClick: (LocationData) -> Unit
+) : RecyclerView.Adapter<LocationAdapter.ViewHolder>() {
 
-    class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val name_text_view: TextView
-        val location_text_view: TextView
-        val category_text_view: TextView
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val nameTextView: TextView = itemView.findViewById(R.id.name)
+        val locationTextView: TextView = itemView.findViewById(R.id.location)
+        val categoryTextView: TextView = itemView.findViewById(R.id.category)
 
         init {
-            name_text_view = itemView.findViewById(R.id.name)
-            location_text_view = itemView.findViewById(R.id.location)
-            category_text_view = itemView.findViewById(R.id.category)
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    onItemClick(locationList[position])
+                }
+            }
         }
     }
 
@@ -32,13 +35,9 @@ class LocationAdapter(
     override fun getItemCount(): Int = locationList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val locations = locationList[position]
-        holder.name_text_view.text = locations.name
-        holder.location_text_view.text = locations.location
-        holder.category_text_view.text = locations.category
-
-        holder.itemView.setOnClickListener {
-            onItemClick(locations)
-        }
+        val location = locationList[position]
+        holder.nameTextView.text = location.name
+        holder.locationTextView.text = location.location
+        holder.categoryTextView.text = location.category
     }
 }
