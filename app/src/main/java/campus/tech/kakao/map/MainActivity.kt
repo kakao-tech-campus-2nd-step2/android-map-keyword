@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.ui.main
+package campus.tech.kakao.map
 
 import android.os.Bundle
 import android.view.View
@@ -10,18 +10,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
-import campus.tech.kakao.map.data.local.StoreDao
-import campus.tech.kakao.map.data.local.StoreDatabase
-import campus.tech.kakao.map.data.local.StoreEntity
 import campus.tech.kakao.map.databinding.ActivityMainBinding
-import campus.tech.kakao.map.ui.adapter.SavedSearchAdapter
-import campus.tech.kakao.map.ui.adapter.StoreAdapter
-import campus.tech.kakao.map.ui.viewmodel.StoreViewModel
-import campus.tech.kakao.map.ui.viewmodel.StoreViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
+
+
 
     private lateinit var database: StoreDatabase
     private lateinit var storeDao: StoreDao
@@ -53,6 +48,9 @@ class MainActivity : AppCompatActivity() {
         // 저장된 검색어 RecyclerView 설정
         setupSavedSearchRecyclerView()
     }
+
+
+    
 
 
     /**
@@ -106,6 +104,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
 
 
     private fun setupRecyclerView() {

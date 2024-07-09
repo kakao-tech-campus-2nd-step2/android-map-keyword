@@ -1,10 +1,9 @@
-package campus.tech.kakao.map.ui.adapter
+package campus.tech.kakao.map
 
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import campus.tech.kakao.map.data.local.StoreEntity
 import campus.tech.kakao.map.databinding.ItemSearchResultBinding
 
 class StoreAdapter(private val onItemClicked: (StoreEntity) -> Unit) :

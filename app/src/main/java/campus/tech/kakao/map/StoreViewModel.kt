@@ -1,10 +1,8 @@
-package campus.tech.kakao.map.ui.viewmodel
+package campus.tech.kakao.map
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import campus.tech.kakao.map.data.local.StoreDao
-import campus.tech.kakao.map.data.local.StoreEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

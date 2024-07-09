@@ -1,9 +1,7 @@
-package campus.tech.kakao.map.ui.viewmodel
+package campus.tech.kakao.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import campus.tech.kakao.map.data.local.StoreDao
-
 
 
 class StoreViewModelFactory(private val storeDao: StoreDao) : ViewModelProvider.Factory {

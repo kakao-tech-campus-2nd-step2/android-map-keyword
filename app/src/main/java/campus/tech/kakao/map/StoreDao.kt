@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.data.local
+package campus.tech.kakao.map
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
