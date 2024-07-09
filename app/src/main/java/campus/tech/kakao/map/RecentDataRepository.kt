@@ -4,7 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 
-class RecentDataRepository(context: Context) {
+class RecentDataRepository(context: Context){
     private val db: RecentDBHelper = RecentDBHelper(context)
     private val wDb = db.writableDatabase
     private val rDb = db.readableDatabase
