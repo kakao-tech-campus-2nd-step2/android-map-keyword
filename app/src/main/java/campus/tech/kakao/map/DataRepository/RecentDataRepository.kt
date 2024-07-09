@@ -1,10 +1,13 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.DataRepository
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import campus.tech.kakao.map.DBHelper.RecentDBHelper
+import campus.tech.kakao.map.DataContract.RecentDataContract
+import campus.tech.kakao.map.Data.RecentSearchData
 
-class RecentDataRepository(context: Context){
+class RecentDataRepository(context: Context) {
     private val db: RecentDBHelper = RecentDBHelper(context)
     private val wDb = db.writableDatabase
     private val rDb = db.readableDatabase

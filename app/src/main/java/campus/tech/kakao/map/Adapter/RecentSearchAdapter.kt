@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.Adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,9 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.Data.RecentSearchData
+import campus.tech.kakao.map.R
+import campus.tech.kakao.map.ViewModel.RecentViewModel
 
 class RecentSearchAdapter(
     private val recentDataList: List<RecentSearchData>,

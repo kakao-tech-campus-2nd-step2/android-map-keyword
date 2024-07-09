@@ -13,6 +13,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.Adapter.RecentSearchAdapter
+import campus.tech.kakao.map.Adapter.SearchDataAdapter
+import campus.tech.kakao.map.Data.SearchData
+import campus.tech.kakao.map.ViewModel.RecentViewModel
+import campus.tech.kakao.map.ViewModel.SearchViewModel
 
 class DataSearchActivity : AppCompatActivity() {
     private lateinit var searchViewModel: SearchViewModel

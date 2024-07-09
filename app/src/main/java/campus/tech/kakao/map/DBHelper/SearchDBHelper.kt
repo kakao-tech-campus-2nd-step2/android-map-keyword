@@ -1,8 +1,9 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.DBHelper
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import campus.tech.kakao.map.DataContract.SearchDataContract
 
 class SearchDBHelper(context: Context) : SQLiteOpenHelper(context, "SearchData.db", null, 1) {
     override fun onCreate(db: SQLiteDatabase?) {
