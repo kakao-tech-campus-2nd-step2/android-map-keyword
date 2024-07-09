@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class RecentSearchAdapter(
-    private val recentDataList: List<String>,
+    private val recentDataList: List<RecentSearchData>,
     private val viewModel: RecentViewModel
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -28,9 +28,9 @@ class RecentSearchAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = recentDataList[position]
         val viewHolder = holder as RecentViewHolder
-        viewHolder.name.text = item
+        viewHolder.name.text = item.name
         viewHolder.deleteBtn.setOnClickListener {
-            viewModel.deleteRecentData(item)
+            viewModel.deleteRecentData(item.name)
         }
     }
 }

@@ -9,20 +9,31 @@ class RecentDataRepository(context: Context){
     private val wDb = db.writableDatabase
     private val rDb = db.readableDatabase
 
-    fun insertSearchData(data: String){
+    fun insertSearchData(data: RecentSearchData){
         val cv = ContentValues().apply{
-            put(RecentDataContract.TABLE_COLUMN_NAME,data)
+            put(RecentDataContract.TABLE_COLUMN_NAME,data.name)
+            put(RecentDataContract.TABLE_COLUMN_TIME,data.time)
         }
         wDb.insert(RecentDataContract.TABLE_NAME,null,cv)
     }
 
-    fun getSearchDataList(): List<String>{
-        val cursor: Cursor = rDb.query(RecentDataContract.TABLE_NAME,null,null,null,null,null,null)
-        val recentDataList = mutableListOf<String>()
+    fun getRecentSearchDataList(): List<RecentSearchData> {
+        val cursor: Cursor = rDb.query(
+            RecentDataContract.TABLE_NAME,
+            null,
+            null,
+            null,
+            null,
+            null,
+            "${RecentDataContract.TABLE_COLUMN_TIME} DESC"
+        )
+        val recentDataList = mutableListOf<RecentSearchData>()
 
         while(cursor.moveToNext()){
-            val name = cursor.getString(cursor.getColumnIndexOrThrow(SearchDataContract.TABLE_COLUMN_NAME))
-            recentDataList.add(name)
+            val name = cursor.getString(cursor.getColumnIndexOrThrow(RecentDataContract.TABLE_COLUMN_NAME))
+            val time = cursor.getString(cursor.getColumnIndexOrThrow(RecentDataContract.TABLE_COLUMN_TIME))
+
+            recentDataList.add(RecentSearchData(name,time.toLong()))
         }
         cursor.close()
 
@@ -34,6 +45,19 @@ class RecentDataRepository(context: Context){
             RecentDataContract.TABLE_NAME,
             "${RecentDataContract.TABLE_COLUMN_NAME} = ?",
             arrayOf(data)
+        )
+    }
+
+    fun updateTime(data: RecentSearchData){
+        val cv = ContentValues().apply {
+            put(RecentDataContract.TABLE_COLUMN_TIME, data.time)
+        }
+
+        wDb.update(
+            RecentDataContract.TABLE_NAME,
+            cv,
+            "${RecentDataContract.TABLE_COLUMN_NAME} = ?",
+            arrayOf(data.name)
         )
     }
 }

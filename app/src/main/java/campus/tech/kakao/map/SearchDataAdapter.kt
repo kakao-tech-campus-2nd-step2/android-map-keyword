@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +30,8 @@ class SearchDataAdapter(private var items:List<SearchData>, private val recentVi
         viewHolder.category.text = item.category
 
         holder.itemView.setOnClickListener{
-            recentViewModel.addRecentData(item.name)
+            val searchTime = System.currentTimeMillis()
+            recentViewModel.addRecentData(item.name,searchTime)
         }
     }
 

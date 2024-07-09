@@ -8,24 +8,33 @@ import androidx.lifecycle.MutableLiveData
 class RecentViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: RecentDataRepository = RecentDataRepository(application)
 
-    private val _recentDataList = MutableLiveData<List<String>>()
+    private val _recentDataList = MutableLiveData<List<RecentSearchData>>()
     init {
-        _recentDataList.value = repository.getSearchDataList()
+        _recentDataList.value = repository.getRecentSearchDataList()
     }
 
-    fun addRecentData(data: String){
-        val currentList = _recentDataList.value.orEmpty()
-        if (data !in currentList){
-            repository.insertSearchData(data)
-            _recentDataList.value = repository.getSearchDataList()
-        } }
+    fun addRecentData(data: String, time: Long) {
+        val currentList = _recentDataList.value.orEmpty().toMutableList()
+        val selectData = RecentSearchData(data, time)
+        if (checkExist(currentList, selectData)) {
+            repository.insertSearchData(selectData)
+        } else {
+            repository.updateTime(selectData)
+        }
+        _recentDataList.value = repository.getRecentSearchDataList()
+    }
 
-    fun getRecentDataLiveData(): LiveData<List<String>> {
+    //DB에 데이터 추가 전 중복 검사 (현재 DB에 없으면 true)
+    private fun checkExist(currentList:MutableList<RecentSearchData>,data: RecentSearchData):Boolean{
+        return !currentList.any{it.name == data.name}
+    }
+
+    fun getRecentDataLiveData(): LiveData<List<RecentSearchData>> {
         return _recentDataList
     }
 
     fun deleteRecentData(data: String){
         repository.deleteSearchData(data)
-        _recentDataList.value = repository.getSearchDataList()
+        _recentDataList.value = repository.getRecentSearchDataList()
     }
 }
