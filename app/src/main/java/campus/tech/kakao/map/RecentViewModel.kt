@@ -9,6 +9,7 @@ class RecentViewModel(application: Application) : AndroidViewModel(application) 
     private val repository: RecentDataRepository = RecentDataRepository(application)
 
     private val _recentDataList = MutableLiveData<List<RecentSearchData>>()
+
     init {
         _recentDataList.value = repository.getRecentSearchDataList()
     }
@@ -25,15 +26,18 @@ class RecentViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     //DB에 데이터 추가 전 중복 검사 (현재 DB에 없으면 true)
-    private fun checkExist(currentList:MutableList<RecentSearchData>,data: RecentSearchData):Boolean{
-        return !currentList.any{it.name == data.name}
+    private fun checkExist(
+        currentList: MutableList<RecentSearchData>,
+        data: RecentSearchData
+    ): Boolean {
+        return !currentList.any { it.name == data.name }
     }
 
     fun getRecentDataLiveData(): LiveData<List<RecentSearchData>> {
         return _recentDataList
     }
 
-    fun deleteRecentData(data: String){
+    fun deleteRecentData(data: String) {
         repository.deleteSearchData(data)
         _recentDataList.value = repository.getRecentSearchDataList()
     }

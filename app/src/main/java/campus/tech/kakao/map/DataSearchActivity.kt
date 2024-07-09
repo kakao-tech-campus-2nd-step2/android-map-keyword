@@ -18,7 +18,7 @@ class DataSearchActivity : AppCompatActivity() {
     private lateinit var searchViewModel: SearchViewModel
     private lateinit var recentViewModel: RecentViewModel
     private lateinit var editText: EditText
-    private lateinit var resultDataAdapter:SearchDataAdapter
+    private lateinit var resultDataAdapter: SearchDataAdapter
     private lateinit var resultData: List<SearchData>
     private lateinit var searchDataListView: RecyclerView
     private lateinit var recentSearchListView: RecyclerView
@@ -40,7 +40,7 @@ class DataSearchActivity : AppCompatActivity() {
         recentViewModel = ViewModelProvider(this)[RecentViewModel::class.java]
 
         //View 초기화
-        searchDataListView= findViewById(R.id.searchResulListView)
+        searchDataListView = findViewById(R.id.searchResulListView)
         editText = findViewById(R.id.searchBar)
         noResultNotice = findViewById(R.id.noResult)
         deleteBtn = findViewById(R.id.deleteInput)
@@ -48,7 +48,9 @@ class DataSearchActivity : AppCompatActivity() {
 
         //검색 결과 목록 세로 스크롤 설정
         searchDataListView.layoutManager = LinearLayoutManager(this)
-        recentSearchListView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        //최근 검색어 목록 가로 스크롤 설정
+        recentSearchListView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         //어뎁터 초기화
         resultDataAdapter = SearchDataAdapter(emptyList(), recentViewModel)
         searchDataListView.adapter = resultDataAdapter
@@ -56,13 +58,13 @@ class DataSearchActivity : AppCompatActivity() {
         resetButtonListener()
         setTextWatcher()
 
-        recentViewModel.getRecentDataLiveData().observe(this, Observer{
-                recentData -> recentSearchListView.adapter = RecentSearchAdapter(recentData,recentViewModel)
+        recentViewModel.getRecentDataLiveData().observe(this, Observer { recentData ->
+            recentSearchListView.adapter = RecentSearchAdapter(recentData, recentViewModel)
         })
     }
 
-    private fun setTextWatcher(){
-       editText.addTextChangedListener(object: TextWatcher{
+    private fun setTextWatcher() {
+        editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -82,8 +84,8 @@ class DataSearchActivity : AppCompatActivity() {
         })
     }
 
-    private fun resetButtonListener(){
-        deleteBtn.setOnClickListener{
+    private fun resetButtonListener() {
+        deleteBtn.setOnClickListener {
             editText.text.clear()
         }
     }

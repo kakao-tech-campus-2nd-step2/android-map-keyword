@@ -5,9 +5,10 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 
-class RecentDBHelper(context: Context) : SQLiteOpenHelper(context,"RecentData.db",null,2){
+//version 2: DB에 time 컬럼을 추가함
+class RecentDBHelper(context: Context) : SQLiteOpenHelper(context, "RecentData.db", null, 2) {
     override fun onCreate(db: SQLiteDatabase?) {
-        Log.d("yeong","Create DB!")
+        Log.d("yeong", "Create DB!")
         createRecentDataTable(db)
     }
 
@@ -16,7 +17,7 @@ class RecentDBHelper(context: Context) : SQLiteOpenHelper(context,"RecentData.db
         createRecentDataTable(db)
     }
 
-    private fun createRecentDataTable(db: SQLiteDatabase?){
+    private fun createRecentDataTable(db: SQLiteDatabase?) {
         db?.execSQL(
             "CREATE TABLE ${RecentDataContract.TABLE_NAME} (" +
                     "${RecentDataContract.TABLE_COLUMN_NAME} varchar(30) NOT NULL, " +
