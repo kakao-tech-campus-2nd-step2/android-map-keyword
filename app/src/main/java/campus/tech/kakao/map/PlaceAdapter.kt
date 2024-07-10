@@ -1,6 +1,5 @@
 package campus.tech.kakao.map
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,9 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class PlaceAdapter(
-    private val onItemClick: (Place) -> Unit
-): RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder>() {
-    private var places : List<Place> = emptyList()
+    private val onItemClick: (Place) -> Unit,
+) : RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder>() {
+    private var places: List<Place> = emptyList()
 
     class PlaceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
@@ -18,7 +17,10 @@ class PlaceAdapter(
         val typeTextView: TextView = itemView.findViewById(R.id.typeTextView)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaceViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): PlaceViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.place_item, parent, false)
         return PlaceViewHolder(view)
     }
@@ -27,7 +29,10 @@ class PlaceAdapter(
         return places.size
     }
 
-    override fun onBindViewHolder(holder: PlaceViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: PlaceViewHolder,
+        position: Int,
+    ) {
         val place = places[position]
         holder.nameTextView.text = place.name
         holder.addressTextView.text = place.address
@@ -41,6 +46,4 @@ class PlaceAdapter(
         places = newPlaces
         notifyDataSetChanged()
     }
-
-
 }

@@ -8,19 +8,22 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class SearchHistoryAdapter(
-    private var historyList: List<String>,
+    private var historyList: MutableList<String>,
     private val onDeleteClick: (String) -> Unit,
-    private val onItemClick: (String) -> Unit
+    private val onItemClick: (String) -> Unit,
 ) : RecyclerView.Adapter<SearchHistoryAdapter.HistoryViewHolder>() {
-
     class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val historyText: TextView = itemView.findViewById(R.id.searchHistoryText)
         val deleteButton: ImageButton = itemView.findViewById(R.id.deleteHistoryButton)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.search_history_item, parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): HistoryViewHolder {
+        val view =
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.search_history_item, parent, false)
         return HistoryViewHolder(view)
     }
 
@@ -28,7 +31,10 @@ class SearchHistoryAdapter(
         return historyList.size
     }
 
-    override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: HistoryViewHolder,
+        position: Int,
+    ) {
         val item = historyList[position]
         holder.historyText.text = item
         holder.historyText.setOnClickListener {
@@ -38,10 +44,10 @@ class SearchHistoryAdapter(
             onDeleteClick(item)
         }
     }
+
     fun updateData(newHistoryList: List<String>) {
-        historyList = newHistoryList
+        historyList.clear()
+        historyList.addAll(newHistoryList)
         notifyDataSetChanged()
     }
-
-
 }

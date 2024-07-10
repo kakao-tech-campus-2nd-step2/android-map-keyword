@@ -21,18 +21,15 @@ class PlaceActivity : AppCompatActivity() {
     private lateinit var historyRecyclerView: RecyclerView
     private lateinit var placeAdapter: PlaceAdapter
     private lateinit var historyAdapter: SearchHistoryAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_place)
 
-        initializeViews()
         initializeViewModel()
-        initializeRecyclerView()
-
-        setUpSearchEditText()
-        setUpRemoveButton()
+        initializeViews()
+        loadSearchHistory()
     }
-
 
     private fun showEmptyMessage() {
         emptyMessage.visibility = TextView.VISIBLE
@@ -55,8 +52,19 @@ class PlaceActivity : AppCompatActivity() {
         placeRecyclerView = findViewById(R.id.placeRecyclerView)
         emptyMessage = findViewById(R.id.emptyMessage)
         historyRecyclerView = findViewById(R.id.historyRecyclerView)
+
+        initializeAdapters()
+        initializeRecyclerView()
+        setUpSearchEditText()
+        setUpRemoveButton()
+    }
+    private fun initializeAdapters() {
         placeAdapter = PlaceAdapter { place ->
             placeViewModel.saveSearchQuery(place.name)
+        }
+        historyAdapter = SearchHistoryAdapter(mutableListOf(), placeViewModel::removeSearchQuery) { query ->
+            searchEditText.setText(query)
+            placeViewModel.searchPlaces(query)
         }
     }
 
@@ -65,10 +73,11 @@ class PlaceActivity : AppCompatActivity() {
         placeViewModel =
             ViewModelProvider(this, placeViewModelFactory).get(PlaceViewModel::class.java)
 
-        historyAdapter = SearchHistoryAdapter(emptyList(), placeViewModel::removeSearchQuery) { query ->
-            searchEditText.setText(query)
-            placeViewModel.searchPlaces(query)
-        }
+        historyAdapter =
+            SearchHistoryAdapter(mutableListOf(), placeViewModel::removeSearchQuery) { query ->
+                searchEditText.setText(query)
+                placeViewModel.searchPlaces(query)
+            }
 
         placeViewModel.places.observe(this) { places ->
             updateUI(places)
@@ -77,6 +86,9 @@ class PlaceActivity : AppCompatActivity() {
         placeViewModel.searchHistory.observe(this) { history ->
             historyAdapter.updateData(history)
         }
+    }
+
+    private fun loadSearchHistory() {
         placeViewModel.loadSearchHistory()
     }
 
@@ -99,24 +111,37 @@ class PlaceActivity : AppCompatActivity() {
     }
 
     private fun setUpSearchEditText() {
-        searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                //
-            }
+        searchEditText.addTextChangedListener(
+            object : TextWatcher {
+                override fun beforeTextChanged(
+                    p0: CharSequence?,
+                    p1: Int,
+                    p2: Int,
+                    p3: Int,
+                ) {
+                    //no-op
+                }
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                placeViewModel.searchPlaces(p0.toString())
-            }
+                override fun onTextChanged(
+                    p0: CharSequence?,
+                    p1: Int,
+                    p2: Int,
+                    p3: Int,
+                ) {
+                    placeViewModel.searchPlaces(p0.toString())
+                }
 
-            override fun afterTextChanged(p0: Editable?) {
-                //
-            }
-        })
-    }
-    private fun setUpRemoveButton() {
-        removeButton.setOnClickListener {
-            clearSearchEditText()
-            showEmptyMessage()
+                    override fun afterTextChanged(p0: Editable?) {
+                        //no-op
+                    }
+                },
+            )
         }
+
+        private fun setUpRemoveButton() {
+            removeButton.setOnClickListener {
+                clearSearchEditText()
+                showEmptyMessage()
+            }
     }
 }

@@ -3,9 +3,8 @@ package campus.tech.kakao.map
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.CreationExtras
 
-class PlaceViewModelFactory(private val context: Context): ViewModelProvider.Factory {
+class PlaceViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         // modelClass 에 MainActivityViewModel이 상속되었는지?
         if (modelClass.isAssignableFrom(PlaceViewModel::class.java)) {

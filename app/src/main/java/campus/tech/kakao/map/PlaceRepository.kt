@@ -17,26 +17,32 @@ class PlaceRepository(context: Context) {
 
     fun insertPlace(place: Place) {
         val db = dbHelper.writableDatabase
-        val values = ContentValues().apply {
-            put(PlaceDBContract.PlaceEntry.COLUMN_NAME, place.name)
-            put(PlaceDBContract.PlaceEntry.COLUMN_ADDRESS, place.address)
-            put(PlaceDBContract.PlaceEntry.COLUMN_TYPE, place.type)
-        }
+        val values =
+            ContentValues().apply {
+                put(PlaceDBContract.PlaceEntry.COLUMN_NAME, place.name)
+                put(PlaceDBContract.PlaceEntry.COLUMN_ADDRESS, place.address)
+                put(PlaceDBContract.PlaceEntry.COLUMN_TYPE, place.type)
+            }
         db.insert(PlaceDBContract.PlaceEntry.TABLE_NAME, null, values)
         db.close()
     }
 
     fun getAllPlaces(): MutableList<Place> {
         val db = dbHelper.readableDatabase
-        val cursor: Cursor = db.query(
-            PlaceDBContract.PlaceEntry.TABLE_NAME,
-            arrayOf(
-                PlaceDBContract.PlaceEntry.COLUMN_NAME,
-                PlaceDBContract.PlaceEntry.COLUMN_ADDRESS,
-                PlaceDBContract.PlaceEntry.COLUMN_TYPE
-            ),
-            null, null, null, null, null
-        )
+        val cursor: Cursor =
+            db.query(
+                PlaceDBContract.PlaceEntry.TABLE_NAME,
+                arrayOf(
+                    PlaceDBContract.PlaceEntry.COLUMN_NAME,
+                    PlaceDBContract.PlaceEntry.COLUMN_ADDRESS,
+                    PlaceDBContract.PlaceEntry.COLUMN_TYPE,
+                ),
+                null,
+                null,
+                null,
+                null,
+                null,
+            )
 
         val places = mutableListOf<Place>()
         with(cursor) {
@@ -57,16 +63,19 @@ class PlaceRepository(context: Context) {
         clearPlaces()
 
         val db = dbHelper.writableDatabase
-        val dummyPlaces = ((1..30).map {
-            Place("카페 $it", "대전 서구 만년동 $it", "카페")
-        })
+        val dummyPlaces = (
+            (1..30).map {
+                Place("카페 $it", "대전 서구 만년동 $it", "카페")
+            }
+        )
         db.beginTransaction()
         for (place in dummyPlaces) {
-            val value = ContentValues().apply {
-                put(PlaceDBContract.PlaceEntry.COLUMN_NAME, place.name)
-                put(PlaceDBContract.PlaceEntry.COLUMN_ADDRESS, place.address)
-                put(PlaceDBContract.PlaceEntry.COLUMN_TYPE, place.type)
-            }
+            val value =
+                ContentValues().apply {
+                    put(PlaceDBContract.PlaceEntry.COLUMN_NAME, place.name)
+                    put(PlaceDBContract.PlaceEntry.COLUMN_ADDRESS, place.address)
+                    put(PlaceDBContract.PlaceEntry.COLUMN_TYPE, place.type)
+                }
             db.insert(PlaceDBContract.PlaceEntry.TABLE_NAME, null, value)
         }
         db.setTransactionSuccessful()
@@ -93,15 +102,20 @@ class PlaceRepository(context: Context) {
         // Selection Arguments : 조건에 대한 값
         val selectionArgs = arrayOf("%$query%")
 
-        val cursor: Cursor = db.query(
-            PlaceDBContract.PlaceEntry.TABLE_NAME,
-            arrayOf(
-                PlaceDBContract.PlaceEntry.COLUMN_NAME,
-                PlaceDBContract.PlaceEntry.COLUMN_ADDRESS,
-                PlaceDBContract.PlaceEntry.COLUMN_TYPE
-            ),
-            selection, selectionArgs, null, null, null
-        )
+        val cursor: Cursor =
+            db.query(
+                PlaceDBContract.PlaceEntry.TABLE_NAME,
+                arrayOf(
+                    PlaceDBContract.PlaceEntry.COLUMN_NAME,
+                    PlaceDBContract.PlaceEntry.COLUMN_ADDRESS,
+                    PlaceDBContract.PlaceEntry.COLUMN_TYPE,
+                ),
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null,
+            )
 
         with(cursor) {
             while (moveToNext()) {
@@ -138,6 +152,4 @@ class PlaceRepository(context: Context) {
             }
         }
     }
-
-
 }

@@ -13,7 +13,8 @@ object PlaceDBContract {
         const val COLUMN_TYPE = "type"
         const val COLUMN_ADDRESS = "address"
 
-        const val CREATE_QUERY = "CREATE TABLE $TABLE_NAME (" +
+        const val CREATE_QUERY =
+            "CREATE TABLE $TABLE_NAME (" +
                 "$COLUMN_PLACE_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$COLUMN_NAME TEXT NOT NULL," +
                 "$COLUMN_TYPE TEXT NOT NULL," +
