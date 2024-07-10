@@ -13,16 +13,13 @@ class LocationViewModel(private val locationDbAccessor: LocationDbAccessor) : Vi
 
     fun setLocations() {
         _locations.value = readLocationData()
-        _searchedLocations.value = null
+        _searchedLocations.value = emptyList()
     }
 
-    fun searchLocations(query: String) {
-        val filteredList = _locations.value?.filter {
-            it.title.contains(query, ignoreCase = true) || // ignoreCase=true -> 대소문자 무시함
-                    it.address.contains(query, ignoreCase = true) ||
-                    it.category.contains(query, ignoreCase = true)
-        }
-        _searchedLocations.value = filteredList
+    fun searchLocations(query: String): Int {
+        val results = locationDbAccessor.searchLocations(query)
+        _searchedLocations.value = if(results.isNotEmpty()) results else emptyList()
+        return results.size
     }
 
     fun insertLocation() {

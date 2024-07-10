@@ -9,7 +9,15 @@ class SavedLocationViewModel(private val locationDbAccessor: LocationDbAccessor)
     private val _savedLocation = MutableLiveData<MutableList<SavedLocation>>()
     val savedLocation: LiveData<MutableList<SavedLocation>> get() = _savedLocation
 
-    fun addSavedLocation(title: String) {
+    fun setSavedLocation() {
+        _savedLocation.value = readSavedLocationData()
+    }
+    private fun readSavedLocationData(): MutableList<SavedLocation> {
+        val result: MutableList<SavedLocation> = locationDbAccessor.getSavedLocationAll()
+        Log.d("jieun", "$result")
+        return result
+    }
+    fun insertSavedLocation(title: String) {
         val savedLocation = SavedLocation(title)
         val currentList = _savedLocation.value ?: mutableListOf()
         if (!currentList.contains(savedLocation)) {
@@ -18,24 +26,11 @@ class SavedLocationViewModel(private val locationDbAccessor: LocationDbAccessor)
         }
         locationDbAccessor.insertSavedLocation(savedLocation.title)
     }
-
-    fun setSavedLocation() {
-        _savedLocation.value = readSavedLocationData()
-    }
-
     fun deleteSavedLocation(savedLocation: SavedLocation) {
         val currentList = _savedLocation.value ?: return
         if (currentList.remove(savedLocation)) {
             _savedLocation.value = currentList
         }
-        deleteSavedLocationData(savedLocation.title)
-    }
-    private fun readSavedLocationData(): MutableList<SavedLocation> {
-        val result: MutableList<SavedLocation> = locationDbAccessor.getSavedLocationAll()
-        Log.d("jieun", "$result")
-        return result
-    }
-    private fun deleteSavedLocationData(title: String) {
-        locationDbAccessor.deleteSavedLocation(title)
+        locationDbAccessor.deleteSavedLocation(savedLocation.title)
     }
 }

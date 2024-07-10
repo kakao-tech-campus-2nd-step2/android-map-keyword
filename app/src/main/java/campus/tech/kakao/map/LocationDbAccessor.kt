@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.util.Log
 import campus.tech.kakao.map.Contract.LocationEntry
+import campus.tech.kakao.map.Contract.SavedLocationEntry
 
 class LocationDbAccessor(private val dbHelper : LocationDbHelper) {
 
@@ -56,21 +57,21 @@ class LocationDbAccessor(private val dbHelper : LocationDbHelper) {
     fun insertSavedLocation(title: String): Long {
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
-            put(Contract.SavedLocationEntry.COLUMN_NAME_TITLE, title)
+            put(SavedLocationEntry.COLUMN_NAME_TITLE, title)
         }
         Log.d("jieun", "insertSavedLocation 저장완료")
-        return db.insert(Contract.SavedLocationEntry.TABLE_NAME, null, values)
+        return db.insert(SavedLocationEntry.TABLE_NAME, null, values)
     }
 
     fun getSavedLocationAll(): MutableList<SavedLocation> {
         val db = dbHelper.readableDatabase
 
         val projection = arrayOf(
-            Contract.SavedLocationEntry.COLUMN_NAME_TITLE,
+            SavedLocationEntry.COLUMN_NAME_TITLE,
         )
-        val sortOrder = "${Contract.SavedLocationEntry.COLUMN_NAME_TITLE} ASC"
+        val sortOrder = "${SavedLocationEntry.COLUMN_NAME_TITLE} ASC"
         val cursor = db.query(
-            Contract.SavedLocationEntry.TABLE_NAME,
+            SavedLocationEntry.TABLE_NAME,
             projection,
             null,
             null,
@@ -82,7 +83,7 @@ class LocationDbAccessor(private val dbHelper : LocationDbHelper) {
         val results = mutableListOf<SavedLocation>()
         with(cursor) {
             while (moveToNext()) {
-                val title = getString(getColumnIndexOrThrow(Contract.SavedLocationEntry.COLUMN_NAME_TITLE))
+                val title = getString(getColumnIndexOrThrow(SavedLocationEntry.COLUMN_NAME_TITLE))
                 results.add(SavedLocation(title))
             }
         }
@@ -93,9 +94,46 @@ class LocationDbAccessor(private val dbHelper : LocationDbHelper) {
     fun deleteSavedLocation(title: String) {
         val db = dbHelper.writableDatabase
 
-        val selection = "${Contract.SavedLocationEntry.COLUMN_NAME_TITLE} = ?"
+        val selection = "${SavedLocationEntry.COLUMN_NAME_TITLE} = ?"
         val selectionArgs = arrayOf(title)
 
-        db.delete(Contract.SavedLocationEntry.TABLE_NAME, selection, selectionArgs)
+        db.delete(SavedLocationEntry.TABLE_NAME, selection, selectionArgs)
+    }
+
+    fun searchLocations(query: String): List<Location> {
+        if(query.isBlank()){
+            return emptyList()
+        }
+        val db = dbHelper.readableDatabase
+
+        val projection = arrayOf(
+            LocationEntry.COLUMN_NAME_TITLE,
+            LocationEntry.COLUMN_NAME_ADDRESS,
+            LocationEntry.COLUMN_NAME_CATEGORY
+        )
+
+        val selection = "${LocationEntry.COLUMN_NAME_TITLE} LIKE '%' || ? || '%' OR ${LocationEntry.COLUMN_NAME_ADDRESS} LIKE '%' || ? || '%' OR ${LocationEntry.COLUMN_NAME_CATEGORY} LIKE '%' || ? || '%'"
+        val selectionArgs = arrayOf(query, query, query)
+
+        val cursor = db.query(
+            LocationEntry.TABLE_NAME,
+            projection,
+            selection,
+            selectionArgs,
+            null,
+            null,
+            null
+        )
+        val results = mutableListOf<Location>()
+        with(cursor) {
+            while (moveToNext()) {
+                val title = getString(getColumnIndexOrThrow(LocationEntry.COLUMN_NAME_TITLE))
+                val address = getString(getColumnIndexOrThrow(LocationEntry.COLUMN_NAME_ADDRESS))
+                val category = getString(getColumnIndexOrThrow(LocationEntry.COLUMN_NAME_CATEGORY))
+                results.add(Location(title, address, category))
+            }
+        }
+        cursor.close()
+        return results
     }
 }

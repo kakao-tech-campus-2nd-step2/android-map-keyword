@@ -11,8 +11,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.ViewModelFactory.LocationViewModelFactory
@@ -43,7 +41,7 @@ class MainActivity : AppCompatActivity(), onItemSelected {
         locationViewModel.insertLocation() // 앱 설치 시 최초 1번만 실행하게 하려면 어떻게 해야할까?
 
         setupSearchFeature()
-        setupSavedLocations()
+        setupSavedLocationFeature()
         setupLocationsFeature()
     }
 
@@ -52,7 +50,7 @@ class MainActivity : AppCompatActivity(), onItemSelected {
         setupClearButton()
     }
 
-    private fun setupSavedLocations() {
+    private fun setupSavedLocationFeature() {
         setupSavedLocationViewModel()
         setupSavedLocationRecyclerView()
     }
@@ -109,12 +107,12 @@ class MainActivity : AppCompatActivity(), onItemSelected {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val query = s.toString()
-                if (query.isEmpty()) {
-                    locationAdapter.submitList(emptyList())
-                    noResultTextView.visibility = View.VISIBLE
-                } else {
-                    locationViewModel.searchLocations(query)
+                val size: Int = locationViewModel.searchLocations(query)
+
+                if (size > 0) {
                     noResultTextView.visibility = View.GONE
+                } else {
+                    noResultTextView.visibility = View.VISIBLE
                 }
             }
 
@@ -130,7 +128,7 @@ class MainActivity : AppCompatActivity(), onItemSelected {
 
     private fun observeLocationsViewModel() {
         locationViewModel.searchedLocations.observe(this, Observer {
-            locationAdapter.submitList(it?.toList())
+            locationAdapter.submitList(it?.toList() ?: emptyList())
         })
     }
 
@@ -153,7 +151,7 @@ class MainActivity : AppCompatActivity(), onItemSelected {
     }
 
     override fun addSavedLocation(title: String) {
-        savedLocationViewModel.addSavedLocation(title)
+        savedLocationViewModel.insertSavedLocation(title)
     }
 
     override fun deleteSavedLocation(item: SavedLocation) {
