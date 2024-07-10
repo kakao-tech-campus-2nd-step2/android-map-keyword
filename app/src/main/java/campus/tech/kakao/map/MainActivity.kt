@@ -3,7 +3,6 @@ package campus.tech.kakao.map
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
@@ -40,36 +39,11 @@ class MainActivity : AppCompatActivity(), onItemSelected {
         initViews()
         locationViewModel.insertLocation() // 앱 설치 시 최초 1번만 실행하게 하려면 어떻게 해야할까?
 
-        setupSearchFeature()
-        setupSavedLocationFeature()
-        setupLocationsFeature()
-    }
-
-    private fun setupSearchFeature() {
         setupSearchEditText()
         setupClearButton()
+        setupViewModels()
+        setupRecyclerViews()
     }
-
-    private fun setupSavedLocationFeature() {
-        setupSavedLocationViewModel()
-        setupSavedLocationRecyclerView()
-    }
-
-    private fun setupLocationsFeature() {
-        setupLocationViewModel()
-        setupLocationRecyclerView()
-    }
-
-    private fun setupSavedLocationViewModel() {
-        savedLocationViewModel.setSavedLocation()
-        observeSavedLocationViewModel()
-    }
-
-    private fun setupLocationViewModel() {
-        locationViewModel.setLocations()
-        observeLocationsViewModel()
-    }
-
     private fun initViews() {
         locationDbHelper = LocationDbHelper(this)
         locationDbAccessor = LocationDbAccessor(locationDbHelper)
@@ -86,20 +60,6 @@ class MainActivity : AppCompatActivity(), onItemSelected {
         searchEditText = findViewById(R.id.searchEditText)
         noResultTextView = findViewById(R.id.NoResultTextView)
     }
-
-    private fun setupLocationRecyclerView() {
-        locationAdapter = LocationAdapter(this)
-        locationRecyclerView.layoutManager = LinearLayoutManager(this)
-        locationRecyclerView.adapter = locationAdapter
-    }
-
-    private fun setupSavedLocationRecyclerView() {
-        savedLocationAdapter = SavedLocationAdapter(this)
-        savedLocationRecyclerView.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        savedLocationRecyclerView.adapter = savedLocationAdapter
-    }
-
 
     private fun setupSearchEditText() {
         searchEditText.addTextChangedListener(object : TextWatcher {
@@ -126,31 +86,43 @@ class MainActivity : AppCompatActivity(), onItemSelected {
         }
     }
 
+    private fun setupViewModels() {
+        savedLocationViewModel.setSavedLocation()
+        observeSavedLocationViewModel()
+
+        locationViewModel.setLocations()
+        observeLocationsViewModel()
+    }
+
+    private fun observeSavedLocationViewModel() {
+        savedLocationViewModel.savedLocation.observe(this, Observer {
+            savedLocationAdapter.submitList(it?.toList() ?: emptyList())
+            if (it.size > 0) {
+                savedLocationRecyclerView.visibility = View.VISIBLE
+            } else {
+                savedLocationRecyclerView.visibility = View.GONE
+            }
+        })
+    }
+
     private fun observeLocationsViewModel() {
         locationViewModel.searchedLocations.observe(this, Observer {
             locationAdapter.submitList(it?.toList() ?: emptyList())
         })
     }
 
-    private fun observeSavedLocationViewModel() {
-        savedLocationViewModel.savedLocation.observe(this, Observer {
-            Log.d("jieun", "observeSavedLocation" + it)
-            if (it.isNotEmpty()) {
-                updateSavedLocationAdapter(it.toList())
-                savedLocationRecyclerView.visibility = View.VISIBLE
-            } else {
-                Log.d("jieun", "비었음")
-                updateSavedLocationAdapter(emptyList())
-                savedLocationRecyclerView.visibility = View.GONE
-            }
-        })
+    private fun setupRecyclerViews() {
+        locationAdapter = LocationAdapter(this)
+        locationRecyclerView.layoutManager = LinearLayoutManager(this)
+        locationRecyclerView.adapter = locationAdapter
+
+        savedLocationAdapter = SavedLocationAdapter(this)
+        savedLocationRecyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        savedLocationRecyclerView.adapter = savedLocationAdapter
     }
 
-    private fun updateSavedLocationAdapter(savedLocationList: List<SavedLocation>) {
-        savedLocationAdapter.submitList(savedLocationList)
-    }
-
-    override fun addSavedLocation(title: String) {
+    override fun insertSavedLocation(title: String) {
         savedLocationViewModel.insertSavedLocation(title)
     }
 

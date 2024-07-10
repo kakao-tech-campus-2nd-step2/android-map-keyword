@@ -67,7 +67,7 @@ class LocationDbAccessor(private val dbHelper : LocationDbHelper) {
         val db = dbHelper.readableDatabase
 
         val projection = arrayOf(
-            SavedLocationEntry.COLUMN_NAME_TITLE,
+            SavedLocationEntry.COLUMN_NAME_TITLE
         )
         val sortOrder = "${SavedLocationEntry.COLUMN_NAME_TITLE} ASC"
         val cursor = db.query(

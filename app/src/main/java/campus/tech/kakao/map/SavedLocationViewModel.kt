@@ -10,27 +10,23 @@ class SavedLocationViewModel(private val locationDbAccessor: LocationDbAccessor)
     val savedLocation: LiveData<MutableList<SavedLocation>> get() = _savedLocation
 
     fun setSavedLocation() {
-        _savedLocation.value = readSavedLocationData()
-    }
-    private fun readSavedLocationData(): MutableList<SavedLocation> {
-        val result: MutableList<SavedLocation> = locationDbAccessor.getSavedLocationAll()
-        Log.d("jieun", "$result")
-        return result
+        _savedLocation.value = locationDbAccessor.getSavedLocationAll()
     }
     fun insertSavedLocation(title: String) {
+        locationDbAccessor.insertSavedLocation(title)
         val savedLocation = SavedLocation(title)
+
         val currentList = _savedLocation.value ?: mutableListOf()
         if (!currentList.contains(savedLocation)) {
             currentList.add(savedLocation)
             _savedLocation.value = currentList
         }
-        locationDbAccessor.insertSavedLocation(savedLocation.title)
     }
     fun deleteSavedLocation(savedLocation: SavedLocation) {
+        locationDbAccessor.deleteSavedLocation(savedLocation.title)
         val currentList = _savedLocation.value ?: return
         if (currentList.remove(savedLocation)) {
             _savedLocation.value = currentList
         }
-        locationDbAccessor.deleteSavedLocation(savedLocation.title)
     }
 }
