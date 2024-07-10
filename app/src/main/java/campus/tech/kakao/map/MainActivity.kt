@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), onItemSelected {
     private lateinit var locationViewModel: LocationViewModel
     private lateinit var locationAdapter: LocationAdapter
     private lateinit var locationRecyclerView: RecyclerView
@@ -28,19 +28,20 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var clearButton: ImageView
     private lateinit var searchEditText: EditText
-    private lateinit var NoResultTextView: TextView
+    private lateinit var noResultTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         initViews()
-        insertLocation() // 앱 설치 시 최초 1번만 실행하게 하려면 어떻게 해야할까?
+        locationViewModel.insertLocation() // 앱 설치 시 최초 1번만 실행하게 하려면 어떻게 해야할까?
 
         setupSearchFeature()
         setupSavedLocations()
         setupLocationsFeature()
     }
+
     private fun setupSearchFeature() {
         setupSearchEditText()
         setupClearButton()
@@ -57,12 +58,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupSavedLocationViewModel() {
-        savedLocationViewModel.setSavedLocation(readSavedLocationData())
+        savedLocationViewModel.setSavedLocation()
         observeSavedLocationViewModel()
     }
 
     private fun setupLocationViewModel() {
-        locationViewModel.setLocations(readLocationData())
+        locationViewModel.setLocations()
         observeLocationsViewModel()
     }
 
@@ -78,24 +79,19 @@ class MainActivity : AppCompatActivity() {
 
         clearButton = findViewById(R.id.clearButton)
         searchEditText = findViewById(R.id.searchEditText)
-        NoResultTextView = findViewById(R.id.NoResultTextView)
+        noResultTextView = findViewById(R.id.NoResultTextView)
     }
 
     private fun setupLocationRecyclerView() {
-        locationAdapter = LocationAdapter { location ->
-            savedLocationViewModel.addSavedLocation(SavedLocation(location.title))
-            insertSavedLocation(location.title)
-        }
+        locationAdapter = LocationAdapter(this)
         locationRecyclerView.layoutManager = LinearLayoutManager(this)
         locationRecyclerView.adapter = locationAdapter
     }
 
     private fun setupSavedLocationRecyclerView() {
-        savedLocationAdapter = SavedLocationAdapter { savedLocation ->
-            deleteSavedLocationData(savedLocation.title)
-            savedLocationViewModel.deleteSavedLocation(SavedLocation(savedLocation.title))
-        }
-        savedLocationRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        savedLocationAdapter = SavedLocationAdapter(this)
+        savedLocationRecyclerView.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         savedLocationRecyclerView.adapter = savedLocationAdapter
     }
 
@@ -108,12 +104,13 @@ class MainActivity : AppCompatActivity() {
                 val query = s.toString()
                 if (query.isEmpty()) {
                     locationAdapter.submitList(emptyList())
-                    NoResultTextView.visibility = View.VISIBLE
+                    noResultTextView.visibility = View.VISIBLE
                 } else {
                     locationViewModel.searchLocations(query)
-                    NoResultTextView.visibility = View.GONE
+                    noResultTextView.visibility = View.GONE
                 }
             }
+
             override fun afterTextChanged(s: Editable?) {}
         })
     }
@@ -132,12 +129,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun observeSavedLocationViewModel() {
         savedLocationViewModel.savedLocation.observe(this, Observer {
-            Log.d("jieun", "observeSavedLocation"+it)
-            if(it.isNotEmpty()) {
+            Log.d("jieun", "observeSavedLocation" + it)
+            if (it.isNotEmpty()) {
                 updateSavedLocationAdapter(it.toList())
                 savedLocationRecyclerView.visibility = View.VISIBLE
-            }
-            else {
+            } else {
                 Log.d("jieun", "비었음")
                 updateSavedLocationAdapter(emptyList())
                 savedLocationRecyclerView.visibility = View.GONE
@@ -145,34 +141,15 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-
-
     private fun updateSavedLocationAdapter(savedLocationList: List<SavedLocation>) {
         savedLocationAdapter.submitList(savedLocationList)
     }
 
-    private fun insertSavedLocation(title: String) {
-        locationDbAccessor.insertSavedLocation(title)
+    override fun addSavedLocation(title: String) {
+        savedLocationViewModel.addSavedLocation(title)
     }
-    private fun readSavedLocationData(): MutableList<SavedLocation> {
-        val result: MutableList<SavedLocation> = locationDbAccessor.getSavedLocationAll()
-        Log.d("jieun", "$result")
-        return result
-    }
-    private fun deleteSavedLocationData(title: String) {
-        locationDbAccessor.deleteSavedLocation(title)
-    }
-    private fun insertLocation() {
-        for (i in 1..9) {
-            locationDbAccessor.insertLocation("카페$i", "부산 부산진구 전포대로$i", "카페")
-        }
-        for (i in 1..9) {
-            locationDbAccessor.insertLocation("음식점$i", "부산 부산진구 중앙대로$i", "음식점")
-        }
-    }
-    private fun readLocationData(): MutableList<Location> {
-        val result: MutableList<Location> = locationDbAccessor.getLocationAll()
-        Log.d("jieun", "$result")
-        return result
+
+    override fun deleteSavedLocation(item: SavedLocation) {
+        savedLocationViewModel.deleteSavedLocation(item)
     }
 }

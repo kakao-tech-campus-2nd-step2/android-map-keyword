@@ -7,8 +7,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.LocationAdapter.LocationHolder
 
-class LocationAdapter(private val onLocationSelected: (Location) -> Unit) : ListAdapter<Location, LocationAdapter.LocationHolder>(
+class LocationAdapter(
+    private val itemSelectedListener: onItemSelected
+) : ListAdapter<Location, LocationHolder>(
     object : DiffUtil.ItemCallback<Location>() {
         override fun areItemsTheSame(oldItem: Location, newItem: Location): Boolean {
             return oldItem.title == newItem.title
@@ -17,28 +20,30 @@ class LocationAdapter(private val onLocationSelected: (Location) -> Unit) : List
             return oldItem == newItem
         }
     }) {
-    inner class LocationHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class LocationHolder(
+        itemView: View,
+        itemSelectedListener: onItemSelected
+    ) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.titleTextView)
         val addressTextView: TextView = itemView.findViewById(R.id.addressTextView)
         val categoryTextView: TextView = itemView.findViewById(R.id.categoryTextView)
 
         init {
             itemView.setOnClickListener {
-                val location = getItem(bindingAdapterPosition)
-                onLocationSelected(location)
+                itemSelectedListener.addSavedLocation(getItem(bindingAdapterPosition).title)
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocationHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_location, parent, false)
-        return LocationHolder(view)
+        return LocationHolder(view, itemSelectedListener)
     }
 
     override fun onBindViewHolder(holder: LocationHolder, position: Int) {
         val location = getItem(position)
-        holder.titleTextView.setText(location.title)
-        holder.addressTextView.setText(location.address)
-        holder.categoryTextView.setText(location.category)
+        holder.titleTextView.text = location.title
+        holder.addressTextView.text = location.address
+        holder.categoryTextView.text = location.category
     }
 }

@@ -10,10 +10,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import campus.tech.kakao.map.SavedLocationAdapter.SavedLocationHolder
 
-import kotlin.Unit;
-
 class SavedLocationAdapter(
-        private val onXButtonSelected: (SavedLocation) -> Unit
+        private val itemSelectedListener: onItemSelected
 ) : ListAdapter<SavedLocation, SavedLocationHolder>(
     object: DiffUtil.ItemCallback<SavedLocation>() {
         override fun areItemsTheSame(oldItem: SavedLocation, newItem: SavedLocation): Boolean {
@@ -23,21 +21,23 @@ class SavedLocationAdapter(
             return oldItem == newItem
         }
     }) {
-    inner class SavedLocationHolder(itemView:View) : RecyclerView.ViewHolder(itemView) {
+    inner class SavedLocationHolder(
+        itemView:View,
+        itemSelectedListener: onItemSelected
+    ) : RecyclerView.ViewHolder(itemView) {
         val savedLocationXButton: ImageView = itemView.findViewById(R.id.savedLocationXButton)
         val savedLocationTextView: TextView = itemView.findViewById(R.id.savedLocationTextView)
 
         init {
             savedLocationXButton.setOnClickListener {
-                val savedLocation = getItem(bindingAdapterPosition)
-                onXButtonSelected(savedLocation)
+                itemSelectedListener.deleteSavedLocation(getItem(bindingAdapterPosition) as SavedLocation)
             }
         }
     }
 
     override fun onCreateViewHolder(parent:ViewGroup, viewType: Int): SavedLocationHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_saved_location, parent, false)
-        return SavedLocationHolder(view)
+        return SavedLocationHolder(view, itemSelectedListener)
     }
 
     override fun onBindViewHolder(holder:SavedLocationHolder, position: Int) {
