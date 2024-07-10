@@ -11,10 +11,15 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.lifecycle.viewmodel.MutableCreationExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import campus.tech.kakao.map.ViewModelFactory.LocationViewModelFactory
+import campus.tech.kakao.map.ViewModelFactory.SavedLocationViewModelFactory
 
 class MainActivity : AppCompatActivity(), onItemSelected {
+
     private lateinit var locationViewModel: LocationViewModel
     private lateinit var locationAdapter: LocationAdapter
     private lateinit var locationRecyclerView: RecyclerView
@@ -71,10 +76,12 @@ class MainActivity : AppCompatActivity(), onItemSelected {
         locationDbHelper = LocationDbHelper(this)
         locationDbAccessor = LocationDbAccessor(locationDbHelper)
 
-        locationViewModel = ViewModelProvider(this).get(LocationViewModel::class.java)
+        locationViewModel = ViewModelProvider(this, LocationViewModelFactory(locationDbAccessor)
+        ).get(LocationViewModel::class.java)
         locationRecyclerView = findViewById(R.id.locationRecyclerView)
 
-        savedLocationViewModel = ViewModelProvider(this).get(SavedLocationViewModel::class.java)
+        savedLocationViewModel = ViewModelProvider(this, SavedLocationViewModelFactory(locationDbAccessor)
+        ).get(SavedLocationViewModel::class.java)
         savedLocationRecyclerView = findViewById(R.id.savedLocationRecyclerView)
 
         clearButton = findViewById(R.id.clearButton)
