@@ -15,16 +15,16 @@
         android:scaleType="centerInside"
         android:src="@drawable/close"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tvPlaceName"
+        app:layout_constraintEnd_toStartOf="@id/tvSearchName"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <TextView
-        android:id="@+id/tvPlaceName"
+        android:id="@+id/tvSearchName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        tools:text="이름1"
+        tools:text="@string/test_name"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@id/btnClose"
         app:layout_constraintEnd_toEndOf="parent"
